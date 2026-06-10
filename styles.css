@@ -1121,6 +1121,11 @@ th {
   box-shadow: 0 3px 10px rgba(0,0,0,0.08);
 }
 
+.sudoku-tabs button.locked {
+  color: #9a9a9a;
+  opacity: 0.55;
+}
+
 .sudoku-meta {
   color: #666;
   font-size: 13px;
@@ -1128,26 +1133,68 @@ th {
 
 .sudoku-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 4px;
+  grid-template-columns: repeat(var(--sudoku-size, 4), 1fr);
+  gap: 2px;
   padding: 8px;
   border-radius: 14px;
   background: #20242a;
 }
 
-.sudoku-grid input {
-  min-height: 56px;
+.sudoku-cell {
+  display: grid;
+  place-items: center;
+  min-height: 54px;
   border: 0;
-  border-radius: 8px;
+  border-radius: 7px;
   background: white;
   text-align: center;
   font-size: 24px;
   font-weight: 800;
+  color: #111;
 }
 
-.sudoku-grid input:disabled {
+.sudoku-grid.size-8 .sudoku-cell {
+  min-height: 32px;
+  border-radius: 4px;
+  font-size: 15px;
+}
+
+.sudoku-cell.given {
   background: #dfe7ef;
   color: #111;
+}
+
+.sudoku-cell.editable {
+  cursor: pointer;
+}
+
+.sudoku-cell.selected {
+  outline: 3px solid #d9a441;
+  outline-offset: -3px;
+  background: #fff6d8;
+}
+
+.sudoku-cell.box-right {
+  margin-right: 3px;
+}
+
+.sudoku-cell.box-bottom {
+  margin-bottom: 3px;
+}
+
+.number-pad {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
+
+.number-pad button {
+  min-height: 38px;
+  border: 0;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  font-weight: 700;
 }
 
 .wechat-head {

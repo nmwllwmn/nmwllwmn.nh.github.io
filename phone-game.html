@@ -1,11 +1,155 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>数独 - 林舟的手机</title><link rel="stylesheet" href="styles.css"></head><body class="chat-shell"><main class="phone-stage"><section class="mi-phone"><div class="phone-island"><span></span><span></span><span></span></div><section class="mi-screen app-screen screen-enter"><div class="app-head"><a class="mini-back" href="chat.html">‹</a><strong>数独</strong></div><div class="sudoku-app"><div class="sudoku-tabs"><button class="active" data-level="1">第一关</button><button data-level="2">第二关</button><button data-level="3">第三关</button></div><div class="sudoku-meta" id="sudokuMeta"></div><div class="sudoku-grid" id="sudokuGrid"></div><button class="btn primary" id="checkSudoku" type="button">检查答案</button></div></section></section><aside class="phone-note"><h1>隐藏游戏</h1><p>第三关需要等待一小时，是给耐心玩家的彩蛋。</p></aside></main><script src="common.js"></script><script>
-initGameShell({stage:1,page:"phone-game"});
-const sudokuLevels={1:{title:"第一关 · 热身",givens:"1..4.3..2....1.",answer:"1234431221433412"},2:{title:"第二关 · 交叉",givens:".2..3..1..4..3.",answer:"1243342121434321"},3:{title:"第三关 · 一小时",givens:"....1..3..4.4...",answer:"2314142332414132"}};
-let currentSudokuLevel=1;
-function renderSudoku(level){currentSudokuLevel=Number(level);const data=sudokuLevels[currentSudokuLevel];const grid=document.querySelector("#sudokuGrid");document.querySelectorAll(".sudoku-tabs button").forEach(btn=>btn.classList.toggle("active",Number(btn.dataset.level)===currentSudokuLevel));const state=loadGame();if(currentSudokuLevel===3&&!state.flags.sudoku3Start){state.flags.sudoku3Start=Date.now();saveGame(state)}const remaining=getSudokuRemaining();document.querySelector("#sudokuMeta").textContent=currentSudokuLevel===3&&remaining>0?`${data.title} · 还需要等待 ${Math.ceil(remaining/60000)} 分钟`:data.title;grid.innerHTML=data.givens.split("").map(ch=>ch==="."?`<input maxlength="1" inputmode="numeric">`:`<input value="${ch}" disabled>`).join("")}
-function getSudokuRemaining(){if(currentSudokuLevel!==3)return 0;const start=loadGame().flags.sudoku3Start||Date.now();return Math.max(0,60*60*1000-(Date.now()-start))}
-document.querySelectorAll(".sudoku-tabs button").forEach(btn=>btn.addEventListener("click",()=>renderSudoku(btn.dataset.level)));
-document.querySelector("#checkSudoku").addEventListener("click",()=>{if(currentSudokuLevel===3&&getSudokuRemaining()>0){toast("第三关还没到时间。林舟把它当成一小时后的彩蛋。");renderSudoku(3);return}const values=Array.from(document.querySelectorAll("#sudokuGrid input")).map(input=>input.value||".").join("");toast(values===sudokuLevels[currentSudokuLevel].answer?(currentSudokuLevel===3?"彩蛋解锁：别回复 17 楼。":"数独通过。"):"还有格子不对。")});
-renderSudoku(1);
-</script></body></html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>数独 - 林舟的手机</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body class="chat-shell">
+    <main class="phone-stage">
+      <section class="mi-phone">
+        <div class="phone-island"><span></span><span></span><span></span></div>
+        <section class="mi-screen app-screen screen-enter">
+          <div class="app-head"><a class="mini-back" href="chat.html">‹</a><strong>数独</strong></div>
+          <div class="sudoku-app">
+            <div class="sudoku-tabs">
+              <button class="active" data-level="1" type="button">第一关</button>
+              <button data-level="2" type="button">第二关</button>
+              <button data-level="3" type="button">第三关</button>
+            </div>
+            <div class="sudoku-meta" id="sudokuMeta"></div>
+            <div class="sudoku-grid" id="sudokuGrid"></div>
+            <div class="number-pad" id="numberPad"></div>
+            <button class="btn primary" id="submitSudoku" type="button">提交</button>
+          </div>
+        </section>
+      </section>
+      <aside class="phone-note">
+        <h1>隐藏游戏</h1>
+        <p>前两关是 4x4。第三关会变成 8x8，非常难。点格子，再从下方数字面板选择数字；提交正确后才能进入下一关。</p>
+      </aside>
+    </main>
+    <script src="common.js"></script>
+    <script>
+      initGameShell({ stage: 1, page: "phone-game" });
+
+      const sudokuLevels = {
+        1: {
+          title: "第一关 · 热身 4x4",
+          size: 4,
+          boxCols: 2,
+          givens: "1.344..2.1.334..",
+          answer: "1234431221433412"
+        },
+        2: {
+          title: "第二关 · 交叉 4x4",
+          size: 4,
+          boxCols: 2,
+          givens: ".2..3..1..4..3..",
+          answer: "1243342121434321"
+        },
+        3: {
+          title: "第三关 · 深水 8x8",
+          size: 8,
+          boxCols: 4,
+          givens: "1...........1....3...........3....5...........5....7...........7",
+          answer: "1234567856781234234567816781234534567812781234564567812381234567"
+        }
+      };
+
+      let currentSudokuLevel = 1;
+      let selectedCell = null;
+
+      function getUnlockedLevel() {
+        return Number(loadGame().flags.sudokuUnlockedLevel || 1);
+      }
+
+      function setUnlockedLevel(level) {
+        const state = loadGame();
+        state.flags.sudokuUnlockedLevel = Math.max(getUnlockedLevel(), level);
+        saveGame(state);
+      }
+
+      function renderSudoku(level) {
+        const unlocked = getUnlockedLevel();
+        level = Number(level);
+        if (level > unlocked) {
+          toast("先提交通过上一关。");
+          return;
+        }
+
+        currentSudokuLevel = level;
+        selectedCell = null;
+        const data = sudokuLevels[currentSudokuLevel];
+        const grid = document.querySelector("#sudokuGrid");
+        const pad = document.querySelector("#numberPad");
+
+        document.querySelectorAll(".sudoku-tabs button").forEach((btn) => {
+          const btnLevel = Number(btn.dataset.level);
+          btn.classList.toggle("active", btnLevel === currentSudokuLevel);
+          btn.disabled = btnLevel > unlocked;
+          btn.classList.toggle("locked", btnLevel > unlocked);
+        });
+
+        document.querySelector("#sudokuMeta").textContent = data.title;
+        grid.className = `sudoku-grid size-${data.size}`;
+        grid.style.setProperty("--sudoku-size", data.size);
+        grid.style.setProperty("--box-cols", data.boxCols);
+        grid.innerHTML = data.givens.split("").map((ch, index) => {
+          const row = Math.floor(index / data.size);
+          const col = index % data.size;
+          const boxEdge = `${col % data.boxCols === data.boxCols - 1 ? " box-right" : ""}${row % 2 === 1 ? " box-bottom" : ""}`;
+          if (ch === ".") {
+            return `<button class="sudoku-cell editable${boxEdge}" data-index="${index}" type="button"></button>`;
+          }
+          return `<button class="sudoku-cell given${boxEdge}" data-index="${index}" type="button" disabled>${ch}</button>`;
+        }).join("");
+
+        pad.innerHTML = Array.from({ length: data.size }, (_, i) => `<button type="button" data-number="${i + 1}">${i + 1}</button>`).join("") + `<button type="button" data-number="">清除</button>`;
+
+        document.querySelectorAll(".sudoku-cell.editable").forEach((cell) => {
+          cell.addEventListener("click", () => {
+            if (selectedCell) selectedCell.classList.remove("selected");
+            selectedCell = cell;
+            cell.classList.add("selected");
+          });
+        });
+
+        document.querySelectorAll("#numberPad button").forEach((button) => {
+          button.addEventListener("click", () => {
+            if (!selectedCell) {
+              toast("先点一个空格。");
+              return;
+            }
+            selectedCell.textContent = button.dataset.number;
+          });
+        });
+      }
+
+      document.querySelectorAll(".sudoku-tabs button").forEach((btn) => {
+        btn.addEventListener("click", () => renderSudoku(btn.dataset.level));
+      });
+
+      document.querySelector("#submitSudoku").addEventListener("click", () => {
+        const data = sudokuLevels[currentSudokuLevel];
+        const values = Array.from(document.querySelectorAll("#sudokuGrid .sudoku-cell")).map((cell) => cell.textContent || ".").join("");
+        if (values !== data.answer) {
+          toast("提交失败，还有格子不对。");
+          return;
+        }
+
+        if (currentSudokuLevel < 3) {
+          setUnlockedLevel(currentSudokuLevel + 1);
+          toast(`第 ${currentSudokuLevel} 关通过，下一关已解锁。`);
+          renderSudoku(currentSudokuLevel + 1);
+        } else {
+          setFlag("sudokuSecretSolved");
+          toast("彩蛋解锁：别回复 17 楼。");
+        }
+      });
+
+      renderSudoku(getUnlockedLevel());
+    </script>
+  </body>
+</html>
