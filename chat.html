@@ -71,6 +71,8 @@
             <button class="app-icon map-icon" data-app="map" type="button"><span><i>⌖</i></span><strong>地图</strong></button>
             <button class="app-icon notes-icon" data-app="notes" type="button"><span><i>✎</i></span><strong>备忘录</strong></button>
             <button class="app-icon settings-icon" data-app="settings" type="button"><span><i>⚙</i></span><strong>设置</strong></button>
+            <button class="app-icon game-icon" data-app="game" type="button"><span><i>9</i></span><strong>游戏</strong></button>
+            <button class="app-icon music-icon" data-app="music" type="button"><span><i>♪</i></span><strong>音乐</strong></button>
           </div>
           <div class="dock">
             <button class="dock-icon dock-phone" data-app="phone" type="button">☎</button>
@@ -114,6 +116,82 @@
             <h2>南洄城市夜行定向赛</h2>
             <p>第七届夜行定向赛成绩归档已开放。林舟最后发来的链接就停在这里。</p>
             <a class="btn primary" href="event.html">打开活动官网</a>
+          </div>
+        </section>
+
+        <section class="mi-screen app-screen" id="contactsScreen" hidden>
+          <div class="app-head"><button class="mini-back" data-back="home" type="button">‹</button><strong>通讯录</strong></div>
+          <div class="app-list">
+            <article><strong>爸妈</strong><span>置顶联系人</span></article>
+            <article><strong>沈眠</strong><span>女朋友 · 最近通话 6 月 6 日</span></article>
+            <article><strong>江予白</strong><span>夜航03 队友</span></article>
+            <article><strong>陈檐</strong><span>夜航03 队友</span></article>
+          </div>
+        </section>
+
+        <section class="mi-screen app-screen" id="mailScreen" hidden>
+          <div class="app-head"><button class="mini-back" data-back="home" type="button">‹</button><strong>邮件</strong></div>
+          <div class="app-card"><h2>未登录</h2><p>林舟的学校邮箱没有保存在本机。最近浏览器停留在夜行赛官网。</p></div>
+        </section>
+
+        <section class="mi-screen app-screen" id="galleryScreen" hidden>
+          <div class="app-head"><button class="mini-back" data-back="home" type="button">‹</button><strong>相册</strong></div>
+          <div class="photo-grid">
+            <button type="button">S01<br>正门</button><button type="button">S02<br>邮筒</button><button type="button">S03<br>旧书摊</button>
+            <button type="button">S04<br>西桥</button><button class="locked-photo" type="button">已隐藏</button><button type="button">截图<br>路线</button>
+          </div>
+          <p class="app-tip">有一张照片被系统标记为隐藏，需要图案密码。</p>
+        </section>
+
+        <section class="mi-screen app-screen" id="mapScreen" hidden>
+          <div class="app-head"><button class="mini-back" data-back="home" type="button">‹</button><strong>地图</strong></div>
+          <div class="app-card"><h2>搜索历史</h2><p>西桥观景台</p><p>北桥体育馆</p><p>北桥地下通道 B 口</p><a class="btn primary" href="map.html">打开城市地图</a></div>
+        </section>
+
+        <section class="mi-screen app-screen" id="notesScreen" hidden>
+          <div class="app-head"><button class="mini-back" data-back="home" type="button">‹</button><strong>备忘录</strong></div>
+          <div class="app-card note-paper"><p>0606</p><p>路线不是被改，是被补完。</p><p>如果我没回来，先看官网，再看缓存。</p></div>
+        </section>
+
+        <section class="mi-screen app-screen" id="settingsScreen" hidden>
+          <div class="app-head"><button class="mini-back" data-back="home" type="button">‹</button><strong>设置</strong></div>
+          <div class="app-list">
+            <article><strong>设备名称</strong><span>LinZhou-Mi 14</span></article>
+            <article><strong>锁屏密码</strong><span>已设置</span></article>
+            <article><strong>备份</strong><span>上次云同步：2026-06-06 18:04</span></article>
+          </div>
+        </section>
+
+        <section class="mi-screen app-screen" id="phoneScreen" hidden>
+          <div class="app-head"><button class="mini-back" data-back="home" type="button">‹</button><strong>电话</strong></div>
+          <div class="app-list">
+            <article><strong>妈妈</strong><span>3 次未接 · 6 月 7 日 12:06</span></article>
+            <article><strong>沈眠</strong><span>已接通 · 6 月 6 日 18:22</span></article>
+            <article><strong>未知号码</strong><span>未接 · 6 月 6 日 21:39</span></article>
+          </div>
+        </section>
+
+        <section class="mi-screen app-screen" id="musicScreen" hidden>
+          <div class="app-head"><button class="mini-back" data-back="home" type="button">‹</button><strong>音乐</strong></div>
+          <div class="music-card">
+            <h2>Gymnopédie No.1</h2>
+            <p>Erik Satie · CC0 / Wikimedia Commons</p>
+            <audio controls loop src="https://upload.wikimedia.org/wikipedia/commons/transcoded/b/b7/Gymnopedie_No._1..ogg/Gymnopedie_No._1..ogg.mp3"></audio>
+            <a href="https://commons.wikimedia.org/wiki/File:Gymnopedie_No._1..ogg" target="_blank" rel="noreferrer">来源与授权</a>
+          </div>
+        </section>
+
+        <section class="mi-screen app-screen" id="gameScreen" hidden>
+          <div class="app-head"><button class="mini-back" data-back="home" type="button">‹</button><strong>数独</strong></div>
+          <div class="sudoku-app">
+            <div class="sudoku-tabs">
+              <button class="active" data-level="1" type="button">第一关</button>
+              <button data-level="2" type="button">第二关</button>
+              <button data-level="3" type="button">第三关</button>
+            </div>
+            <div class="sudoku-meta" id="sudokuMeta"></div>
+            <div class="sudoku-grid" id="sudokuGrid"></div>
+            <button class="btn primary" id="checkSudoku" type="button">检查答案</button>
           </div>
         </section>
       </section>
@@ -182,7 +260,7 @@
     <script src="common.js"></script>
     <script>
       initGameShell({ stage: 1, page: "phone" });
-      const screens = ["lockScreen", "homeScreen", "wechatScreen", "browserScreen"];
+      const screens = ["lockScreen", "homeScreen", "wechatScreen", "browserScreen", "contactsScreen", "mailScreen", "galleryScreen", "mapScreen", "notesScreen", "settingsScreen", "phoneScreen", "musicScreen", "gameScreen"];
       function showScreen(id) {
         screens.forEach((screen) => {
           const el = document.querySelector("#" + screen);
@@ -220,15 +298,16 @@
           launchApp(button, () => {
             if (button.dataset.app === "wechat") showScreen("wechatScreen");
             if (button.dataset.app === "browser") showScreen("browserScreen");
-            if (button.dataset.app === "mail") toast("邮件 App 未登录。林舟最后停留在浏览器和微信。");
-            if (button.dataset.app === "contacts") toast("通讯录最近联系人：爸妈、沈眠、江予白。");
-            if (button.dataset.app === "map") toast("地图搜索历史：西桥、北桥。");
-            if (button.dataset.app === "settings") openShade("controls");
-            if (button.dataset.app === "phone") toast("最近通话：妈妈 3 次未接。");
-            if (button.dataset.app === "audio") toast("没有正在播放的音频。");
+            if (button.dataset.app === "contacts") showScreen("contactsScreen");
+            if (button.dataset.app === "mail") showScreen("mailScreen");
+            if (button.dataset.app === "gallery") showScreen("galleryScreen");
+            if (button.dataset.app === "map") showScreen("mapScreen");
+            if (button.dataset.app === "notes") showScreen("notesScreen");
+            if (button.dataset.app === "settings") showScreen("settingsScreen");
+            if (button.dataset.app === "phone") showScreen("phoneScreen");
+            if (button.dataset.app === "audio" || button.dataset.app === "music") showScreen("musicScreen");
+            if (button.dataset.app === "game") { showScreen("gameScreen"); renderSudoku(currentSudokuLevel); }
           });
-          if (button.dataset.app === "gallery") toast("相册需要图案密码，暂时打不开。");
-          if (button.dataset.app === "notes") toast("便签最后同步时间：2026-06-06 18:04。");
         });
       });
       function launchApp(button, callback) {
@@ -297,6 +376,49 @@
       document.querySelectorAll("[data-chat]").forEach((row) => row.addEventListener("click", () => openChat(row.dataset.chat)));
       document.querySelector("#momentsBtn").addEventListener("click", () => openChat("moments"));
       document.querySelector("#discoverTab").addEventListener("click", () => openChat("moments"));
+      const sudokuLevels = {
+        1: { title: "第一关 · 热身", givens: "1..4.3..2....1.", answer: "1234431221433412" },
+        2: { title: "第二关 · 交叉", givens: ".2..3..1..4..3.", answer: "1243342121434321" },
+        3: { title: "第三关 · 一小时", givens: "....1..3..4.4...", answer: "2314142332414132" }
+      };
+      let currentSudokuLevel = 1;
+      function renderSudoku(level) {
+        currentSudokuLevel = Number(level);
+        const data = sudokuLevels[currentSudokuLevel];
+        const grid = document.querySelector("#sudokuGrid");
+        document.querySelectorAll(".sudoku-tabs button").forEach(btn => btn.classList.toggle("active", Number(btn.dataset.level) === currentSudokuLevel));
+        const state = loadGame();
+        if (currentSudokuLevel === 3 && !state.flags.sudoku3Start) {
+          state.flags.sudoku3Start = Date.now();
+          saveGame(state);
+        }
+        const remaining = getSudokuRemaining();
+        document.querySelector("#sudokuMeta").textContent = currentSudokuLevel === 3 && remaining > 0
+          ? `${data.title} · 还需要等待 ${Math.ceil(remaining / 60000)} 分钟`
+          : data.title;
+        grid.innerHTML = data.givens.split("").map((ch, i) => ch === "."
+          ? `<input maxlength="1" inputmode="numeric" data-index="${i}">`
+          : `<input value="${ch}" disabled>`).join("");
+      }
+      function getSudokuRemaining() {
+        if (currentSudokuLevel !== 3) return 0;
+        const start = loadGame().flags.sudoku3Start || Date.now();
+        return Math.max(0, 60 * 60 * 1000 - (Date.now() - start));
+      }
+      document.querySelectorAll(".sudoku-tabs button").forEach(btn => btn.addEventListener("click", () => renderSudoku(btn.dataset.level)));
+      document.querySelector("#checkSudoku").addEventListener("click", () => {
+        if (currentSudokuLevel === 3 && getSudokuRemaining() > 0) {
+          toast("第三关还没到时间。林舟把它当成一小时后的彩蛋。");
+          renderSudoku(3);
+          return;
+        }
+        const values = Array.from(document.querySelectorAll("#sudokuGrid input")).map(input => input.value || ".").join("");
+        if (values === sudokuLevels[currentSudokuLevel].answer) {
+          toast(currentSudokuLevel === 3 ? "彩蛋解锁：别回复 17 楼。" : "数独通过。");
+        } else {
+          toast("还有格子不对。");
+        }
+      });
       if (hasFlag("phoneUnlocked")) showScreen("homeScreen");
     </script>
   </body>
