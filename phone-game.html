@@ -22,6 +22,7 @@
             <div class="sudoku-grid" id="sudokuGrid"></div>
             <div class="number-pad" id="numberPad"></div>
             <button class="btn primary" id="submitSudoku" type="button">提交</button>
+            <div class="phone-app-toast" id="sudokuToast" hidden></div>
           </div>
         </section>
       </section>
@@ -40,7 +41,7 @@
           size: 4,
           boxCols: 2,
           givens: "1.344..2.1.334..",
-          answer: "1234431221433412"
+          answer: "1234431221433421"
         },
         2: {
           title: "第二关 · 交叉 4x4",
@@ -75,7 +76,7 @@
         const unlocked = getUnlockedLevel();
         level = Number(level);
         if (level > unlocked) {
-          toast("先提交通过上一关。");
+          gameToast("先提交通过上一关。");
           return;
         }
 
@@ -119,7 +120,7 @@
         document.querySelectorAll("#numberPad button").forEach((button) => {
           button.addEventListener("click", () => {
             if (!selectedCell) {
-              toast("先点一个空格。");
+              gameToast("先点一个空格。");
               return;
             }
             selectedCell.textContent = button.dataset.number;
@@ -135,19 +136,33 @@
         const data = sudokuLevels[currentSudokuLevel];
         const values = Array.from(document.querySelectorAll("#sudokuGrid .sudoku-cell")).map((cell) => cell.textContent || ".").join("");
         if (values !== data.answer) {
-          toast("提交失败，还有格子不对。");
+          gameToast("提交失败，还有格子不对。");
           return;
         }
 
         if (currentSudokuLevel < 3) {
           setUnlockedLevel(currentSudokuLevel + 1);
-          toast(`第 ${currentSudokuLevel} 关通过，下一关已解锁。`);
+          gameToast(`第 ${currentSudokuLevel} 关通过，下一关已解锁。`);
           renderSudoku(currentSudokuLevel + 1);
         } else {
           setFlag("sudokuSecretSolved");
-          toast("彩蛋解锁：别回复 17 楼。");
+          gameToast("彩蛋解锁：别回复 17 楼。");
         }
       });
+
+      function gameToast(message) {
+        const box = document.querySelector("#sudokuToast");
+        box.textContent = message;
+        box.hidden = false;
+        box.classList.remove("show");
+        void box.offsetWidth;
+        box.classList.add("show");
+        clearTimeout(gameToast.timer);
+        gameToast.timer = setTimeout(() => {
+          box.hidden = true;
+          box.classList.remove("show");
+        }, 2600);
+      }
 
       renderSudoku(getUnlockedLevel());
     </script>
