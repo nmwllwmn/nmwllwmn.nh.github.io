@@ -13,12 +13,12 @@
   --mono: "Consolas", "SFMono-Regular", monospace;
   --sans: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
   --serif: "Noto Serif SC", "Songti SC", Georgia, serif;
-  --phone-shell: #c99aa7;
-  --phone-shell-dark: #7c5160;
-  --phone-accent: #b45f74;
-  --phone-accent-2: #ff6f93;
-  --phone-surface: #fff8fa;
-  --phone-line: #f0d5dd;
+  --phone-shell: #12161c;
+  --phone-shell-dark: #05070a;
+  --phone-accent: #2267d8;
+  --phone-accent-2: #18b56f;
+  --phone-surface: #f7f8fa;
+  --phone-line: #e4e8ee;
 }
 
 * {
@@ -587,9 +587,9 @@ th {
 .chat-shell {
   min-height: 100vh;
   background:
-    radial-gradient(circle at 12% 0%, rgba(92, 129, 128, 0.2), transparent 26%),
-    radial-gradient(circle at 82% 14%, rgba(127, 92, 55, 0.18), transparent 24%),
-    linear-gradient(145deg, #101417, #272b28 54%, #07090c);
+    radial-gradient(circle at 18% 8%, rgba(42, 89, 142, 0.28), transparent 28%),
+    radial-gradient(circle at 82% 20%, rgba(106, 88, 62, 0.22), transparent 26%),
+    linear-gradient(145deg, #090c11, #171d24 54%, #050608);
   padding: 26px 0;
 }
 
@@ -610,17 +610,17 @@ th {
   position: relative;
   width: min(372px, 100%);
   aspect-ratio: 9 / 19.5;
-  border: 9px solid var(--phone-shell);
+  border: 10px solid var(--phone-shell);
   border-radius: 44px;
   background:
-    linear-gradient(145deg, rgba(255,255,255,0.08), transparent 18%),
+    linear-gradient(145deg, rgba(255,255,255,0.1), transparent 22%),
     var(--phone-shell);
   overflow: hidden;
   box-shadow:
     0 34px 90px rgba(0, 0, 0, 0.38),
     0 0 0 1px rgba(255,255,255,0.08),
-    inset 0 0 0 1px rgba(255,255,255,0.38),
-    inset 0 0 0 3px rgba(124,81,96,0.18);
+    inset 0 0 0 1px rgba(255,255,255,0.12),
+    inset 0 0 0 3px rgba(0,0,0,0.24);
 }
 
 .mi-phone::before {
@@ -705,12 +705,10 @@ th {
 .home-screen {
   color: white;
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.03) 38%, rgba(80,44,55,0.5)),
-    radial-gradient(circle at 20% 38%, rgba(255, 193, 206, 0.52), transparent 16%),
-    radial-gradient(circle at 70% 58%, rgba(228, 124, 145, 0.32), transparent 19%),
-    linear-gradient(115deg, transparent 0 38%, rgba(255,255,255,0.35) 39% 40%, transparent 41%),
-    repeating-linear-gradient(92deg, rgba(255,255,255,0.16) 0 1px, transparent 1px 9px),
-    linear-gradient(145deg, #cad7d3, #e5b8c3 45%, #8b5e69);
+    linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.14) 42%, rgba(0,0,0,0.56)),
+    radial-gradient(circle at 28% 18%, rgba(98, 145, 183, 0.46), transparent 20%),
+    radial-gradient(circle at 70% 60%, rgba(190, 154, 92, 0.32), transparent 26%),
+    linear-gradient(145deg, #17202a, #263949 48%, #071014);
   background-size: cover;
   background-position: center;
 }
@@ -722,11 +720,9 @@ th {
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(circle at 24% 16%, rgba(255,255,255,0.68) 0 2px, transparent 3px),
-    radial-gradient(circle at 64% 28%, rgba(255,255,255,0.48) 0 2px, transparent 3px),
-    radial-gradient(circle at 84% 42%, rgba(255,255,255,0.42) 0 2px, transparent 3px),
-    linear-gradient(120deg, rgba(255,255,255,0.1), transparent 24% 76%, rgba(255,255,255,0.04));
-  opacity: 0.7;
+    linear-gradient(120deg, rgba(255,255,255,0.11), transparent 24% 76%, rgba(255,255,255,0.04)),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 10px);
+  opacity: 0.52;
 }
 
 .statusbar {
@@ -735,11 +731,11 @@ th {
   display: flex;
   justify-content: space-between;
   padding: 15px 22px 0;
-  color: #b05067;
+  color: rgba(255,255,255,0.92);
   font-size: 12px;
   font-weight: 700;
   font-family: var(--mono);
-  text-shadow: 0 1px 8px rgba(255,255,255,0.45);
+  text-shadow: 0 1px 8px rgba(0,0,0,0.42);
 }
 
 .lock-time {
@@ -811,10 +807,10 @@ th {
   position: relative;
   z-index: 2;
   padding: 58px 30px 0;
-  color: rgba(86, 52, 62, 0.92);
+  color: rgba(255,255,255,0.92);
   font-size: 20px;
   font-weight: 450;
-  text-shadow: 0 2px 12px rgba(255,255,255,0.48);
+  text-shadow: 0 2px 12px rgba(0,0,0,0.42);
 }
 
 .pull-zone {
@@ -947,8 +943,8 @@ th {
 .app-icon[data-badge]::after {
   content: attr(data-badge);
   position: absolute;
-  right: 9px;
-  top: -5px;
+  right: 7px;
+  top: -6px;
   z-index: 2;
   min-width: 20px;
   height: 20px;
@@ -977,13 +973,12 @@ th {
 .app-icon span {
   display: grid;
   place-items: center;
-  width: 56px;
-  height: 56px;
-  border-radius: 16px;
+  width: 57px;
+  height: 57px;
+  border-radius: 17px;
   font-weight: 800;
-  background-color: rgba(255,255,255,0.9);
   box-shadow:
-    0 12px 24px rgba(116,65,80,0.22),
+    0 12px 24px rgba(0,0,0,0.28),
     inset 0 1px 0 rgba(255,255,255,0.34),
     inset 0 -12px 22px rgba(0,0,0,0.12);
 }
@@ -996,11 +991,11 @@ th {
 
 .app-icon strong {
   max-width: 68px;
-  color: rgba(83, 50, 60, 0.95);
+  color: rgba(255,255,255,0.96);
   font-size: 11px;
   font-weight: 600;
   line-height: 1.2;
-  text-shadow: 0 1px 8px rgba(255,255,255,0.5);
+  text-shadow: 0 1px 8px rgba(0,0,0,0.72);
 }
 
 .wechat-icon span,
@@ -1057,10 +1052,10 @@ th {
   gap: 14px;
   padding: 12px;
   border-radius: 24px;
-  background: rgba(255, 235, 240, 0.62);
+  background: rgba(255,255,255,0.2);
   backdrop-filter: blur(18px);
-  border: 1px solid rgba(255,255,255,0.46);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.46), 0 18px 40px rgba(116,65,80,0.18);
+  border: 1px solid rgba(255,255,255,0.2);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 18px 40px rgba(0,0,0,0.22);
 }
 
 .dock-icon {
@@ -1068,7 +1063,7 @@ th {
   border: 0;
   border-radius: 17px;
   background: rgba(255,255,255,0.9);
-  color: var(--phone-accent);
+  color: #1d2630;
   font-size: 28px;
   transition: transform 0.16s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.16s ease;
 }
@@ -1089,45 +1084,20 @@ th {
   width: 118px;
   height: 5px;
   border-radius: 999px;
-  background: rgba(103, 62, 74, 0.42);
+  background: rgba(255,255,255,0.72);
   transform: translateX(-50%);
 }
 
 .wechat-screen,
 .browser-screen,
 .app-screen {
-  background: #f8f4f6;
+  background: var(--phone-surface);
   color: #111;
-}
-
-.wechat-screen::after,
-.browser-screen::after,
-.app-screen::after,
-.camera-app::after,
-.sms-app::after {
-  content: "‹   ⌂   ▦";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 18;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  height: 38px;
-  border-top: 1px solid var(--phone-line);
-  background: rgba(255, 251, 252, 0.94);
-  color: var(--phone-accent);
-  font-size: 24px;
-  font-weight: 800;
-  letter-spacing: 0;
-  pointer-events: none;
 }
 
 .app-screen {
   display: flex;
   flex-direction: column;
-  padding-bottom: 38px;
 }
 
 .app-screen[hidden] {
@@ -1139,14 +1109,18 @@ th {
   top: 0;
   z-index: 8;
   display: grid;
-  grid-template-columns: 50px minmax(0, 1fr) 50px;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
   align-items: center;
-  min-height: 68px;
-  padding: 18px 10px 8px;
+  min-height: 80px;
+  padding: 30px 12px 8px;
   border-bottom: 1px solid var(--phone-line);
-  background: rgba(255, 248, 251, 0.92);
+  background: rgba(250, 251, 252, 0.92);
   backdrop-filter: blur(18px);
   box-shadow: 0 1px 0 rgba(255,255,255,0.72);
+}
+
+.app-head::after {
+  content: "";
 }
 
 .app-head strong,
@@ -1166,11 +1140,11 @@ th {
 
 .app-list article,
 .app-card {
-  border: 1px solid rgba(0,0,0,0.05);
+  border: 1px solid rgba(18, 27, 38, 0.06);
   border-radius: 12px;
   padding: 14px;
   background: white;
-  box-shadow: 0 8px 24px rgba(30, 36, 42, 0.06);
+  box-shadow: 0 8px 22px rgba(18, 27, 38, 0.06);
 }
 
 .app-list article {
@@ -1420,12 +1394,12 @@ th {
   top: 0;
   z-index: 8;
   display: grid;
-  grid-template-columns: 64px minmax(0, 1fr) auto;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
   align-items: center;
-  min-height: 68px;
-  padding: 18px 10px 8px;
+  min-height: 80px;
+  padding: 30px 12px 8px;
   border-bottom: 1px solid var(--phone-line);
-  background: rgba(255, 248, 251, 0.94);
+  background: rgba(250, 251, 252, 0.94);
   backdrop-filter: blur(18px);
 }
 
@@ -1469,7 +1443,7 @@ th {
   width: 100%;
   min-height: 70px;
   border: 0;
-  border-bottom: 1px solid #eee2e7;
+  border-bottom: 1px solid var(--phone-line);
   padding: 10px 12px;
   background: rgba(255,255,255,0.92);
   text-align: left;
@@ -1751,7 +1725,7 @@ th {
   display: grid;
   overflow-y: auto;
   padding-bottom: 88px;
-  background: #fff8fa;
+  background: #fff;
 }
 
 .contact-row,
@@ -1761,7 +1735,7 @@ th {
   gap: 12px;
   align-items: center;
   min-height: 70px;
-  border-bottom: 1px solid #eee2e7;
+  border-bottom: 1px solid var(--phone-line);
   padding: 11px 14px;
   color: #111;
   text-decoration: none;
@@ -1771,13 +1745,13 @@ th {
 .call-row em {
   display: block;
   margin-top: 4px;
-  color: #9a737d;
+  color: #6f7782;
   font-size: 12px;
   font-style: normal;
 }
 
 .call-row time {
-  color: #b36a7d;
+  color: #9099a4;
   font-size: 11px;
 }
 
@@ -1787,8 +1761,8 @@ th {
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: #f6e9ee;
-  color: var(--phone-accent);
+  background: #e9edf2;
+  color: #333;
   font-weight: 800;
 }
 
@@ -1830,7 +1804,7 @@ th {
 .browser-search button {
   border: 0;
   border-radius: 999px;
-  background: var(--phone-accent-2);
+  background: var(--phone-accent);
   color: white;
   font-size: 12px;
   font-weight: 700;
@@ -1859,13 +1833,13 @@ th {
 .browser-page article {
   display: grid;
   gap: 4px;
-  border: 1px solid rgba(0,0,0,0.05);
+  border: 1px solid rgba(18,27,38,0.06);
   border-radius: 10px;
   padding: 14px;
   background: white;
   color: #111;
   text-align: left;
-  box-shadow: 0 8px 22px rgba(30,36,42,0.06);
+  box-shadow: 0 8px 22px rgba(18,27,38,0.06);
 }
 
 .browser-history button:active,
@@ -1903,7 +1877,6 @@ th {
   flex-direction: column;
   background: #050609;
   color: white;
-  padding-bottom: 38px;
 }
 
 .camera-topbar {
@@ -2121,17 +2094,15 @@ th {
 .sms-app {
   display: flex;
   flex-direction: column;
-  background: #fff5f7;
+  background: #f4f6f8;
   color: #111;
-  padding-bottom: 38px;
 }
 
 .sms-list {
   display: grid;
   align-content: start;
   overflow-y: auto;
-  padding-bottom: 38px;
-  background: #fff8fa;
+  background: #fff;
 }
 
 .sms-list[hidden],
@@ -2146,7 +2117,7 @@ th {
   align-items: center;
   min-height: 74px;
   border: 0;
-  border-bottom: 1px solid #f1dce3;
+  border-bottom: 1px solid var(--phone-line);
   padding: 10px 12px;
   background: rgba(255,255,255,0.94);
   color: #111;
@@ -2167,7 +2138,7 @@ th {
   display: block;
   margin-top: 4px;
   overflow: hidden;
-  color: #9a737d;
+  color: #6f7782;
   font-size: 12px;
   font-style: normal;
   text-overflow: ellipsis;
@@ -2175,7 +2146,7 @@ th {
 }
 
 .sms-row time {
-  color: #b36a7d;
+  color: #9099a4;
   font-size: 11px;
 }
 
@@ -2205,8 +2176,8 @@ th {
   gap: 14px;
   flex: 1;
   overflow-y: auto;
-  padding: 10px 18px 114px;
-  background: #fff5f7;
+  padding: 10px 18px 76px;
+  background: #f4f6f8;
 }
 
 .sms-date {
@@ -2236,13 +2207,13 @@ th {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 38px;
+  bottom: 0;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 58px;
   gap: 8px;
   padding: 9px 10px;
   border-top: 1px solid var(--phone-line);
-  background: #fff9fb;
+  background: rgba(250,251,252,0.96);
 }
 
 .sms-composer input {
@@ -2344,12 +2315,12 @@ th {
 }
 
 .mail-preview span {
-  color: #8a737a;
+  color: #68717d;
   font-size: 13px;
 }
 
 .mail-preview em {
-  color: #b36a7d;
+  color: #8a94a0;
   font-size: 11px;
   font-style: normal;
 }
@@ -2379,7 +2350,7 @@ th {
 }
 
 .map-app {
-  background: #f8f4f6;
+  background: var(--phone-surface);
 }
 
 .phone-map-canvas {
