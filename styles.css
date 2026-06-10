@@ -573,40 +573,7 @@ th {
 }
 
 .phone-island {
-  display: none;
-  position: absolute;
-  top: 8px;
-  left: 50%;
-  z-index: 5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  width: 128px;
-  height: 34px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.68);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
-  transform: translateX(-50%);
-}
-
-.phone-island span {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: rgba(0,0,0,0.13);
-}
-
-.phone-island span:first-child {
-  width: 8px;
-  height: 8px;
-}
-
-.phone-island span:last-child {
-  width: 16px;
-  height: 16px;
-  margin-left: 4px;
-  background: rgba(0,0,0,0.26);
+  display: none !important;
 }
 
 .mi-phone::after {
@@ -948,6 +915,10 @@ th {
 .gallery-icon span,
 .orange {
   background: #f08a34;
+}
+
+.camera-icon span {
+  background: linear-gradient(145deg, #2e333b, #090a0d);
 }
 
 .map-icon span {
@@ -1597,6 +1568,72 @@ th {
   border-radius: 12px;
   padding: 14px;
   background: white;
+}
+
+.broken-camera {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 48% 42%, rgba(74, 82, 91, 0.18), transparent 12%),
+    radial-gradient(circle at 52% 56%, rgba(8, 18, 28, 0.9), transparent 34%),
+    linear-gradient(135deg, rgba(255,255,255,0.04) 0 1px, transparent 1px 11px),
+    #010205;
+}
+
+.broken-camera::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background:
+    linear-gradient(28deg, transparent 0 47%, rgba(190, 218, 255, 0.16) 48%, transparent 49% 100%),
+    linear-gradient(132deg, transparent 0 39%, rgba(255,255,255,0.09) 40%, transparent 41% 100%),
+    linear-gradient(81deg, transparent 0 58%, rgba(255,255,255,0.08) 59%, transparent 60% 100%);
+  filter: blur(0.4px);
+  opacity: 0.8;
+}
+
+.broken-camera::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.05) 0 1px, transparent 1px 5px),
+    radial-gradient(circle at 50% 50%, transparent 0 40%, rgba(0,0,0,0.85) 70%);
+  mix-blend-mode: screen;
+  opacity: 0.46;
+  animation: cameraNoise 0.18s steps(2, end) infinite;
+}
+
+.camera-fault {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 24px;
+  z-index: 2;
+  display: grid;
+  gap: 6px;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px;
+  padding: 12px;
+  background: rgba(0,0,0,0.42);
+  color: rgba(230, 238, 246, 0.82);
+  font-family: var(--mono);
+  font-size: 12px;
+  backdrop-filter: blur(8px);
+}
+
+.camera-fault strong {
+  color: #f3f7ff;
+}
+
+@keyframes cameraNoise {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(2px);
+  }
 }
 
 .browser-bar {
