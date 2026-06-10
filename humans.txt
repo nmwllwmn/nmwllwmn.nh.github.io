@@ -1,0 +1,10 @@
+/* TEAM */
+Author: 你没完了
+Project: 最后一次签到
+Type: 中文网页解谜游戏 / ARG / 校园悬疑
+
+/* SITE */
+Canonical: https://nmwllwmn.github.io/nmwllwmn.nh.github.io/
+Language: zh-CN
+Built with: HTML, CSS, JavaScript, GitHub Pages
+Last update: 2026-06-10

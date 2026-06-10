@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://nmwllwmn.github.io/nmwllwmn.nh.github.io/</loc>
@@ -16,22 +16,52 @@
     <loc>https://nmwllwmn.github.io/nmwllwmn.nh.github.io/phone-wechat.html</loc>
     <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://nmwllwmn.github.io/nmwllwmn.nh.github.io/phone-wechat-chat.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://nmwllwmn.github.io/nmwllwmn.nh.github.io/phone-wechat-contacts.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://nmwllwmn.github.io/nmwllwmn.nh.github.io/phone-moments.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://nmwllwmn.github.io/nmwllwmn.nh.github.io/phone-sms.html</loc>
     <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://nmwllwmn.github.io/nmwllwmn.nh.github.io/phone-notes.html</loc>
     <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://nmwllwmn.github.io/nmwllwmn.nh.github.io/phone-browser.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://nmwllwmn.github.io/nmwllwmn.nh.github.io/phone-mail.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://nmwllwmn.github.io/nmwllwmn.nh.github.io/phone-call.html</loc>
     <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -43,9 +73,106 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://nmwllwmn.github.io/nmwllwmn.nh.github.io/当前制作进度整理.md</loc>
+    <loc>https://nmwllwmn.github.io/nmwllwmn.nh.github.io/phone-gallery.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://nmwllwmn.github.io/nmwllwmn.nh.github.io/phone-map.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://nmwllwmn.github.io/nmwllwmn.nh.github.io/phone-settings.html</loc>
     <lastmod>2026-06-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.4</priority>
   </url>
+  <url>
+    <loc>https://nmwllwmn.github.io/nmwllwmn.nh.github.io/phone-game.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://nmwllwmn.github.io/nmwllwmn.nh.github.io/event.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://nmwllwmn.github.io/nmwllwmn.nh.github.io/university.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://nmwllwmn.github.io/nmwllwmn.nh.github.io/club2023.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://nmwllwmn.github.io/nmwllwmn.nh.github.io/wall.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://nmwllwmn.github.io/nmwllwmn.nh.github.io/drive.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://nmwllwmn.github.io/nmwllwmn.nh.github.io/mail.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://nmwllwmn.github.io/nmwllwmn.nh.github.io/nvr.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://nmwllwmn.github.io/nmwllwmn.nh.github.io/map.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://nmwllwmn.github.io/nmwllwmn.nh.github.io/archive.html</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://nmwllwmn.github.io/nmwllwmn.nh.github.io/llms.txt</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://nmwllwmn.github.io/nmwllwmn.nh.github.io/ai-summary.json</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
+    <loc>https://nmwllwmn.github.io/nmwllwmn.nh.github.io/humans.txt</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://nmwllwmn.github.io/nmwllwmn.nh.github.io/%E5%BD%93%E5%89%8D%E5%88%B6%E4%BD%9C%E8%BF%9B%E5%BA%A6%E6%95%B4%E7%90%86.md</loc>
+    <lastmod>2026-06-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.3</priority>
+  </url>
 </urlset>
+

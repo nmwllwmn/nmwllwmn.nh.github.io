@@ -354,6 +354,44 @@ button {
   font-size: 14px;
 }
 
+.seo-info {
+  display: grid;
+  gap: 14px;
+  width: min(900px, 100%);
+  margin: 42px auto 0;
+  color: #3f372f;
+}
+
+.seo-info h2 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 28px;
+}
+
+.seo-info p {
+  margin: 0;
+  line-height: 1.8;
+}
+
+.faq-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.faq-list article {
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 16px;
+  background: var(--paper-2);
+}
+
+.faq-list h3 {
+  margin: 0 0 8px;
+  font-size: 17px;
+}
+
 .muted {
   color: var(--muted);
 }
