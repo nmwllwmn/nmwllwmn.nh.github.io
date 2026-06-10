@@ -21,7 +21,7 @@
     </main>
     <script src="common.js"></script>
     <script>
-      initGameShell({ stage: 6, page: "drive" });
+      initGameShell({ stage: 24, page: "drive" });
       if (hasFlag("loggedDrive")) document.querySelector("#files").hidden = false;
       document.querySelector("#driveLogin").addEventListener("submit", (e) => {
         e.preventDefault();
@@ -29,7 +29,7 @@
         const account = normalize(data.get("account"));
         const password = normalize(data.get("password"));
         if (account === "b17" && (password === "yuting0606" || password === "雨停在0606")) {
-          setFlag("loggedDrive"); setStage(7);
+          setFlag("loggedDrive"); setStage(26);
           document.querySelector("#files").hidden = false;
           toast("B17 备份目录已打开。");
         } else toast("口令错误。校园墙说：雨停在 0606。");

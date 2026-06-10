@@ -30,7 +30,7 @@
     </main>
     <script src="common.js"></script>
     <script>
-      initGameShell({ stage: 8, page: "nvr" });
+      initGameShell({ stage: 32, page: "nvr" });
       const openNvr = () => { document.querySelector("#nvrGate").hidden = true; document.querySelector("#nvrApp").hidden = false; };
       if (hasFlag("loggedNvr")) openNvr();
       document.querySelector("#nvrLogin").addEventListener("submit", (e) => {
@@ -50,7 +50,7 @@
       document.querySelector("#impForm").addEventListener("submit", (e) => {
         e.preventDefault();
         if (normalize(new FormData(e.target).get("answer")) === "imp-2202") {
-          addEvidence("D"); setFlag("foundImp2202"); setStage(9); toast("证据 D 已记录：21:38 北桥监控异常。去地图搜索 IMP-2202。");
+          addEvidence("D"); setFlag("foundImp2202"); setStage(34); toast("证据 D 已记录：21:38 北桥监控异常。去地图搜索 IMP-2202。");
         } else toast("需要先在 21:38 的 CAM 04 画面角落找到编号。");
       });
     </script>

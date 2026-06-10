@@ -18,7 +18,7 @@
     </main>
     <script src="common.js"></script>
     <script>
-      initGameShell({ stage: 10, page: "archive" });
+      initGameShell({ stage: 40, page: "archive" });
       document.querySelector("#archiveForm").addEventListener("submit", (e) => {
         e.preventDefault();
         const data = new FormData(e.target);
@@ -32,7 +32,26 @@
         const impOk = imp === "imp-2202";
         if (placeOk && timeOk && personOk && impOk) {
           setFlag("submittedArchive");
-          document.querySelector("#ending").innerHTML = `<article class="doc ending"><h2>真结局：最后一次签到</h2>你提交的不只是地点。
+          const hidden = hasFlag("sudokuSecretSolved");
+          document.querySelector("#ending").innerHTML = hidden ? `<article class="doc ending"><h2>隐藏结局：第十七格</h2>你先解开了林舟手机里的数独。
+
+第三关最后出现的不是分数，而是一行很短的提示：
+
+别回复 17 楼。
+
+你把 S08、21:38、沈泊和 IMP-2202 一起提交后，归档终端没有立刻关闭。
+它额外恢复了一个旧论坛索引。
+
+B17 不是备份编号。
+它也是第 17 条留言。
+
+留言内容只有一句：
+
+“第 8 个点已经放回去了。现在去找第 17 楼。”
+
+关联档案已打开：
+MYJ-0606-S08 -> MYJ-B17-FLOOR
+</article>` : `<article class="doc ending"><h2>真结局：最后一次签到</h2>你提交的不只是地点。
 你提交了旧路线、监控时间、导入编号和执行账号。
 
 归档终端短暂黑屏。一条三年前的记录被恢复。

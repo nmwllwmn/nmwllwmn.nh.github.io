@@ -259,7 +259,7 @@
 
     <script src="common.js"></script>
     <script>
-      initGameShell({ stage: 1, page: "phone" });
+      initGameShell({ stage: 2, page: "phone" });
       const screens = ["lockScreen", "homeScreen", "wechatScreen", "browserScreen", "contactsScreen", "mailScreen", "galleryScreen", "mapScreen", "notesScreen", "settingsScreen", "phoneScreen", "musicScreen", "gameScreen"];
       function showScreen(id) {
         screens.forEach((screen) => {
@@ -296,7 +296,7 @@
       document.querySelectorAll("[data-url]").forEach((button) => {
         button.addEventListener("click", () => {
           launchApp(button, () => {
-            window.location.href = button.dataset.url;
+            window.open(button.dataset.url, "_blank", "noopener");
           });
         });
       });

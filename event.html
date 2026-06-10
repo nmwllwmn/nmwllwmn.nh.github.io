@@ -56,7 +56,7 @@
     </main>
     <script src="common.js"></script>
     <script>
-      initGameShell({ stage: 2, page: "event" });
+      initGameShell({ stage: 8, page: "event" });
       if (hasFlag("loggedEventLinzhou")) document.querySelector("#records").hidden = false;
       document.querySelector("#scoreForm").addEventListener("submit", (e) => {
         e.preventDefault();
@@ -77,7 +77,7 @@
       document.querySelector("#s04Form").addEventListener("submit", (e) => {
         e.preventDefault();
         if (normalize(new FormData(e.target).get("answer")) === "s04") {
-          addEvidence("A"); setFlag("solvedS04"); setStage(3);
+          addEvidence("A"); setFlag("solvedS04"); setStage(12);
           toast("证据 A 已记录：S05-S07 为 Web Import。去学校官网查城迹社。");
         } else toast("再比对系统时间、照片时间和上传方式。");
       });

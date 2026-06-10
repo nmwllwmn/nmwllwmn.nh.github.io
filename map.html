@@ -9,7 +9,7 @@
     </main>
     <script src="common.js"></script>
     <script>
-      initGameShell({ stage: 9, page: "map" });
+      initGameShell({ stage: 36, page: "map" });
       document.querySelector("#mapSearch").addEventListener("submit", (e) => {
         e.preventDefault();
         const q = normalize(new FormData(e.target).get("q"));
@@ -19,7 +19,7 @@
         } else if (q === "s08") {
           html = hasFlag("foundOldRoute") ? `<article class="result"><h2>S08 北桥体育馆</h2><p>历史路线点已恢复。S04 后接 S08。</p></article>` : `<article class="result">未找到公开结果。</article>`;
         } else if (q === "imp-2202") {
-          addEvidence("E"); setFlag("foundShenbo"); setStage(10);
+          addEvidence("E"); setFlag("foundShenbo"); setStage(38);
           html = `<article class="result"><h2>导入任务 IMP-2202</h2><p>执行账号：<strong>shenbo_admin</strong></p><p>执行时间：2026-06-06 22:02</p><p>内容：补全 linzhou S05-S07 签到记录</p><p>账号实名：沈泊</p></article>`;
         } else html = `<article class="result">没有匹配地点或任务。</article>`;
         document.querySelector("#mapResults").innerHTML = html;

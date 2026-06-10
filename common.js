@@ -1,4 +1,5 @@
 const STORE_KEY = "last-checkin-webarg-v2";
+const MAX_STAGE = 40;
 
 const defaultState = {
   stage: 0,
@@ -76,13 +77,14 @@ function initGameShell(options = {}) {
   const { stage = 0, page = "" } = options;
   setStage(stage);
   document.body.dataset.page = page;
+  const isPhonePage = page.startsWith("phone");
   if (!document.querySelector(".game-widget")) {
     const widget = document.createElement("aside");
     widget.className = "game-widget";
     widget.innerHTML = `
       <div class="widget-card">
         <div class="muted mono">调查进度</div>
-        <div class="stage-num"><span id="stageNow">00</span> / 10</div>
+        <div class="stage-num"><span id="stageNow">00</span> / ${MAX_STAGE}</div>
       </div>
       <div class="widget-card">
         <button class="small-btn" id="noteToggle" type="button">打开笔记</button>
@@ -107,8 +109,6 @@ function initGameShell(options = {}) {
       <textarea id="noteText" placeholder="记录关键词、编号、时间、人名、密码。
 例如：0606 / S04 / B17 / 21:38 / IMP-2202"></textarea>
       <div class="note-actions">
-        <button class="small-btn" id="copyNotes" type="button">复制全部</button>
-        <button class="small-btn" id="clearNotes" type="button">清空笔记</button>
         <span class="muted" id="noteStatus">已自动保存</span>
       </div>
     `;
@@ -137,30 +137,58 @@ function initGameShell(options = {}) {
     document.querySelector(".note-panel").hidden = true;
     document.querySelector("#noteToggle").textContent = "打开笔记";
   });
-  document.querySelector("#copyNotes").addEventListener("click", async () => {
-    const text = document.querySelector("#noteText").value;
-    try {
-      await navigator.clipboard.writeText(text);
-      toast("笔记已复制到剪贴板。");
-    } catch {
-      document.querySelector("#noteText").select();
-      toast("浏览器阻止自动复制，已选中笔记内容，可手动复制。");
-    }
-  });
-  document.querySelector("#clearNotes").addEventListener("click", () => {
-    if (!confirm("确定清空调查笔记吗？")) return;
-    const next = loadGame();
-    next.notes = "";
-    saveGame(next);
-    document.querySelector("#noteText").value = "";
-    toast("笔记已清空。");
-  });
   document.querySelector("#resetGame").addEventListener("click", () => {
     localStorage.removeItem(STORE_KEY);
     toast("进度已重置。");
     setTimeout(() => location.href = "index.html", 500);
   });
+  if (isPhonePage) initPhoneIsland();
   updateWidget();
+}
+
+function setMusicState(next) {
+  const state = loadGame();
+  state.flags.music = { ...(state.flags.music || {}), ...next };
+  saveGame(state);
+  updatePhoneIsland();
+}
+
+function getMusicState() {
+  return loadGame().flags.music || { playing: false, track: 0 };
+}
+
+function initPhoneIsland() {
+  if (document.querySelector(".phone-music-island")) return;
+  const island = document.createElement("aside");
+  island.className = "phone-music-island";
+  island.innerHTML = `
+    <button type="button" id="islandPrev">‹</button>
+    <button type="button" id="islandToggle">播放</button>
+    <button type="button" id="islandNext">›</button>
+  `;
+  document.body.appendChild(island);
+  document.querySelector("#islandToggle").addEventListener("click", () => {
+    const music = getMusicState();
+    setMusicState({ playing: !music.playing });
+  });
+  document.querySelector("#islandPrev").addEventListener("click", () => {
+    const music = getMusicState();
+    setMusicState({ track: Math.max(0, Number(music.track || 0) - 1), playing: true });
+  });
+  document.querySelector("#islandNext").addEventListener("click", () => {
+    const music = getMusicState();
+    setMusicState({ track: Number(music.track || 0) + 1, playing: true });
+  });
+  updatePhoneIsland();
+}
+
+function updatePhoneIsland() {
+  const island = document.querySelector(".phone-music-island");
+  if (!island) return;
+  const music = getMusicState();
+  island.classList.toggle("playing", Boolean(music.playing));
+  const toggle = document.querySelector("#islandToggle");
+  if (toggle) toggle.textContent = music.playing ? "暂停" : "播放";
 }
 
 function updateWidget() {

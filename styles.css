@@ -1095,6 +1095,39 @@ th {
   margin: 14px 0 8px;
 }
 
+.music-controls {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.track-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.track-list button {
+  display: grid;
+  gap: 3px;
+  border: 0;
+  border-radius: 12px;
+  padding: 10px;
+  background: #f2f2f2;
+  text-align: left;
+}
+
+.track-list button.active {
+  background: #e4f1e9;
+  outline: 2px solid #65b883;
+}
+
+.track-list span {
+  color: #777;
+  font-size: 11px;
+}
+
 .sudoku-app {
   display: grid;
   gap: 12px;
@@ -1434,9 +1467,7 @@ th {
 }
 
 .phone-note {
-  width: min(380px, 100%);
-  text-align: center;
-  color: #f5ead7;
+  display: none;
 }
 
 .phone-note h1 {
@@ -1448,6 +1479,55 @@ th {
 .phone-note p {
   color: #d6c7ad;
   line-height: 1.8;
+}
+
+body[data-page^="phone"] .game-widget {
+  top: 18px;
+  right: 18px;
+  width: auto;
+}
+
+body[data-page^="phone"] .game-widget .widget-card:first-child,
+body[data-page^="phone"] #resetGame,
+body[data-page^="phone"] .evidence-list {
+  display: none;
+}
+
+body[data-page^="phone"] .game-widget .widget-card {
+  padding: 8px;
+  background: rgba(251, 248, 241, 0.78);
+  backdrop-filter: blur(12px);
+}
+
+.phone-music-island {
+  position: fixed;
+  left: 50%;
+  top: 18px;
+  z-index: 95;
+  display: grid;
+  grid-template-columns: 30px 64px 30px;
+  gap: 6px;
+  align-items: center;
+  padding: 6px;
+  border-radius: 999px;
+  background: rgba(20, 21, 24, 0.72);
+  color: white;
+  transform: translateX(-50%);
+  box-shadow: 0 12px 36px rgba(0,0,0,0.25);
+  backdrop-filter: blur(14px);
+}
+
+.phone-music-island.playing {
+  background: rgba(46, 77, 66, 0.84);
+}
+
+.phone-music-island button {
+  min-height: 28px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.12);
+  color: white;
+  font-size: 12px;
 }
 
 .oldsite {
