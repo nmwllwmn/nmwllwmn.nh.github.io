@@ -32,23 +32,27 @@
       const chats = {
         mom: {
           title: "妈妈",
+          avatar: "妈",
           messages: [
             ["time", "6 月 6 日 17:42"],
             ["other", "最近降温，外套带了没有？"],
             ["me", "带了，我晚上回来。"],
             ["other", "明天中午回个电话，好吗？"],
             ["time", "6 月 7 日 12:06"],
+            ["call-missed", "未接微信语音通话"],
             ["other", "电话怎么一直打不通？"]
           ]
         },
         dad: {
           title: "爸爸",
+          avatar: "爸",
           messages: [
             ["time", "6 月 6 日 17:46"],
             ["other", "你妈说你晚上还要出去？"],
             ["me", "定向赛，走完就回。"],
             ["other", "别老拍那些没人的地方，注意安全。"],
             ["time", "6 月 7 日 11:49"],
+            ["call-missed", "未接微信语音通话"],
             ["other", "你手机怎么不接？"]
           ]
         },
@@ -79,8 +83,9 @@
             ["other", "什么改过？"],
             ["me", "路线。\n如果官网说我完赛了，别信。"],
             ["me", "北桥不是终点。"],
+            ["time", "6 月 6 日 22:17"],
             ["call-out", "微信语音通话 · 未接通"],
-            ["system", "消息发送失败。对方可能不在服务区。"]
+            ["other", "我刚才没接到。你现在在哪？"]
           ],
           flag: "readLinzhouWechat",
           readFlag: "readChatPlayer"
@@ -101,16 +106,17 @@
           avatar: "队",
           messages: [
             ["time", "6 月 6 日 20:55"],
-            ["other", "陈檐：我退赛了。西桥那边太暗。"],
-            ["other", "江予白：林舟呢？他刚刚说还要去拍一张照片。"],
+            ["chen", "我退赛了。西桥那边太暗。"],
+            ["jiang", "林舟呢？他刚刚说还要去拍一张照片。"],
             ["me", "我去确认最后一个点。你们先回。"],
             ["time", "6 月 7 日 00:12"],
-            ["other", "陈檐：有人联系上林舟吗？"],
-            ["other", "沈眠：他电话打不通。"],
-            ["other", "陈檐：后面的照片不像他拍的。"]
+            ["chen", "有人联系上林舟吗？"],
+            ["yuan", "我打了微信语音，没接。"],
+            ["chen", "后面的照片不像他拍的。"]
           ]
         }
       };
+      const avatarMap = { chen: "陈", jiang: "江", yuan: "远" };
 
       const key = new URLSearchParams(location.search).get("chat") || "player";
       const chat = chats[key] || chats.player;
@@ -122,7 +128,7 @@
             if (type === "time") return `<div class="chat-time">${text}</div>`;
             if (type === "system") return `<div class="system-msg">${text}</div>`;
             if (type.startsWith("call")) return `<div class="wechat-call ${type}">${text}</div>`;
-            const avatar = type === "me" ? "舟" : (chat.avatar || chat.title.slice(0, 1));
+            const avatar = type === "me" ? "舟" : (avatarMap[type] || chat.avatar || chat.title.slice(0, 1));
             return `<div class="message-line ${type === "me" ? "me" : ""}"><span class="msg-avatar">${avatar}</span><div class="bubble ${type === "me" ? "me" : ""}">${text.replace(/\n/g, "<br>")}</div></div>`;
           }).join("")}
         </div>

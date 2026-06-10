@@ -1,2 +1,55 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>浏览器 - 林舟的手机</title><link rel="stylesheet" href="styles.css"></head><body class="chat-shell"><main class="phone-stage"><section class="mi-phone"><div class="phone-island"><span></span><span></span><span></span></div><section class="mi-screen browser-screen screen-enter"><div class="wechat-head"><a class="mini-back" href="chat.html">‹</a><strong>小米浏览器</strong></div><div class="browser-card"><div class="browser-bar">https://night.nhu.edu.cn</div><h2>南洄城市夜行定向赛</h2><p>第七届夜行定向赛成绩归档已开放。林舟最后发来的链接就停在这里。</p><a class="btn primary" href="event.html" target="_blank" rel="noopener">打开活动官网</a></div></section></section><aside class="phone-note"><h1>浏览器</h1><p>浏览器会跳到真正的活动官网页面。</p></aside></main><script src="common.js"></script><script>initGameShell({stage:6,page:"phone-browser"});</script></body></html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>浏览器 - 林舟的手机</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body class="chat-shell">
+    <main class="phone-stage">
+      <section class="mi-phone">
+        <section class="mi-screen browser-screen screen-enter">
+          <div class="wechat-head"><a class="mini-back" href="chat.html">‹</a><strong>浏览器</strong><span></span></div>
+          <div class="browser-bar">搜索或输入网址</div>
+          <section class="browser-history" id="browserHistory">
+            <h2>历史记录</h2>
+            <button data-page="event" type="button"><strong>南洄城市夜行定向赛</strong><span>night.nhu.edu.cn/result</span></button>
+            <button data-page="university" type="button"><strong>南洄大学官网</strong><span>www.nhu.edu.cn</span></button>
+            <button data-page="club" type="button"><strong>城迹社旧站缓存</strong><span>www.nhu.edu.cn/club/citytrace/2023/cache</span></button>
+            <button data-page="map" type="button"><strong>北桥体育馆 搜索结果</strong><span>map.nanhui.local/search?q=北桥体育馆</span></button>
+          </section>
+          <section class="browser-page" id="browserPage" hidden>
+            <div class="browser-page-head"><button class="mini-back" id="browserBack" type="button">‹</button><strong id="browserTitle">网页</strong></div>
+            <article id="browserContent"></article>
+          </section>
+        </section>
+      </section>
+    </main>
+    <script src="common.js"></script>
+    <script>
+      initGameShell({ stage: 6, page: "phone-browser" });
+      const pages = {
+        event: ["南洄城市夜行定向赛", "<h2>第七届夜行定向赛</h2><p>林舟的成绩显示已完赛，但 S05-S07 的上传方式为 Web Import。</p><p class='mono'>账号 linzhou / 初始口令 0606</p>"],
+        university: ["南洄大学官网", "<h2>站内搜索记录</h2><p>城迹社、北桥体育馆、许听雨。</p><p>北桥体育馆自 2023 年 6 月 8 日起停止对外开放。</p>"],
+        club: ["城迹社旧站缓存", "<h2>2023 路线资料</h2><p>旧路径仍能看到 route_20230606_old.pdf 的索引。</p><p>公开页面已迁移。</p>"],
+        map: ["北桥体育馆", "<h2>地图搜索</h2><p>状态：封闭。旧入口：北桥地下通道 B 口。</p><p class='mono'>S08 / 北桥体育馆</p>"]
+      };
+      const history = document.querySelector("#browserHistory");
+      const page = document.querySelector("#browserPage");
+      document.querySelectorAll("[data-page]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const data = pages[button.dataset.page];
+          document.querySelector("#browserTitle").textContent = data[0];
+          document.querySelector("#browserContent").innerHTML = data[1];
+          history.hidden = true;
+          page.hidden = false;
+        });
+      });
+      document.querySelector("#browserBack").addEventListener("click", () => {
+        page.hidden = true;
+        history.hidden = false;
+      });
+    </script>
+  </body>
+</html>

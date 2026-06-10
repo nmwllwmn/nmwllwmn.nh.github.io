@@ -930,6 +930,10 @@ th {
   background: linear-gradient(145deg, #38c46a, #159543);
 }
 
+.notes-icon span {
+  background: #f0c748;
+}
+
 .settings-icon span {
   background: linear-gradient(145deg, #a9a9a9, #5b5b5b);
 }
@@ -1572,6 +1576,53 @@ th {
   background: white;
 }
 
+.browser-history,
+.browser-page {
+  display: grid;
+  gap: 10px;
+  overflow-y: auto;
+  padding: 14px;
+}
+
+.browser-history[hidden],
+.browser-page[hidden] {
+  display: none;
+}
+
+.browser-history h2 {
+  margin: 4px 0 8px;
+  font-size: 18px;
+}
+
+.browser-history button,
+.browser-page article {
+  display: grid;
+  gap: 4px;
+  border: 0;
+  border-radius: 14px;
+  padding: 13px;
+  background: white;
+  color: #111;
+  text-align: left;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.browser-history span {
+  overflow: hidden;
+  color: #777;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.browser-page-head,
+.sms-thread-head {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  align-items: center;
+  min-height: 42px;
+}
+
 .camera-app {
   display: flex;
   flex-direction: column;
@@ -1782,12 +1833,92 @@ th {
   font-weight: 700;
 }
 
+.sms-app {
+  display: flex;
+  flex-direction: column;
+  background: #eef1f4;
+  color: #111;
+}
+
+.sms-list {
+  display: grid;
+  align-content: start;
+  overflow-y: auto;
+  background: white;
+}
+
+.sms-list[hidden],
+.sms-thread[hidden] {
+  display: none;
+}
+
+.sms-row {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr) 44px;
+  gap: 10px;
+  align-items: center;
+  min-height: 74px;
+  border: 0;
+  border-bottom: 1px solid #e8e8e8;
+  padding: 10px 12px;
+  background: white;
+  color: #111;
+  text-align: left;
+}
+
+.sms-row.unread strong::after {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-left: 6px;
+  border-radius: 50%;
+  background: #f04444;
+}
+
+.sms-row em {
+  display: block;
+  margin-top: 4px;
+  overflow: hidden;
+  color: #777;
+  font-size: 12px;
+  font-style: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sms-row time {
+  color: #999;
+  font-size: 11px;
+}
+
+.sms-avatar {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #30343b;
+  color: white;
+  font-weight: 800;
+}
+
+.sms-avatar.school {
+  background: #1f4568;
+}
+
+.sms-avatar.carrier {
+  background: #1ec45a;
+}
+
 .sms-thread {
+  position: relative;
   display: grid;
   align-content: start;
   gap: 14px;
   flex: 1;
-  padding: 18px;
+  overflow-y: auto;
+  padding: 10px 18px 76px;
   background: #eef1f4;
 }
 
@@ -1812,6 +1943,67 @@ th {
   margin: 7px 0 0;
   font-size: 18px;
   line-height: 1.55;
+}
+
+.sms-composer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 58px;
+  gap: 8px;
+  padding: 9px 10px;
+  border-top: 1px solid #d4d4d4;
+  background: #f7f7f7;
+}
+
+.sms-composer input {
+  min-height: 38px;
+  border: 0;
+  border-radius: 999px;
+  background: white;
+}
+
+.sms-composer button {
+  border: 0;
+  border-radius: 999px;
+  background: #1ec45a;
+  color: white;
+}
+
+.notes-list {
+  display: grid;
+  gap: 12px;
+  overflow-y: auto;
+  padding: 14px;
+  background: #f3f1eb;
+}
+
+.note-item {
+  border-radius: 16px;
+  padding: 14px;
+  background: #fffdf6;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.note-item.important {
+  background: #fff5ba;
+}
+
+.note-item time {
+  color: #888;
+  font-size: 11px;
+}
+
+.note-item h2 {
+  margin: 6px 0 8px;
+  font-size: 18px;
+}
+
+.note-item p {
+  margin: 4px 0;
+  line-height: 1.65;
 }
 
 .phone-mail-login {
@@ -1910,21 +2102,7 @@ th {
 }
 
 body[data-page^="phone"] .game-widget {
-  top: 18px;
-  right: 18px;
-  width: auto;
-}
-
-body[data-page^="phone"] .game-widget .widget-card:first-child,
-body[data-page^="phone"] #resetGame,
-body[data-page^="phone"] .evidence-list {
   display: none;
-}
-
-body[data-page^="phone"] .game-widget .widget-card {
-  padding: 8px;
-  background: rgba(251, 248, 241, 0.78);
-  backdrop-filter: blur(12px);
 }
 
 .oldsite {

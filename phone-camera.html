@@ -12,9 +12,9 @@
         <section class="mi-screen camera-app screen-enter">
           <div class="camera-topbar">
             <a class="mini-back" href="chat.html">‹</a>
-            <button type="button">⚡</button>
-            <button type="button">HDR</button>
-            <button type="button">⚙</button>
+            <button class="camera-broken-control" type="button">⚡</button>
+            <button class="camera-broken-control" type="button">HDR</button>
+            <button class="camera-broken-control" type="button">⚙</button>
           </div>
 
           <div class="camera-viewfinder">
@@ -28,8 +28,8 @@
           </div>
 
           <div class="camera-controls">
-            <button class="camera-switch" type="button">↻</button>
-            <button class="camera-shutter" type="button" aria-label="拍照"></button>
+            <button class="camera-switch camera-broken-control" type="button">↻</button>
+            <button class="camera-shutter camera-broken-control" type="button" aria-label="拍照"></button>
             <button class="camera-album" id="openAlbumLock" type="button" aria-label="打开相册">
               <span></span>
             </button>
@@ -49,6 +49,7 @@
               <em id="lockError"></em>
             </div>
           </section>
+          <div class="phone-app-toast" id="cameraToast" hidden></div>
         </section>
       </section>
     </main>
@@ -74,6 +75,18 @@
       document.querySelector("#openAlbumLock").addEventListener("click", () => {
         lock.hidden = false;
         resetPin("");
+      });
+      document.querySelectorAll(".camera-broken-control").forEach((button) => {
+        button.addEventListener("click", () => {
+          const box = document.querySelector("#cameraToast");
+          box.textContent = "相机已损坏";
+          box.hidden = false;
+          box.classList.remove("show");
+          void box.offsetWidth;
+          box.classList.add("show");
+          clearTimeout(window.cameraToastTimer);
+          window.cameraToastTimer = setTimeout(() => { box.hidden = true; }, 1800);
+        });
       });
 
       document.querySelectorAll(".lock-pad button").forEach((button) => {

@@ -19,8 +19,8 @@
             <span>5G 82%</span>
           </div>
           <div class="lock-time">
-            <div class="lock-clock">02:17</div>
-            <div class="lock-date">6 月 10 日 周三</div>
+            <div class="lock-clock" data-live-time>--:--</div>
+            <div class="lock-date" data-live-date>--</div>
           </div>
           <div class="lock-notifications">
             <article class="lock-card">
@@ -38,7 +38,7 @@
         <section class="mi-screen home-screen" id="homeScreen" hidden>
           <div class="shade-layer" id="shadeLayer" hidden>
             <section class="control-center" id="controlCenter">
-              <div class="cc-head"><strong>控制中心</strong><span>02:17</span></div>
+              <div class="cc-head"><strong>控制中心</strong><span data-live-time>--:--</span></div>
               <div class="cc-grid">
                 <button class="cc-tile on" type="button">Wi-Fi<br><span>NHU-Guest</span></button>
                 <button class="cc-tile on" type="button">移动数据<br><span>5G</span></button>
@@ -57,10 +57,10 @@
           </div>
 
           <div class="statusbar">
-            <span>02:17</span>
+            <span data-live-time>--:--</span>
             <span>5G 82%</span>
           </div>
-          <div class="home-date">2026年6月10日 周三</div>
+          <div class="home-date" data-live-full-date>--</div>
           <div class="pull-zone left" data-panel="notifications"></div>
           <div class="pull-zone right" data-panel="controls"></div>
 
@@ -70,6 +70,7 @@
             <button class="app-icon browser-icon" data-url="phone-browser.html" type="button"><span><i>南</i></span><strong>浏览器</strong></button>
             <button class="app-icon mail-icon" data-url="phone-mail.html" type="button"><span><i>✉</i></span><strong>邮件</strong></button>
             <button class="app-icon sms-icon" data-url="phone-sms.html" type="button"><span><i>✦</i></span><strong>短信</strong></button>
+            <button class="app-icon notes-icon" data-url="phone-notes.html" type="button"><span><i>记</i></span><strong>备忘录</strong></button>
             <button class="app-icon gallery-icon" data-url="phone-gallery.html" type="button"><span><i>▧</i></span><strong>相册</strong></button>
             <button class="app-icon camera-icon" data-url="phone-camera.html" type="button"><span><i>◉</i></span><strong>相机</strong></button>
             <button class="app-icon map-icon" data-url="phone-map.html" type="button"><span><i>⌖</i></span><strong>地图</strong></button>
@@ -186,6 +187,19 @@
       shade.addEventListener("click", (event) => {
         if (event.target === shade) closeShade();
       });
+
+      function updateLiveClock() {
+        const now = new Date();
+        const time = now.toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit", hour12: false });
+        const date = now.toLocaleDateString("zh-CN", { month: "long", day: "numeric", weekday: "short" });
+        const fullDate = now.toLocaleDateString("zh-CN", { year: "numeric", month: "long", day: "numeric", weekday: "short" });
+        document.querySelectorAll("[data-live-time]").forEach((el) => { el.textContent = time; });
+        document.querySelectorAll("[data-live-date]").forEach((el) => { el.textContent = date; });
+        document.querySelectorAll("[data-live-full-date]").forEach((el) => { el.textContent = fullDate; });
+      }
+      updateLiveClock();
+      setInterval(updateLiveClock, 1000);
+      if (hasFlag("phoneUnlocked")) showScreen("homeScreen");
 
     </script>
   </body>
