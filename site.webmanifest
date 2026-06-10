@@ -1,0 +1,10 @@
+{
+  "name": "最后一次签到",
+  "short_name": "最后一次签到",
+  "description": "以林舟手机为入口的中文网页解谜游戏。",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#161819",
+  "theme_color": "#161819",
+  "lang": "zh-CN"
+}

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://nmwllwmn.github.io/nmwllwmn.nh.github.io/sitemap.xml

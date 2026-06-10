@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">最后一次签到</title>
+  <desc id="desc">南洄大学网页解谜游戏封面</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#17191b"/>
+      <stop offset="0.48" stop-color="#35302b"/>
+      <stop offset="1" stop-color="#07080a"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="42%" r="60%">
+      <stop offset="0" stop-color="#b99863" stop-opacity="0.38"/>
+      <stop offset="1" stop-color="#b99863" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <path d="M0 458 C160 420 270 500 420 462 C570 424 660 372 840 414 C990 449 1080 412 1200 382 L1200 630 L0 630 Z" fill="#0b0d10" opacity="0.78"/>
+  <rect x="782" y="98" width="210" height="410" rx="42" fill="#111318" stroke="#2b2f36" stroke-width="10"/>
+  <rect x="805" y="128" width="164" height="348" rx="28" fill="#edf0ec"/>
+  <rect x="842" y="162" width="90" height="18" rx="9" fill="#15171a" opacity="0.9"/>
+  <rect x="828" y="220" width="118" height="28" rx="14" fill="#dfe5e2"/>
+  <rect x="828" y="264" width="88" height="28" rx="14" fill="#9fe27e"/>
+  <rect x="828" y="326" width="118" height="28" rx="14" fill="#dfe5e2"/>
+  <text x="96" y="166" fill="#d9c49d" font-family="Consolas, monospace" font-size="24" letter-spacing="6">NANHUI NIGHT TRACE / 0606</text>
+  <text x="92" y="294" fill="#fff8ea" font-family="'Microsoft YaHei', 'Noto Serif SC', serif" font-size="86" font-weight="600">最后一次签到</text>
+  <text x="98" y="366" fill="#f2e3c4" font-family="'Microsoft YaHei', sans-serif" font-size="32">他们说他完成了比赛。</text>
+  <text x="98" y="416" fill="#f2e3c4" font-family="'Microsoft YaHei', sans-serif" font-size="32">可他最后发来的消息只有一句：</text>
+  <text x="98" y="474" fill="#ffffff" font-family="'Microsoft YaHei', sans-serif" font-size="38" font-weight="700">“北桥不是终点。”</text>
+  <text x="98" y="552" fill="#d9c49d" font-family="'Microsoft YaHei', sans-serif" font-size="22">中文网页解谜 · 手机调查 · 校园悬疑</text>
+</svg>
