@@ -16,6 +16,7 @@
             <h2 id="trackTitle">Gymnopédie No.1</h2>
             <p id="trackCredit">Erik Satie · CC0 / Wikimedia Commons</p>
             <audio id="musicAudio" controls loop></audio>
+            <p class="music-status" id="musicStatus">点击播放按钮后，音乐会通过当前浏览器/电脑音频输出。</p>
             <div class="music-controls">
               <button class="btn" id="prevTrack" type="button">上一首</button>
               <button class="btn primary" id="playTrack" type="button">播放/暂停</button>
@@ -54,6 +55,7 @@
 
       const audio = document.querySelector("#musicAudio");
       const list = document.querySelector("#trackList");
+      const status = document.querySelector("#musicStatus");
 
       function clampTrack(index) {
         return ((Number(index) || 0) % tracks.length + tracks.length) % tracks.length;
@@ -71,16 +73,32 @@
           renderTrack(Number(button.dataset.track), true);
         }));
         setMusicState({ track: safeIndex });
-        if (autoplay || getMusicState().playing) {
-          audio.play().then(() => setMusicState({ playing: true })).catch(() => setMusicState({ playing: false }));
+        if (autoplay) {
+          audio.play()
+            .then(() => {
+              status.textContent = "正在播放。声音来自浏览器使用的系统音频设备。";
+              setMusicState({ playing: true });
+            })
+            .catch(() => {
+              status.textContent = "浏览器阻止自动播放，请手动点击播放器的播放按钮。";
+              setMusicState({ playing: false });
+            });
         }
       }
 
       document.querySelector("#playTrack").addEventListener("click", () => {
         if (audio.paused) {
-          audio.play().then(() => setMusicState({ playing: true })).catch(() => {});
+          audio.play()
+            .then(() => {
+              status.textContent = "正在播放。声音来自浏览器使用的系统音频设备。";
+              setMusicState({ playing: true });
+            })
+            .catch(() => {
+              status.textContent = "浏览器阻止播放，请点播放器控件或检查浏览器音量权限。";
+            });
         } else {
           audio.pause();
+          status.textContent = "已暂停。";
           setMusicState({ playing: false });
         }
       });
@@ -97,8 +115,18 @@
         renderTrack(next, true);
       });
 
-      audio.addEventListener("play", () => setMusicState({ playing: true }));
-      audio.addEventListener("pause", () => setMusicState({ playing: false }));
+      audio.addEventListener("play", () => {
+        status.textContent = "正在播放。声音来自浏览器使用的系统音频设备。";
+        setMusicState({ playing: true });
+      });
+      audio.addEventListener("pause", () => {
+        status.textContent = "已暂停。";
+        setMusicState({ playing: false });
+      });
+      audio.addEventListener("error", () => {
+        status.textContent = "音频加载失败，可能是网络或来源站点限制。";
+        setMusicState({ playing: false });
+      });
       renderTrack();
     </script>
   </body>

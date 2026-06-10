@@ -162,22 +162,11 @@ function initPhoneIsland() {
   const island = document.createElement("aside");
   island.className = "phone-music-island";
   island.innerHTML = `
-    <button type="button" id="islandPrev">‹</button>
-    <button type="button" id="islandToggle">播放</button>
-    <button type="button" id="islandNext">›</button>
+    <button type="button" id="islandOpen">音乐</button>
   `;
   document.body.appendChild(island);
-  document.querySelector("#islandToggle").addEventListener("click", () => {
-    const music = getMusicState();
-    setMusicState({ playing: !music.playing });
-  });
-  document.querySelector("#islandPrev").addEventListener("click", () => {
-    const music = getMusicState();
-    setMusicState({ track: Math.max(0, Number(music.track || 0) - 1), playing: true });
-  });
-  document.querySelector("#islandNext").addEventListener("click", () => {
-    const music = getMusicState();
-    setMusicState({ track: Number(music.track || 0) + 1, playing: true });
+  document.querySelector("#islandOpen").addEventListener("click", () => {
+    window.open("phone-music.html", "_blank", "noopener");
   });
   updatePhoneIsland();
 }
@@ -187,8 +176,8 @@ function updatePhoneIsland() {
   if (!island) return;
   const music = getMusicState();
   island.classList.toggle("playing", Boolean(music.playing));
-  const toggle = document.querySelector("#islandToggle");
-  if (toggle) toggle.textContent = music.playing ? "暂停" : "播放";
+  const open = document.querySelector("#islandOpen");
+  if (open) open.textContent = music.playing ? "音乐播放中" : "音乐";
 }
 
 function updateWidget() {

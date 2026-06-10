@@ -1505,7 +1505,7 @@ body[data-page^="phone"] .game-widget .widget-card {
   top: 18px;
   z-index: 95;
   display: grid;
-  grid-template-columns: 30px 64px 30px;
+  grid-template-columns: 1fr;
   gap: 6px;
   align-items: center;
   padding: 6px;
@@ -1528,6 +1528,15 @@ body[data-page^="phone"] .game-widget .widget-card {
   background: rgba(255,255,255,0.12);
   color: white;
   font-size: 12px;
+  padding: 0 12px;
+  white-space: nowrap;
+}
+
+.music-status {
+  margin: 8px 0 0;
+  color: #777;
+  font-size: 12px;
+  line-height: 1.5;
 }
 
 .oldsite {
