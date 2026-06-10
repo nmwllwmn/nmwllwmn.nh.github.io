@@ -67,7 +67,7 @@
           <div class="home-apps">
             <button class="app-icon wechat-icon" data-url="phone-wechat.html" type="button"><span><i>☘</i></span><strong>微信</strong></button>
             <button class="app-icon contacts-icon" data-url="phone-wechat-contacts.html" type="button"><span><i>人</i></span><strong>通讯录</strong></button>
-            <button class="app-icon browser-icon" data-url="phone-browser.html" type="button"><span><i>↗</i></span><strong>浏览器</strong></button>
+            <button class="app-icon browser-icon" data-url="phone-browser.html" type="button"><span><i>南</i></span><strong>浏览器</strong></button>
             <button class="app-icon mail-icon" data-url="phone-mail.html" type="button"><span><i>✉</i></span><strong>邮件</strong></button>
             <button class="app-icon sms-icon" data-url="phone-sms.html" type="button"><span><i>✦</i></span><strong>短信</strong></button>
             <button class="app-icon gallery-icon" data-url="phone-gallery.html" type="button"><span><i>▧</i></span><strong>相册</strong></button>
@@ -111,20 +111,31 @@
       document.querySelector("#unlockBtn").addEventListener("click", unlockPhone);
 
       const unlockTrack = document.querySelector("#unlockTrack");
+      const unlockBtn = document.querySelector("#unlockBtn");
       let unlockStart = null;
+      let unlocked = false;
       unlockTrack.addEventListener("pointerdown", (event) => {
+        unlocked = false;
         unlockStart = event.clientY;
+        unlockBtn.style.transition = "none";
         unlockTrack.setPointerCapture(event.pointerId);
       });
       unlockTrack.addEventListener("pointermove", (event) => {
-        if (unlockStart === null) return;
+        if (unlockStart === null || unlocked) return;
         const dy = Math.min(0, event.clientY - unlockStart);
-        document.querySelector("#unlockBtn").style.transform = `translateY(${Math.max(dy, -86)}px)`;
-        if (dy < -74) unlockPhone();
+        const progress = Math.min(1, Math.abs(dy) / 92);
+        unlockBtn.style.transform = `translateY(${-92 * progress}px) scale(${1 - progress * 0.08})`;
+        unlockBtn.style.opacity = String(1 - progress * 0.55);
+        if (progress >= 1) {
+          unlocked = true;
+          unlockPhone();
+        }
       });
       unlockTrack.addEventListener("pointerup", () => {
         unlockStart = null;
-        document.querySelector("#unlockBtn").style.transform = "";
+        unlockBtn.style.transition = "transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.22s ease";
+        unlockBtn.style.transform = "";
+        unlockBtn.style.opacity = "";
       });
 
       function launchApp(button, callback) {

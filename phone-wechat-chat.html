@@ -54,19 +54,23 @@
         },
         girlfriend: {
           title: "沈眠",
+          avatar: "沈",
           messages: [
             ["time", "6 月 6 日 18:19"],
             ["other", "你别又一个人跑出去查。"],
             ["me", "我只是去确认路线。"],
             ["other", "你说的“北桥”到底是什么？"],
             ["me", "如果官网说我完赛了，别信。"],
+            ["call-in", "微信语音通话 · 已接通 01:42"],
             ["other", "林舟，回我。"],
             ["time", "6 月 6 日 23:58"],
+            ["call-missed", "未接微信语音通话"],
             ["other", "你是不是看见 B17 了？"]
           ]
         },
         player: {
           title: "阿远",
+          avatar: "远",
           messages: [
             ["time", "6 月 6 日 18:04"],
             ["me", "你明天中午之前如果联系不上我，别先发朋友圈。"],
@@ -75,6 +79,7 @@
             ["other", "什么改过？"],
             ["me", "路线。\n如果官网说我完赛了，别信。"],
             ["me", "北桥不是终点。"],
+            ["call-out", "微信语音通话 · 未接通"],
             ["system", "消息发送失败。对方可能不在服务区。"]
           ],
           flag: "readLinzhouWechat",
@@ -82,17 +87,18 @@
         },
         jiang: {
           title: "江予白",
+          avatar: "江",
           messages: [
             ["time", "6 月 5 日 23:12"],
-            ["other", "林舟让我别再碰那个缓存。"],
-            ["me", "哪个缓存？"],
-            ["other", "他说旧路线里少了一个点。"],
-            ["other", "我没登录过那个系统。"],
+            ["other", "你昨晚是不是还在看旧路线？"],
+            ["me", "嗯，少了一个点。"],
+            ["other", "我只拿到过导出的表，后台不是我进的。"],
             ["me", "那是谁导入的 S05-S07？"]
           ]
         },
         team: {
           title: "夜航03小队(4)",
+          avatar: "队",
           messages: [
             ["time", "6 月 6 日 20:55"],
             ["other", "陈檐：我退赛了。西桥那边太暗。"],
@@ -115,7 +121,9 @@
           ${chat.messages.map(([type, text]) => {
             if (type === "time") return `<div class="chat-time">${text}</div>`;
             if (type === "system") return `<div class="system-msg">${text}</div>`;
-            return `<div class="bubble ${type === "me" ? "me" : ""}">${text.replace(/\n/g, "<br>")}</div>`;
+            if (type.startsWith("call")) return `<div class="wechat-call ${type}">${text}</div>`;
+            const avatar = type === "me" ? "舟" : (chat.avatar || chat.title.slice(0, 1));
+            return `<div class="message-line ${type === "me" ? "me" : ""}"><span class="msg-avatar">${avatar}</span><div class="bubble ${type === "me" ? "me" : ""}">${text.replace(/\n/g, "<br>")}</div></div>`;
           }).join("")}
         </div>
       `;

@@ -1,2 +1,47 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>邮件 - 林舟的手机</title><link rel="stylesheet" href="styles.css"></head><body class="chat-shell"><main class="phone-stage"><section class="mi-phone"><div class="phone-island"><span></span><span></span><span></span></div><section class="mi-screen app-screen screen-enter"><div class="app-head"><a class="mini-back" href="chat.html">‹</a><strong>邮件</strong></div><div class="app-card"><h2>未登录</h2><p>林舟的学校邮箱没有保存在本机。最近浏览器停留在夜行赛官网。</p><a class="btn" href="mail.html" target="_blank" rel="noopener">打开学校邮箱系统</a></div></section></section><aside class="phone-note"><h1>邮件</h1><p>手机 App 没登录，但真正的学校邮箱站点仍可能有线索。</p></aside></main><script src="common.js"></script><script>initGameShell({stage:1,page:"phone-mail"});</script></body></html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>校园邮箱 - 林舟的手机</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body class="chat-shell">
+    <main class="phone-stage">
+      <section class="mi-phone">
+        <div class="phone-island"><span></span><span></span><span></span></div>
+        <section class="mi-screen app-screen screen-enter">
+          <div class="app-head"><a class="mini-back" href="chat.html">‹</a><strong>校园邮箱</strong></div>
+          <form class="phone-mail-login" id="mailLogin">
+            <div class="mail-logo">NHU</div>
+            <h2>南洄大学统一身份认证</h2>
+            <label>邮箱账号<input id="mailUser" autocomplete="username" placeholder="学号 / 邮箱"></label>
+            <label>密码<input id="mailPass" type="password" autocomplete="current-password" placeholder="请输入密码"></label>
+            <button class="btn primary" type="submit">登录校园邮箱</button>
+            <p id="mailError" class="mail-error"></p>
+          </form>
+        </section>
+      </section>
+    </main>
+    <script src="common.js"></script>
+    <script>
+      initGameShell({ stage: 4, page: "phone-mail" });
+      document.querySelector("#mailLogin").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const user = normalize(document.querySelector("#mailUser").value);
+        const pass = normalize(document.querySelector("#mailPass").value);
+        if ((user === "linzhou" || user === "20220606") && pass === "b17") {
+          setFlag("phoneMailLoggedIn");
+          document.querySelector("#mailLogin").innerHTML = `
+            <div class="mail-logo">NHU</div>
+            <h2>收件箱</h2>
+            <article class="mail-preview"><strong>夜行赛系统</strong><span>Web Import 完成：S05-S07</span><em>6 月 6 日 21:22</em></article>
+            <article class="mail-preview"><strong>校园安全中心</strong><span>北桥摄像头维护通知</span><em>6 月 6 日 21:38</em></article>
+          `;
+        } else {
+          document.querySelector("#mailError").textContent = "账号或密码错误。";
+        }
+      });
+    </script>
+  </body>
+</html>

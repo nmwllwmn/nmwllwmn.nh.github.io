@@ -19,10 +19,6 @@
 
           <div class="camera-viewfinder">
             <div class="focus-box"></div>
-            <div class="camera-warning">
-              <strong>REAR CAMERA DAMAGED</strong>
-              <span>画面信号异常 / 镜头玻璃破裂</span>
-            </div>
           </div>
 
           <div class="camera-modebar">
@@ -42,8 +38,8 @@
           <section class="app-lock" id="albumLock" hidden>
             <div class="app-lock-card">
               <strong>相册已锁定</strong>
-              <p>请输入 4 位应用锁密码</p>
-              <div class="lock-dots" id="lockDots"><span></span><span></span><span></span><span></span></div>
+              <p>请输入 6 位应用锁密码</p>
+              <div class="lock-dots" id="lockDots"><span></span><span></span><span></span><span></span><span></span><span></span></div>
               <div class="lock-pad">
                 <button type="button">1</button><button type="button">2</button><button type="button">3</button>
                 <button type="button">4</button><button type="button">5</button><button type="button">6</button>
@@ -94,8 +90,8 @@
           }
           pin += button.textContent.trim();
           renderPin();
-          if (pin.length === 4) {
-            if (pin === "0606") {
+          if (pin.length === 6) {
+            if (pin === "062139") {
               setFlag("albumLockOpened");
               location.href = "phone-gallery.html";
             } else {
