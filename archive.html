@@ -3,110 +3,76 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>归档终端</title>
+    <title>密页集 - 林舟的手机</title>
     <link rel="stylesheet" href="styles.css">
   </head>
-  <body class="archive-page">
-    <header class="site-top">
-      <div class="site-id"><span class="site-mark">MYJ</span><div><h1>密页集归档终端</h1><p>MYJ-0606-S08 / evidence submit</p></div></div>
-      <nav class="top-actions"><a class="plain-link" href="chat.html">林舟手机</a><a class="plain-link" href="nvr.html">NVR</a><a class="plain-link" href="map.html">城市地图</a></nav>
-    </header>
-    <main class="layout stack">
-      <section class="panel">
-        <h2>提交证据链</h2>
-        <p class="muted">基础四项能指认伪造完赛记录；救援四项决定你是否能找到林舟。</p>
-        <form id="archiveForm" class="answer-form archive-form">
-          <input name="place" placeholder="最后真实地点">
-          <input name="time" placeholder="关键监控时间">
-          <input name="person" placeholder="导入记录执行人">
-          <input name="imp" placeholder="证据编号">
-          <input name="door" placeholder="地下入口 / 门牌">
-          <input name="entry" placeholder="实际进入点">
-          <input name="window" placeholder="救援时间窗口">
-          <input name="proof" placeholder="隐藏证据来源">
-          <button class="btn primary" type="submit">归档</button>
-        </form>
+  <body class="chat-shell">
+    <main class="phone-stage">
+      <section class="mi-phone">
+        <section class="mi-screen app-screen archive-app screen-enter">
+          <div class="app-head"><a class="mini-back" href="phone-browser.html">‹</a><strong>密页集</strong></div>
+          <section class="archive-phone-feed" id="archiveFeed"></section>
+        </section>
       </section>
-      <section id="ending"></section>
     </main>
     <script src="common.js"></script>
     <script>
-      initGameShell({ stage: 40, page: "archive" });
-      document.querySelector("#archiveForm").addEventListener("submit", (e) => {
-        e.preventDefault();
-        const data = new FormData(e.target);
-        const place = normalize(data.get("place"));
-        const time = normalize(data.get("time"));
-        const person = normalize(data.get("person"));
-        const imp = normalize(data.get("imp"));
-        const door = normalize(data.get("door"));
-        const entry = normalize(data.get("entry"));
-        const windowTime = normalize(data.get("window"));
-        const proof = normalize(data.get("proof"));
+      initGameShell({ stage: 40, page: "phone-archive" });
 
-        const placeOk = ["s08", "北桥", "北桥体育馆"].includes(place);
-        const timeOk = time === "21:38" || time === "2138";
-        const personOk = person === "沈泊" || person === "shenbo_admin" || person === "shenboadmin";
-        const impOk = imp === "imp-2202";
-        const truthOk = placeOk && timeOk && personOk && impOk;
-        const rescueOk = ["b17", "17", "17号门", "地下通道17号门"].includes(door)
-          && (entry.includes("泵站") || entry.includes("雨水"))
-          && (windowTime === "00:17" || windowTime === "0017" || windowTime.includes("00:17"))
-          && (proof.includes("exif") || proof.includes("相册") || proof.includes("数独") || proof.includes("nvr"));
+      const feed = document.querySelector("#archiveFeed");
+      const state = loadGame();
+      const evidence = state.evidence || {};
+      const flags = state.flags || {};
+      const hasTruth = Boolean(evidence.A && evidence.B && evidence.C && evidence.D && evidence.E);
+      const hasRescueRoute = Boolean(flags.foundB17 && flags.foundPumpStation && flags.foundRescueWindow);
 
-        if (truthOk && rescueOk) {
-          setFlag("rescuedLinzhou");
-          document.querySelector("#ending").innerHTML = `<article class="doc ending"><h2>隐藏结局：未完成的签到</h2>你没有去北桥主馆。
+      function item(title, body, locked = false) {
+        return `<article class="archive-phone-card ${locked ? "locked" : ""}">
+          <span>${locked ? "未恢复" : "已恢复"}</span>
+          <h2>${title}</h2>
+          <p>${body}</p>
+        </article>`;
+      }
 
-你把旧站 S08、相册 EXIF、B17 门禁日志和 00:17 维护窗口一起提交。归档终端没有立刻报警，而是先用林舟邮箱发出一封延迟邮件。
+      const cards = [
+        item("0606 / 起点", "林舟把 0606 留在微信、备忘录和邮箱密码里。它不是答案，是进入旧路线的第一把钥匙。"),
+        item("S08 / 北桥体育馆", evidence.B ? "旧站缓存和相册照片都证明 2023 试跑存在 S08。新版官网删除了它。" : "需要在浏览器旧站缓存或相册中恢复 S08。", !evidence.B),
+        item("许听雨 / 2023", evidence.C ? "许听雨参加过 2023 年 6 月 6 日试跑，最后出现地点与 S08 重合。" : "还缺少许听雨与 S08 的关联。", !evidence.C),
+        item("IMP-2202", evidence.A && evidence.E ? "林舟 S05-S07 的完赛记录来自 Web Import，执行账号指向 shenbo_admin。" : "还没有把 Web Import 和执行账号连起来。", !(evidence.A && evidence.E)),
+        item("21:38 / NVR", evidence.D ? "北桥 CAM 04 在 21:38 后出现覆盖。画面角落残留 IMP-2202。" : "还没有查看关键时间的 NVR。", !evidence.D),
+        item("B17 / 救援路线", hasRescueRoute ? "B17 不是编号备注，是地下通道 17 号门。入口在北桥雨水泵站，维护窗口为 00:17-00:22。" : "还缺 B17、泵站入口或 00:17 维护窗口。", !hasRescueRoute)
+      ];
 
-00:17  B17 门禁进入维护窗口
-00:18  林舟手机短暂恢复信号
-00:19  录音和照片上传完成
-00:21  泵站检修门被打开
-00:24  校园安全中心接警记录被外部同步
+      let ending = "";
+      if (hasTruth && hasRescueRoute) {
+        setFlag("rescuedLinzhou");
+        ending = `<article class="archive-phone-ending rescue">
+          <h2>隐藏结局：未完成的签到</h2>
+          <p>你没有去主馆。你把林舟手机里的旧站、相册 EXIF、B17 门禁和 NVR 时间拼在一起，绕开了 21:38 的假画面。</p>
+          <p class="mono">00:17 B17 门禁进入维护窗口<br>00:19 录音和照片上传完成<br>00:24 校园安全中心接警记录被同步</p>
+          <p>林舟被找到时，手机还剩 2% 电量。S08 仍显示：未完成。</p>
+        </article>`;
+      } else if (hasTruth && flags.sudokuSecretSolved) {
+        setFlag("reportedMysteryMan");
+        ending = `<article class="archive-phone-ending truth">
+          <h2>真相结局：旧站未删除</h2>
+          <p>数独缓存恢复出匿名号码与 shenbo_admin 的绑定记录。你没有贸然去北桥，而是把证据备份到了密页集。</p>
+          <p class="mono">报警回执已生成。<br>林舟仍未归队。</p>
+        </article>`;
+      } else if (hasTruth) {
+        ending = `<article class="archive-phone-ending danger">
+          <h2>普通结局：最后一次签到</h2>
+          <p>你已经知道林舟没有完赛，也知道是谁补写了后半程。但你还不知道真正入口在哪里。</p>
+          <p>手机震动了一下。未知号码再次打来。</p>
+        </article>`;
+      } else {
+        ending = `<article class="archive-phone-ending pending">
+          <h2>密页集未完成</h2>
+          <p>这里不会判断对错。它只把你已经找到的碎片放在一起。继续回到手机里的浏览器、相册、邮箱、地图和 NVR。</p>
+        </article>`;
+      }
 
-林舟被找到时，手机还剩 2% 电量。最后一张照片没有对准黑手，只拍到墙上的旧签到牌：
-
-S08 北桥体育馆
-状态：未完成
-
-这一次，没有人能替他点完最后三个签到。</article>`;
-        } else if (truthOk && hasFlag("sudokuSecretSolved")) {
-          document.querySelector("#ending").innerHTML = `<article class="doc ending"><h2>真相结局：旧站未删除</h2>你提交了 S08、21:38、沈泊和 IMP-2202。
-
-数独第三关恢复的缓存证明，B17 不是普通备份编号，而是旧站把 S08 地下入口藏起来的索引。相册里的隐藏照片也证明，2023 年许听雨不是个人夜跑失联。
-
-你找到了旧站点的秘密，也找到了伪造记录的人。
-
-但你没有给出实际入口和救援窗口。
-
-归档终端停在一行字上：
-
-真相已归档。
-林舟仍未归队。</article>`;
-        } else if (truthOk) {
-          document.querySelector("#ending").innerHTML = `<article class="doc ending"><h2>普通结局：最后一次签到</h2>你证明了林舟没有完赛。
-
-S05-S07 是 Web Import，导入批次 IMP-2202 来自 shenbo_admin。NVR 在 21:38 覆盖了北桥画面。沈泊被锁定为伪造记录的人。
-
-你按证据去了北桥体育馆主馆。
-
-屏幕变黑前，手机震动了一下。活动官网刷新出一条新记录：
-
-阿远
-状态：已完赛
-最后一次签到：S08</article>`;
-        } else if (placeOk && timeOk) {
-          document.querySelector("#ending").innerHTML = `<article class="doc ending"><h2>坏结局：北桥不是终点</h2>你找到了 S08 和 21:38，但没有找出是谁补写记录，也没有找到 IMP-2202。
-
-北桥体育馆的门是锁着的。你听见地下有水声，却不知道入口在哪里。
-
-第二天，官网关闭了成绩查询。林舟的状态仍然是：已完赛。</article>`;
-        } else {
-          toast("归档失败。至少需要地点、时间、执行人、编号四项。");
-        }
-      });
+      feed.innerHTML = cards.join("") + ending;
     </script>
   </body>
 </html>

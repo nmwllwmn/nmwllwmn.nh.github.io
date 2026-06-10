@@ -35,6 +35,7 @@ function setStage(stage) {
     saveGame(state);
   }
   updateWidget();
+  scheduleThreatEvents();
 }
 
 function setFlag(key, value = true) {
@@ -42,6 +43,7 @@ function setFlag(key, value = true) {
   state.flags[key] = value;
   saveGame(state);
   updateWidget();
+  scheduleThreatEvents();
 }
 
 function hasFlag(key) {
@@ -75,8 +77,8 @@ function normalize(value) {
 
 function initGameShell(options = {}) {
   const { stage = 0, page = "" } = options;
-  setStage(stage);
   document.body.dataset.page = page;
+  setStage(stage);
   if (!document.querySelector(".game-widget")) {
     const widget = document.createElement("aside");
     widget.className = "game-widget";
@@ -142,6 +144,7 @@ function initGameShell(options = {}) {
     setTimeout(() => location.href = "index.html", 500);
   });
   updateWidget();
+  scheduleThreatEvents();
 }
 
 function updateWidget() {
@@ -154,4 +157,117 @@ function updateWidget() {
       .map(([key, label]) => `<li class="${state.evidence[key] ? "done" : ""}">${state.evidence[key] ? "已获得" : "未获得"} · ${key} ${label}</li>`)
       .join("");
   }
+}
+
+function isSafeFromThreats(state = loadGame()) {
+  return Boolean(state.flags.rescuedLinzhou || state.flags.sudokuSecretSolved || state.flags.reportedMysteryMan);
+}
+
+function scheduleThreatEvents() {
+  if (window.threatEventTimer) clearTimeout(window.threatEventTimer);
+  window.threatEventTimer = setTimeout(runThreatEvents, 240);
+}
+
+function runThreatEvents() {
+  const state = loadGame();
+  const page = document.body.dataset.page || "";
+  const safe = isSafeFromThreats(state);
+  const quietPage = page === "phone-archive";
+
+  if (quietPage) return;
+
+  if (state.stage >= 32 && !state.flags.threatSmsSeen && !safe) {
+    markThreatFlag("threatSmsSeen");
+    showThreatSmsBarrage();
+  }
+
+  if (state.stage >= 36 && !state.flags.threatCallSeen && !safe) {
+    markThreatFlag("threatCallSeen");
+    showThreatCall();
+  }
+
+  if (state.stage >= 40 && !state.flags.knockoutSeen && !safe && page !== "phone-archive") {
+    markThreatFlag("knockoutSeen");
+    showKnockout();
+  }
+}
+
+function markThreatFlag(key) {
+  const state = loadGame();
+  state.flags[key] = true;
+  saveGame(state);
+  updateWidget();
+}
+
+function showThreatSmsBarrage() {
+  const messages = [
+    "不要再查了。",
+    "林舟已经完赛。",
+    "删掉你看到的东西。",
+    "北桥没有第八个点。",
+    "最后警告。"
+  ];
+  const wrap = document.createElement("div");
+  wrap.className = "threat-barrage";
+  document.body.appendChild(wrap);
+  messages.forEach((message, index) => {
+    setTimeout(() => {
+      const item = document.createElement("article");
+      item.className = "threat-sms";
+      item.innerHTML = `<strong>未知号码</strong><p>${message}</p>`;
+      wrap.appendChild(item);
+      setTimeout(() => item.classList.add("show"), 20);
+      setTimeout(() => item.remove(), 6400);
+    }, index * 620);
+  });
+  setTimeout(() => wrap.remove(), 8600);
+}
+
+function showThreatCall() {
+  const old = document.querySelector(".threat-call");
+  if (old) old.remove();
+  const modal = document.createElement("section");
+  modal.className = "threat-call";
+  modal.innerHTML = `
+    <div class="threat-call-card">
+      <div class="threat-call-avatar">?</div>
+      <p>未知号码</p>
+      <strong>正在呼叫...</strong>
+      <span>139****7777</span>
+      <div class="threat-call-actions">
+        <button class="decline" type="button">挂断</button>
+        <button class="accept" type="button">接听</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  modal.querySelector(".decline").addEventListener("click", () => {
+    modal.querySelector("strong").textContent = "又打来了。";
+    modal.classList.remove("shake");
+    void modal.offsetWidth;
+    modal.classList.add("shake");
+  });
+  modal.querySelector(".accept").addEventListener("click", () => {
+    modal.querySelector("strong").textContent = "别来北桥。";
+    modal.querySelector("span").textContent = "通话已中断";
+    setTimeout(() => modal.remove(), 1800);
+  });
+  setTimeout(() => {
+    if (document.body.contains(modal)) modal.remove();
+  }, 12000);
+}
+
+function showKnockout() {
+  const old = document.querySelector(".knockout-screen");
+  if (old) old.remove();
+  const overlay = document.createElement("section");
+  overlay.className = "knockout-screen";
+  overlay.innerHTML = `
+    <div>
+      <p>身后有脚步声。</p>
+      <p>手机从手里滑了下去。</p>
+      <strong>最后一次签到：S08</strong>
+    </div>
+  `;
+  document.body.appendChild(overlay);
 }

@@ -21,7 +21,7 @@
             <button data-page="oldsite" type="button"><strong>城迹社旧站缓存</strong><span>www.nhu.edu.cn/club/citytrace/2023/cache</span></button>
             <button data-page="xutingyu" type="button"><strong>许听雨 北桥 2023</strong><span>search.local?q=许听雨+北桥</span></button>
             <button data-page="b17" type="button"><strong>B17 门禁掉线</strong><span>sec.nhu.local/logs/b17</span></button>
-            <button data-page="archive" type="button"><strong>密页集归档终端</strong><span>myj.local/archive/0606</span></button>
+            <button data-page="archive" type="button"><strong>密页集本机备份</strong><span>myj.local/cache/0606</span></button>
           </section>
           <section class="browser-page" id="browserPage" hidden>
             <div class="browser-page-head"><button class="mini-back" id="browserBack" type="button">‹</button><strong id="browserTitle">网页</strong></div>
@@ -55,8 +55,8 @@
           action: () => setFlag("foundRescueWindow")
         },
         archive: {
-          title: "密页集归档终端",
-          html: "<h2>MYJ-0606-S08</h2><p>林舟把归档入口留在浏览器历史里。只有证据链完整时，提交才有意义。</p><p><a class='btn primary' href='archive.html'>打开归档终端</a></p>",
+          title: "密页集本机备份",
+          html: "<h2>MYJ-0606-S08</h2><p>林舟把密页集入口留在浏览器历史里。它不会替你判断答案，只会把已经找到的碎片恢复出来。</p><p><a class='btn primary' href='archive.html'>打开密页集</a></p>",
           action: () => setStage(40)
         }
       };

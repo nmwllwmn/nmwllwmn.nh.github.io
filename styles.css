@@ -510,6 +510,197 @@ th {
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
 }
 
+.threat-barrage {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 120;
+  display: grid;
+  gap: 10px;
+  width: min(330px, calc(100% - 36px));
+  pointer-events: none;
+}
+
+.threat-sms {
+  border: 1px solid rgba(255,255,255,0.16);
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: rgba(15, 18, 22, 0.9);
+  color: white;
+  box-shadow: 0 16px 42px rgba(0,0,0,0.28);
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  backdrop-filter: blur(14px);
+}
+
+.threat-sms.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.threat-sms strong {
+  color: #ff5967;
+  font-size: 12px;
+}
+
+.threat-sms p {
+  margin: 4px 0 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.threat-call {
+  position: fixed;
+  inset: 0;
+  z-index: 130;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(0,0,0,0.44);
+  backdrop-filter: blur(10px);
+}
+
+.threat-call.shake .threat-call-card {
+  animation: callShake 0.24s linear 3;
+}
+
+.threat-call-card {
+  width: min(330px, 100%);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 28px;
+  padding: 28px 22px;
+  background: linear-gradient(180deg, rgba(24,28,34,0.96), rgba(5,7,10,0.96));
+  color: white;
+  text-align: center;
+  box-shadow: 0 28px 80px rgba(0,0,0,0.42);
+}
+
+.threat-call-avatar {
+  display: grid;
+  place-items: center;
+  width: 82px;
+  height: 82px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  background: #1d232c;
+  color: #ff5967;
+  font-size: 42px;
+  font-weight: 800;
+}
+
+.threat-call-card p {
+  margin: 0;
+  color: #aeb7c3;
+}
+
+.threat-call-card strong {
+  display: block;
+  margin-top: 8px;
+  font-size: 24px;
+}
+
+.threat-call-card span {
+  display: block;
+  margin-top: 6px;
+  color: #d5d9df;
+  font-family: var(--mono);
+}
+
+.threat-call-actions {
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+  margin-top: 28px;
+}
+
+.threat-call-actions button {
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  border: 0;
+  border-radius: 50%;
+  color: white;
+  font-size: 0;
+}
+
+.threat-call-actions button::before {
+  font-size: 24px;
+}
+
+.threat-call-actions .decline {
+  background: #e33d4f;
+}
+
+.threat-call-actions .decline::before {
+  content: "×";
+}
+
+.threat-call-actions .accept {
+  background: #19b86b;
+}
+
+.threat-call-actions .accept::before {
+  content: "✓";
+}
+
+.knockout-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(95, 0, 0, 0.18), transparent 24%),
+    #000;
+  color: #e8e4d8;
+  animation: blackoutIn 1.4s ease both;
+}
+
+.knockout-screen div {
+  max-width: 520px;
+  text-align: center;
+  line-height: 1.9;
+}
+
+.knockout-screen p {
+  margin: 0 0 14px;
+  opacity: 0.82;
+}
+
+.knockout-screen strong {
+  display: block;
+  margin-top: 22px;
+  color: #ff5967;
+  font-family: var(--mono);
+  letter-spacing: 0;
+}
+
+@keyframes callShake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-8px);
+  }
+  75% {
+    transform: translateX(8px);
+  }
+}
+
+@keyframes blackoutIn {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
 .game-widget {
   position: fixed;
   right: 14px;
@@ -684,6 +875,14 @@ th {
   border-radius: 34px;
   background: #f4f5f4;
   touch-action: none;
+}
+
+.mi-screen * {
+  scrollbar-width: none;
+}
+
+.mi-screen *::-webkit-scrollbar {
+  display: none;
 }
 
 .mi-screen.screen-enter {
@@ -2475,6 +2674,17 @@ body[data-page^="phone"] .game-widget {
   display: none;
 }
 
+body[data-page="archive"] .game-widget {
+  display: none;
+}
+
+body[data-page^="phone"] .btn.primary,
+.chat-shell .btn.primary {
+  border-color: var(--phone-accent);
+  background: var(--phone-accent);
+  color: white;
+}
+
 .oldsite {
   background: #f3f3d9;
   font-family: "SimSun", serif;
@@ -2585,6 +2795,82 @@ body[data-page^="phone"] .game-widget {
   line-height: 1.85;
   font-family: var(--serif);
   font-size: 18px;
+}
+
+.archive-app {
+  background: #10151c;
+  color: #e9edf4;
+}
+
+.archive-app .app-head {
+  border-color: rgba(255,255,255,0.08);
+  background: rgba(18, 23, 31, 0.92);
+}
+
+.archive-app .app-head strong,
+.archive-app .mini-back {
+  color: #edf2f7;
+}
+
+.archive-phone-feed {
+  display: grid;
+  gap: 12px;
+  overflow-y: auto;
+  padding: 14px 14px 24px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.archive-phone-card,
+.archive-phone-ending {
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 14px;
+  background: rgba(255,255,255,0.06);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.16);
+}
+
+.archive-phone-card.locked {
+  opacity: 0.52;
+}
+
+.archive-phone-card span {
+  color: #7dd3fc;
+  font-family: var(--mono);
+  font-size: 11px;
+}
+
+.archive-phone-card.locked span {
+  color: #9aa4b2;
+}
+
+.archive-phone-card h2,
+.archive-phone-ending h2 {
+  margin: 6px 0 8px;
+  font-size: 17px;
+}
+
+.archive-phone-card p,
+.archive-phone-ending p {
+  margin: 0;
+  color: #cbd5e1;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.archive-phone-ending {
+  border-color: rgba(255,255,255,0.14);
+}
+
+.archive-phone-ending.rescue {
+  background: linear-gradient(145deg, rgba(22,101,52,0.38), rgba(255,255,255,0.06));
+}
+
+.archive-phone-ending.truth {
+  background: linear-gradient(145deg, rgba(30,64,175,0.34), rgba(255,255,255,0.06));
+}
+
+.archive-phone-ending.danger {
+  background: linear-gradient(145deg, rgba(127,29,29,0.36), rgba(255,255,255,0.06));
 }
 
 @media (max-width: 900px) {
