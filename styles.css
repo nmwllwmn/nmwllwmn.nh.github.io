@@ -573,6 +573,7 @@ th {
 }
 
 .phone-island {
+  display: none;
   position: absolute;
   top: 8px;
   left: 50%;
@@ -967,7 +968,7 @@ th {
   right: 18px;
   bottom: 20px;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 12px;
   padding: 12px;
   border-radius: 22px;
@@ -1385,7 +1386,8 @@ th {
 }
 
 .chat-page .wechat-detail {
-  padding: 16px 12px 24px;
+  height: calc(100% - 112px);
+  padding: 16px 12px 20px;
 }
 
 .wechat-tabs {
@@ -1394,7 +1396,7 @@ th {
   right: 0;
   bottom: 0;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   min-height: 58px;
   border-top: 1px solid #d8d8d8;
   background: #f8f8f8;
@@ -1501,6 +1503,95 @@ th {
   opacity: 0.82;
 }
 
+.wechat-composer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) 38px;
+  gap: 8px;
+  align-items: center;
+  min-height: 58px;
+  padding: 8px 10px;
+  border-top: 1px solid #d4d4d4;
+  background: #f7f7f7;
+}
+
+.wechat-composer button {
+  display: grid;
+  place-items: center;
+  min-height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: #ececec;
+  color: #333;
+  font-size: 20px;
+}
+
+.wechat-composer input {
+  min-height: 38px;
+  border: 0;
+  border-radius: 8px;
+  background: white;
+}
+
+.wechat-contact-list,
+.call-list {
+  display: grid;
+  overflow-y: auto;
+  padding-bottom: 68px;
+  background: #fff;
+}
+
+.contact-row,
+.call-row {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  min-height: 70px;
+  border-bottom: 1px solid #e6e6e6;
+  padding: 11px 14px;
+  color: #111;
+  text-decoration: none;
+}
+
+.contact-row em,
+.call-row em {
+  display: block;
+  margin-top: 4px;
+  color: #777;
+  font-size: 12px;
+  font-style: normal;
+}
+
+.call-row time {
+  color: #999;
+  font-size: 11px;
+}
+
+.call-avatar {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #e9edf1;
+  color: #333;
+  font-weight: 800;
+}
+
+.call-row.missed strong,
+.call-row.missed em {
+  color: #d64040;
+}
+
+.call-avatar.unknown {
+  background: #30343b;
+  color: white;
+}
+
 .browser-card {
   margin: 18px;
   border-radius: 12px;
@@ -1550,39 +1641,6 @@ body[data-page^="phone"] .game-widget .widget-card {
   padding: 8px;
   background: rgba(251, 248, 241, 0.78);
   backdrop-filter: blur(12px);
-}
-
-.phone-music-island {
-  position: fixed;
-  left: 50%;
-  top: 18px;
-  z-index: 95;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 6px;
-  align-items: center;
-  padding: 6px;
-  border-radius: 999px;
-  background: rgba(20, 21, 24, 0.72);
-  color: white;
-  transform: translateX(-50%);
-  box-shadow: 0 12px 36px rgba(0,0,0,0.25);
-  backdrop-filter: blur(14px);
-}
-
-.phone-music-island.playing {
-  background: rgba(46, 77, 66, 0.84);
-}
-
-.phone-music-island button {
-  min-height: 28px;
-  border: 0;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.12);
-  color: white;
-  font-size: 12px;
-  padding: 0 12px;
-  white-space: nowrap;
 }
 
 .music-status {

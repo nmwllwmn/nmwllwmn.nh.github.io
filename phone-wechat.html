@@ -18,9 +18,14 @@
           </div>
           <div class="wechat-search">搜索</div>
           <div class="wechat-list">
-            <a class="chat-row pinned" href="phone-wechat-chat.html?chat=parents">
-              <span class="avatar family">家</span>
-              <span><strong>爸妈</strong><em>妈：明天中午回个电话，好吗？</em></span>
+            <a class="chat-row pinned" href="phone-wechat-chat.html?chat=mom">
+              <span class="avatar family">妈</span>
+              <span><strong>妈妈</strong><em>电话怎么一直打不通？</em></span>
+              <time>置顶</time>
+            </a>
+            <a class="chat-row pinned" href="phone-wechat-chat.html?chat=dad">
+              <span class="avatar family dad">爸</span>
+              <span><strong>爸爸</strong><em>别老拍那些没人的地方，注意安全。</em></span>
               <time>置顶</time>
             </a>
             <a class="chat-row pinned" href="phone-wechat-chat.html?chat=girlfriend">
@@ -28,7 +33,7 @@
               <span><strong>沈眠</strong><em>如果官网说我完赛了，别信。</em></span>
               <time>置顶</time>
             </a>
-            <a class="chat-row unread" href="phone-wechat-chat.html?chat=player">
+            <a class="chat-row" id="playerRow" href="phone-wechat-chat.html?chat=player">
               <span class="avatar dark">远</span>
               <span><strong>阿远</strong><em>林舟：北桥不是终点。</em></span>
               <time>昨天</time>
@@ -38,17 +43,16 @@
               <span><strong>江予白</strong><em>他说旧路线里少了一个点。</em></span>
               <time>周日</time>
             </a>
-            <a class="chat-row" href="phone-wechat-chat.html?chat=chen">
-              <span class="avatar orange">陈</span>
-              <span><strong>陈檐</strong><em>你们有人联系上林舟吗？</em></span>
+            <a class="chat-row" href="phone-wechat-chat.html?chat=team">
+              <span class="avatar orange">队</span>
+              <span><strong>夜航03小队</strong><em>陈檐：有人联系上林舟吗？</em></span>
               <time>周六</time>
             </a>
           </div>
           <nav class="wechat-tabs">
-            <a class="active" href="phone-wechat.html">微信</a>
-            <a href="phone-contacts.html">通讯录</a>
-            <a href="phone-moments.html">发现</a>
-            <a href="phone-settings.html">我</a>
+            <a class="active" href="phone-wechat.html">消息</a>
+            <a href="phone-wechat-contacts.html">通讯录</a>
+            <a href="phone-moments.html">朋友圈</a>
           </nav>
         </section>
       </section>
@@ -56,6 +60,9 @@
     <script src="common.js"></script>
     <script>
       initGameShell({ stage: 4, page: "phone-wechat" });
+      if (!hasFlag("readChatPlayer")) {
+        document.querySelector("#playerRow").classList.add("unread");
+      }
     </script>
   </body>
 </html>

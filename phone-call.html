@@ -1,2 +1,50 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>电话 - 林舟的手机</title><link rel="stylesheet" href="styles.css"></head><body class="chat-shell"><main class="phone-stage"><section class="mi-phone"><div class="phone-island"><span></span><span></span><span></span></div><section class="mi-screen app-screen screen-enter"><div class="app-head"><a class="mini-back" href="chat.html">‹</a><strong>电话</strong></div><div class="app-list"><article><strong>妈妈</strong><span>3 次未接 · 6 月 7 日 12:06</span></article><article><strong>沈眠</strong><span>已接通 · 6 月 6 日 18:22</span></article><article><strong>未知号码</strong><span>未接 · 6 月 6 日 21:39</span></article></div></section></section><aside class="phone-note"><h1>电话</h1><p>21:39 的未知来电发生在林舟失联之后。</p></aside></main><script src="common.js"></script><script>initGameShell({stage:1,page:"phone-call"});</script></body></html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>电话 - 林舟的手机</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body class="chat-shell">
+    <main class="phone-stage">
+      <section class="mi-phone">
+        <div class="phone-island"><span></span><span></span><span></span></div>
+        <section class="mi-screen app-screen screen-enter">
+          <div class="app-head"><a class="mini-back" href="chat.html">‹</a><strong>最近通话</strong></div>
+          <div class="call-list">
+            <article class="call-row missed">
+              <span class="call-avatar">妈</span>
+              <div><strong>妈妈</strong><em>未接来电 3 次</em></div>
+              <time>6 月 7 日 12:06</time>
+            </article>
+            <article class="call-row missed">
+              <span class="call-avatar">沈</span>
+              <div><strong>沈眠</strong><em>未接微信语音通话</em></div>
+              <time>6 月 7 日 00:04</time>
+            </article>
+            <article class="call-row outgoing">
+              <span class="call-avatar">远</span>
+              <div><strong>阿远</strong><em>微信语音通话 · 未接通</em></div>
+              <time>6 月 6 日 22:17</time>
+            </article>
+            <article class="call-row incoming">
+              <span class="call-avatar">沈</span>
+              <div><strong>沈眠</strong><em>微信语音通话 · 已接通 01:42</em></div>
+              <time>6 月 6 日 18:22</time>
+            </article>
+            <article class="call-row missed">
+              <span class="call-avatar unknown">?</span>
+              <div><strong>未知号码</strong><em>未接来电</em></div>
+              <time>6 月 6 日 21:39</time>
+            </article>
+          </div>
+        </section>
+      </section>
+    </main>
+    <script src="common.js"></script>
+    <script>
+      initGameShell({ stage: 2, page: "phone-call" });
+    </script>
+  </body>
+</html>

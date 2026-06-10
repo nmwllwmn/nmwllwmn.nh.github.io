@@ -142,43 +142,7 @@ function initGameShell(options = {}) {
     toast("进度已重置。");
     setTimeout(() => location.href = "index.html", 500);
   });
-  if (isPhonePage) initPhoneIsland();
   updateWidget();
-}
-
-function setMusicState(next) {
-  const state = loadGame();
-  state.flags.music = { ...(state.flags.music || {}), ...next };
-  saveGame(state);
-  updatePhoneIsland();
-}
-
-function getMusicState() {
-  return loadGame().flags.music || { playing: false, track: 0 };
-}
-
-function initPhoneIsland() {
-  if (document.querySelector(".phone-music-island")) return;
-  const island = document.createElement("aside");
-  island.className = "phone-music-island";
-  island.innerHTML = `
-    <button type="button" id="islandOpen">音乐</button>
-  `;
-  document.body.appendChild(island);
-  document.querySelector("#islandOpen").addEventListener("click", () => {
-    window.open("phone-music.html", "_blank", "noopener");
-  });
-  updatePhoneIsland();
-}
-
-function updatePhoneIsland() {
-  const island = document.querySelector(".phone-music-island");
-  if (!island) return;
-  const music = getMusicState();
-  island.hidden = !music.playing;
-  island.classList.toggle("playing", Boolean(music.playing));
-  const open = document.querySelector("#islandOpen");
-  if (open) open.textContent = music.playing ? "音乐播放中" : "音乐";
 }
 
 function updateWidget() {
