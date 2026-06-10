@@ -9,21 +9,101 @@
   <body class="chat-shell">
     <main class="phone-stage">
       <section class="mi-phone">
-        <section class="mi-screen app-screen screen-enter">
-          <div class="app-head"><a class="mini-back" href="chat.html">‹</a><strong>相机</strong></div>
-          <div class="broken-camera">
-            <div class="camera-fault">
-              <strong>CAMERA MODULE ERROR</strong>
-              <span>rear_01 / signal lost</span>
-              <span>镜头玻璃破裂，画面不可恢复。</span>
+        <section class="mi-screen camera-app screen-enter">
+          <div class="camera-topbar">
+            <a class="mini-back" href="chat.html">‹</a>
+            <button type="button">⚡</button>
+            <button type="button">HDR</button>
+            <button type="button">⚙</button>
+          </div>
+
+          <div class="camera-viewfinder">
+            <div class="focus-box"></div>
+            <div class="camera-warning">
+              <strong>REAR CAMERA DAMAGED</strong>
+              <span>画面信号异常 / 镜头玻璃破裂</span>
             </div>
           </div>
+
+          <div class="camera-modebar">
+            <span>夜景</span>
+            <strong>拍照</strong>
+            <span>录像</span>
+          </div>
+
+          <div class="camera-controls">
+            <button class="camera-switch" type="button">↻</button>
+            <button class="camera-shutter" type="button" aria-label="拍照"></button>
+            <button class="camera-album" id="openAlbumLock" type="button" aria-label="打开相册">
+              <span></span>
+            </button>
+          </div>
+
+          <section class="app-lock" id="albumLock" hidden>
+            <div class="app-lock-card">
+              <strong>相册已锁定</strong>
+              <p>请输入 4 位应用锁密码</p>
+              <div class="lock-dots" id="lockDots"><span></span><span></span><span></span><span></span></div>
+              <div class="lock-pad">
+                <button type="button">1</button><button type="button">2</button><button type="button">3</button>
+                <button type="button">4</button><button type="button">5</button><button type="button">6</button>
+                <button type="button">7</button><button type="button">8</button><button type="button">9</button>
+                <button type="button" data-action="clear">清除</button><button type="button">0</button><button type="button" data-action="close">取消</button>
+              </div>
+              <em id="lockError"></em>
+            </div>
+          </section>
         </section>
       </section>
     </main>
     <script src="common.js"></script>
     <script>
       initGameShell({ stage: 3, page: "phone-camera" });
+
+      const lock = document.querySelector("#albumLock");
+      const error = document.querySelector("#lockError");
+      const dots = Array.from(document.querySelectorAll("#lockDots span"));
+      let pin = "";
+
+      function renderPin() {
+        dots.forEach((dot, index) => dot.classList.toggle("filled", index < pin.length));
+      }
+
+      function resetPin(message = "") {
+        pin = "";
+        error.textContent = message;
+        renderPin();
+      }
+
+      document.querySelector("#openAlbumLock").addEventListener("click", () => {
+        lock.hidden = false;
+        resetPin("");
+      });
+
+      document.querySelectorAll(".lock-pad button").forEach((button) => {
+        button.addEventListener("click", () => {
+          const action = button.dataset.action;
+          if (action === "close") {
+            lock.hidden = true;
+            resetPin("");
+            return;
+          }
+          if (action === "clear") {
+            resetPin("");
+            return;
+          }
+          pin += button.textContent.trim();
+          renderPin();
+          if (pin.length === 4) {
+            if (pin === "0606") {
+              setFlag("albumLockOpened");
+              location.href = "phone-gallery.html";
+            } else {
+              resetPin("密码错误");
+            }
+          }
+        });
+      });
     </script>
   </body>
 </html>
