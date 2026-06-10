@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>朋友圈 - 林舟的手机</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body class="chat-shell">
+    <main class="phone-stage">
+      <section class="mi-phone">
+        <div class="phone-island"><span></span><span></span><span></span></div>
+        <section class="mi-screen wechat-screen moments-page screen-enter">
+          <div class="wechat-head">
+            <a class="mini-back" href="phone-wechat.html">‹</a>
+            <strong>朋友圈</strong>
+            <span></span>
+          </div>
+          <div class="moments-cover">
+            <div>
+              <strong>林舟</strong>
+              <span>LinZhou-Mi 14</span>
+            </div>
+          </div>
+          <div class="moments-feed">
+            <article>
+              <strong>林舟</strong>
+              <p>今晚去走一条“不存在”的路线。</p>
+              <em>6 月 6 日 18:04</em>
+            </article>
+            <article>
+              <strong>江予白</strong>
+              <p>有些备份删了也会留下索引。</p>
+              <em>6 月 5 日 23:17</em>
+            </article>
+            <article>
+              <strong>陈檐</strong>
+              <p>别问 B17 了。问了也没人会承认。</p>
+              <em>6 月 7 日 00:12</em>
+            </article>
+          </div>
+          <nav class="wechat-tabs">
+            <a href="phone-wechat.html">微信</a>
+            <a href="phone-contacts.html">通讯录</a>
+            <a class="active" href="phone-moments.html">发现</a>
+            <a href="phone-settings.html">我</a>
+          </nav>
+        </section>
+      </section>
+    </main>
+    <script src="common.js"></script>
+    <script>
+      initGameShell({ stage: 5, page: "phone-moments" });
+    </script>
+  </body>
+</html>

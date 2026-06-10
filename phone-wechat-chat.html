@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>微信聊天 - 林舟的手机</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body class="chat-shell">
+    <main class="phone-stage">
+      <section class="mi-phone">
+        <div class="phone-island"><span></span><span></span><span></span></div>
+        <section class="mi-screen wechat-screen chat-page screen-enter">
+          <div class="wechat-head chat-head">
+            <a class="mini-back" href="phone-wechat.html">‹</a>
+            <strong id="chatTitle">微信</strong>
+            <span></span>
+          </div>
+          <div class="wechat-detail" id="chatDetail"></div>
+        </section>
+      </section>
+    </main>
+    <script src="common.js"></script>
+    <script>
+      initGameShell({ stage: 5, page: "phone-wechat-chat" });
+
+      const chats = {
+        parents: {
+          title: "爸妈",
+          messages: [
+            ["time", "6 月 6 日 17:42"],
+            ["other", "妈：最近降温，外套带了没有？"],
+            ["me", "带了，我晚上回来。"],
+            ["other", "爸：别老拍那些没人的地方，注意安全。"],
+            ["other", "妈：明天中午回个电话，好吗？"],
+            ["time", "6 月 7 日 12:06"],
+            ["other", "妈：电话怎么一直打不通？"]
+          ]
+        },
+        girlfriend: {
+          title: "沈眠",
+          messages: [
+            ["time", "6 月 6 日 18:19"],
+            ["other", "你别又一个人跑出去查。"],
+            ["me", "我只是去确认路线。"],
+            ["other", "你说的“北桥”到底是什么？"],
+            ["me", "如果官网说我完赛了，别信。"],
+            ["other", "林舟，回我。"],
+            ["time", "6 月 6 日 23:58"],
+            ["other", "你是不是看见 B17 了？"]
+          ]
+        },
+        player: {
+          title: "阿远",
+          messages: [
+            ["time", "6 月 6 日 18:04"],
+            ["me", "你明天中午之前如果联系不上我，别先发朋友圈。"],
+            ["other", "你又在查什么？"],
+            ["me", "0606。\n城迹社把它改过一次。"],
+            ["other", "什么改过？"],
+            ["me", "路线。\n如果官网说我完赛了，别信。"],
+            ["me", "北桥不是终点。"],
+            ["system", "消息发送失败。对方可能不在服务区。"]
+          ],
+          flag: "readLinzhouWechat"
+        },
+        jiang: {
+          title: "江予白",
+          messages: [
+            ["time", "6 月 5 日 23:12"],
+            ["other", "林舟让我别再碰那个缓存。"],
+            ["me", "哪个缓存？"],
+            ["other", "他说旧路线里少了一个点。"],
+            ["other", "我没登录过那个系统。"],
+            ["me", "那是谁导入的 S05-S07？"]
+          ]
+        },
+        chen: {
+          title: "陈檐",
+          messages: [
+            ["time", "6 月 6 日 20:55"],
+            ["other", "我退赛了。西桥那边太暗。"],
+            ["other", "林舟说还要去拍一张照片。"],
+            ["time", "6 月 7 日 00:12"],
+            ["other", "你们有人联系上林舟吗？"],
+            ["other", "后面的照片不像他拍的。"]
+          ]
+        }
+      };
+
+      const key = new URLSearchParams(location.search).get("chat") || "player";
+      const chat = chats[key] || chats.player;
+      document.querySelector("#chatTitle").textContent = chat.title;
+      document.title = `${chat.title} - 微信`;
+      document.querySelector("#chatDetail").innerHTML = `
+        <div class="wechat-messages">
+          ${chat.messages.map(([type, text]) => {
+            if (type === "time") return `<div class="chat-time">${text}</div>`;
+            if (type === "system") return `<div class="system-msg">${text}</div>`;
+            return `<div class="bubble ${type === "me" ? "me" : ""}">${text.replace(/\n/g, "<br>")}</div>`;
+          }).join("")}
+        </div>
+      `;
+      if (chat.flag) setFlag(chat.flag);
+    </script>
+  </body>
+</html>

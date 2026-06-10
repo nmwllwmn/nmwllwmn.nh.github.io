@@ -55,6 +55,7 @@
               <article class="notice-card"><strong>系统服务</strong><p>低电量模式已关闭。</p></article>
             </section>
           </div>
+
           <div class="statusbar">
             <span>02:17</span>
             <span>5G 82%</span>
@@ -62,6 +63,7 @@
           <div class="home-date">2026年6月10日 周三</div>
           <div class="pull-zone left" data-panel="notifications"></div>
           <div class="pull-zone right" data-panel="controls"></div>
+
           <div class="home-apps">
             <button class="app-icon wechat-icon" data-url="phone-wechat.html" type="button"><span><i>☘</i></span><strong>微信</strong></button>
             <button class="app-icon contacts-icon" data-url="phone-contacts.html" type="button"><span><i>人</i></span><strong>通讯录</strong></button>
@@ -69,11 +71,11 @@
             <button class="app-icon mail-icon" data-url="phone-mail.html" type="button"><span><i>✉</i></span><strong>邮件</strong></button>
             <button class="app-icon gallery-icon" data-url="phone-gallery.html" type="button"><span><i>▧</i></span><strong>相册</strong></button>
             <button class="app-icon map-icon" data-url="phone-map.html" type="button"><span><i>⌖</i></span><strong>地图</strong></button>
-            <button class="app-icon notes-icon" data-url="phone-notes.html" type="button"><span><i>✎</i></span><strong>备忘录</strong></button>
             <button class="app-icon settings-icon" data-url="phone-settings.html" type="button"><span><i>⚙</i></span><strong>设置</strong></button>
             <button class="app-icon game-icon" data-url="phone-game.html" type="button"><span><i>9</i></span><strong>游戏</strong></button>
             <button class="app-icon music-icon" data-url="phone-music.html" type="button"><span><i>♪</i></span><strong>音乐</strong></button>
           </div>
+
           <div class="dock">
             <button class="dock-icon dock-phone" data-url="phone-call.html" type="button">☎</button>
             <button class="dock-icon dock-audio" data-url="phone-music.html" type="button">♫</button>
@@ -81,186 +83,14 @@
           </div>
           <div class="gesture-bar"></div>
         </section>
-
-        <section class="mi-screen wechat-screen" id="wechatScreen" hidden>
-          <div class="wechat-head">
-            <button class="mini-back" data-back="home" type="button">‹</button>
-            <strong id="wechatTitle">微信</strong>
-            <button class="mini-back" id="momentsBtn" type="button">朋友圈</button>
-          </div>
-          <div class="wechat-search">搜索</div>
-          <div id="wechatList" class="wechat-list">
-            <button class="chat-row pinned" data-chat="parents" type="button"><span class="avatar family">家</span><span><strong>爸妈</strong><em>妈：记得吃早饭，别老熬夜。</em></span><time>置顶</time></button>
-            <button class="chat-row pinned" data-chat="girlfriend" type="button"><span class="avatar love">沈</span><span><strong>沈眠</strong><em>你别又一个人跑出去查。</em></span><time>置顶</time></button>
-            <button class="chat-row" data-chat="player" type="button"><span class="avatar dark">远</span><span><strong>阿远</strong><em>我：北桥不是终点。</em></span><time>昨天</time></button>
-            <button class="chat-row" data-chat="jiang" type="button"><span class="avatar blue">江</span><span><strong>江予白</strong><em>我没登录过那个系统。</em></span><time>周日</time></button>
-            <button class="chat-row" data-chat="chen" type="button"><span class="avatar orange">陈</span><span><strong>陈檐</strong><em>你们有人联系上林舟吗？</em></span><time>周六</time></button>
-            <button class="chat-row" data-chat="moments" type="button"><span class="avatar green">朋</span><span><strong>朋友圈</strong><em>3 条新动态</em></span><time>·</time></button>
-          </div>
-          <div id="chatDetail" class="wechat-detail" hidden></div>
-          <nav class="wechat-tabs">
-            <button class="active" type="button">微信</button>
-            <button type="button">通讯录</button>
-            <button type="button" id="discoverTab">发现</button>
-            <button type="button">我</button>
-          </nav>
-        </section>
-
-        <section class="mi-screen browser-screen" id="browserScreen" hidden>
-          <div class="wechat-head">
-            <button class="mini-back" data-back="home" type="button">‹</button>
-            <strong>小米浏览器</strong>
-          </div>
-          <div class="browser-card">
-            <div class="browser-bar">https://night.nhu.edu.cn</div>
-            <h2>南洄城市夜行定向赛</h2>
-            <p>第七届夜行定向赛成绩归档已开放。林舟最后发来的链接就停在这里。</p>
-            <a class="btn primary" href="event.html">打开活动官网</a>
-          </div>
-        </section>
-
-        <section class="mi-screen app-screen" id="contactsScreen" hidden>
-          <div class="app-head"><button class="mini-back" data-back="home" type="button">‹</button><strong>通讯录</strong></div>
-          <div class="app-list">
-            <article><strong>爸妈</strong><span>置顶联系人</span></article>
-            <article><strong>沈眠</strong><span>女朋友 · 最近通话 6 月 6 日</span></article>
-            <article><strong>江予白</strong><span>夜航03 队友</span></article>
-            <article><strong>陈檐</strong><span>夜航03 队友</span></article>
-          </div>
-        </section>
-
-        <section class="mi-screen app-screen" id="mailScreen" hidden>
-          <div class="app-head"><button class="mini-back" data-back="home" type="button">‹</button><strong>邮件</strong></div>
-          <div class="app-card"><h2>未登录</h2><p>林舟的学校邮箱没有保存在本机。最近浏览器停留在夜行赛官网。</p></div>
-        </section>
-
-        <section class="mi-screen app-screen" id="galleryScreen" hidden>
-          <div class="app-head"><button class="mini-back" data-back="home" type="button">‹</button><strong>相册</strong></div>
-          <div class="photo-grid">
-            <button type="button">S01<br>正门</button><button type="button">S02<br>邮筒</button><button type="button">S03<br>旧书摊</button>
-            <button type="button">S04<br>西桥</button><button class="locked-photo" type="button">已隐藏</button><button type="button">截图<br>路线</button>
-          </div>
-          <p class="app-tip">有一张照片被系统标记为隐藏，需要图案密码。</p>
-        </section>
-
-        <section class="mi-screen app-screen" id="mapScreen" hidden>
-          <div class="app-head"><button class="mini-back" data-back="home" type="button">‹</button><strong>地图</strong></div>
-          <div class="app-card"><h2>搜索历史</h2><p>西桥观景台</p><p>北桥体育馆</p><p>北桥地下通道 B 口</p><a class="btn primary" href="map.html">打开城市地图</a></div>
-        </section>
-
-        <section class="mi-screen app-screen" id="notesScreen" hidden>
-          <div class="app-head"><button class="mini-back" data-back="home" type="button">‹</button><strong>备忘录</strong></div>
-          <div class="app-card note-paper"><p>0606</p><p>路线不是被改，是被补完。</p><p>如果我没回来，先看官网，再看缓存。</p></div>
-        </section>
-
-        <section class="mi-screen app-screen" id="settingsScreen" hidden>
-          <div class="app-head"><button class="mini-back" data-back="home" type="button">‹</button><strong>设置</strong></div>
-          <div class="app-list">
-            <article><strong>设备名称</strong><span>LinZhou-Mi 14</span></article>
-            <article><strong>锁屏密码</strong><span>已设置</span></article>
-            <article><strong>备份</strong><span>上次云同步：2026-06-06 18:04</span></article>
-          </div>
-        </section>
-
-        <section class="mi-screen app-screen" id="phoneScreen" hidden>
-          <div class="app-head"><button class="mini-back" data-back="home" type="button">‹</button><strong>电话</strong></div>
-          <div class="app-list">
-            <article><strong>妈妈</strong><span>3 次未接 · 6 月 7 日 12:06</span></article>
-            <article><strong>沈眠</strong><span>已接通 · 6 月 6 日 18:22</span></article>
-            <article><strong>未知号码</strong><span>未接 · 6 月 6 日 21:39</span></article>
-          </div>
-        </section>
-
-        <section class="mi-screen app-screen" id="musicScreen" hidden>
-          <div class="app-head"><button class="mini-back" data-back="home" type="button">‹</button><strong>音乐</strong></div>
-          <div class="music-card">
-            <h2>Gymnopédie No.1</h2>
-            <p>Erik Satie · CC0 / Wikimedia Commons</p>
-            <audio controls loop src="https://upload.wikimedia.org/wikipedia/commons/transcoded/b/b7/Gymnopedie_No._1..ogg/Gymnopedie_No._1..ogg.mp3"></audio>
-            <a href="https://commons.wikimedia.org/wiki/File:Gymnopedie_No._1..ogg" target="_blank" rel="noreferrer">来源与授权</a>
-          </div>
-        </section>
-
-        <section class="mi-screen app-screen" id="gameScreen" hidden>
-          <div class="app-head"><button class="mini-back" data-back="home" type="button">‹</button><strong>数独</strong></div>
-          <div class="sudoku-app">
-            <div class="sudoku-tabs">
-              <button class="active" data-level="1" type="button">第一关</button>
-              <button data-level="2" type="button">第二关</button>
-              <button data-level="3" type="button">第三关</button>
-            </div>
-            <div class="sudoku-meta" id="sudokuMeta"></div>
-            <div class="sudoku-grid" id="sudokuGrid"></div>
-            <button class="btn primary" id="checkSudoku" type="button">检查答案</button>
-          </div>
-        </section>
       </section>
-
-      <aside class="phone-note">
-        <h1>林舟的手机</h1>
-        <p>先解锁手机，再从微信和浏览器继续调查。日常聊天不一定都是线索，但它们会让这个人变得真实。</p>
-      </aside>
     </main>
-
-    <template id="chatParents">
-      <div class="wechat-messages">
-        <div class="bubble">妈：最近降温，外套带了没有？</div>
-        <div class="bubble me">带了，我晚上回来。</div>
-        <div class="bubble">爸：别老拍那些没人的地方，注意安全。</div>
-        <div class="bubble">妈：你明天中午给我回个电话。</div>
-      </div>
-    </template>
-
-    <template id="chatGirlfriend">
-      <div class="wechat-messages">
-        <div class="bubble">沈眠：你别又一个人跑出去查。</div>
-        <div class="bubble me">我只是去确认路线。</div>
-        <div class="bubble">沈眠：你说的“北桥”到底是什么？</div>
-        <div class="bubble me">如果官网说我完赛了，别信。</div>
-      </div>
-    </template>
-
-    <template id="chatPlayer">
-      <div class="wechat-messages">
-        <div class="bubble me">你明天中午之前如果联系不上我，别先发朋友圈。</div>
-        <div class="bubble">你又在查什么？</div>
-        <div class="bubble me">0606。<br>城迹社把它改过一次。</div>
-        <div class="bubble">什么改过？</div>
-        <div class="bubble me">路线。<br>如果官网说我完赛了，别信。</div>
-        <div class="bubble me">北桥不是终点。</div>
-        <div class="system-msg">消息发送失败。对方可能不在服务区。</div>
-      </div>
-    </template>
-
-    <template id="chatJiang">
-      <div class="wechat-messages">
-        <div class="bubble">江予白：林舟让我别再碰那个缓存。</div>
-        <div class="bubble me">哪个缓存？</div>
-        <div class="bubble">他说旧路线里少了一个点。</div>
-        <div class="bubble">我没登录过那个系统。</div>
-      </div>
-    </template>
-
-    <template id="chatChen">
-      <div class="wechat-messages">
-        <div class="bubble">陈檐：你们有人联系上林舟吗？</div>
-        <div class="bubble">陈檐：我 20:55 就退赛了，他还说要去西桥拍一张。</div>
-        <div class="bubble">陈檐：后面的照片不像他拍的。</div>
-      </div>
-    </template>
-
-    <template id="chatMoments">
-      <div class="moments-feed">
-        <article><strong>林舟</strong><p>今晚去走一条“不存在”的路线。</p><em>6 月 6 日 18:04</em></article>
-        <article><strong>江予白</strong><p>有些备份删了也会留下索引。</p><em>6 月 5 日 23:17</em></article>
-        <article><strong>陈檐</strong><p>别问 B17 了。</p><em>6 月 7 日 00:12</em></article>
-      </div>
-    </template>
 
     <script src="common.js"></script>
     <script>
       initGameShell({ stage: 2, page: "phone" });
-      const screens = ["lockScreen", "homeScreen", "wechatScreen", "browserScreen", "contactsScreen", "mailScreen", "galleryScreen", "mapScreen", "notesScreen", "settingsScreen", "phoneScreen", "musicScreen", "gameScreen"];
+
+      const screens = ["lockScreen", "homeScreen"];
       function showScreen(id) {
         screens.forEach((screen) => {
           const el = document.querySelector("#" + screen);
@@ -272,11 +102,14 @@
           }
         });
       }
+
       function unlockPhone() {
         showScreen("homeScreen");
         setFlag("phoneUnlocked");
       }
+
       document.querySelector("#unlockBtn").addEventListener("click", unlockPhone);
+
       const unlockTrack = document.querySelector("#unlockTrack");
       let unlockStart = null;
       unlockTrack.addEventListener("pointerdown", (event) => {
@@ -293,13 +126,7 @@
         unlockStart = null;
         document.querySelector("#unlockBtn").style.transform = "";
       });
-      document.querySelectorAll("[data-url]").forEach((button) => {
-        button.addEventListener("click", () => {
-          launchApp(button, () => {
-            window.open(button.dataset.url, "_blank", "noopener");
-          });
-        });
-      });
+
       function launchApp(button, callback) {
         const phone = document.querySelector(".mi-phone");
         const rect = button.getBoundingClientRect();
@@ -309,12 +136,18 @@
         phone.classList.remove("launching");
         void phone.offsetWidth;
         phone.classList.add("launching");
-        setTimeout(callback, 150);
-        setTimeout(() => phone.classList.remove("launching"), 360);
+        setTimeout(callback, 130);
+        setTimeout(() => phone.classList.remove("launching"), 330);
       }
-      document.querySelectorAll("[data-back='home']").forEach((button) => {
-        button.addEventListener("click", () => showScreen("homeScreen"));
+
+      document.querySelectorAll("[data-url]").forEach((button) => {
+        button.addEventListener("click", () => {
+          launchApp(button, () => {
+            window.open(button.dataset.url, "_blank", "noopener");
+          });
+        });
       });
+
       const shade = document.querySelector("#shadeLayer");
       function openShade(type) {
         shade.hidden = false;
@@ -330,7 +163,10 @@
       }
       document.querySelectorAll(".pull-zone").forEach((zone) => {
         let start = null;
-        zone.addEventListener("pointerdown", (event) => { start = event.clientY; zone.setPointerCapture(event.pointerId); });
+        zone.addEventListener("pointerdown", (event) => {
+          start = event.clientY;
+          zone.setPointerCapture(event.pointerId);
+        });
         zone.addEventListener("pointermove", (event) => {
           if (start !== null && event.clientY - start > 42) openShade(zone.dataset.panel);
         });
@@ -339,76 +175,7 @@
       shade.addEventListener("click", (event) => {
         if (event.target === shade) closeShade();
       });
-      const title = document.querySelector("#wechatTitle");
-      const list = document.querySelector("#wechatList");
-      const detail = document.querySelector("#chatDetail");
-      const chatMap = {
-        parents: ["爸妈", "chatParents"],
-        girlfriend: ["沈眠", "chatGirlfriend"],
-        player: ["阿远", "chatPlayer"],
-        jiang: ["江予白", "chatJiang"],
-        chen: ["陈檐", "chatChen"],
-        moments: ["朋友圈", "chatMoments"]
-      };
-      function openChat(key) {
-        const [name, tpl] = chatMap[key];
-        title.textContent = name;
-        list.hidden = true;
-        detail.hidden = false;
-        detail.innerHTML = `<button class="mini-back chat-back" type="button">‹ 返回微信</button>` + document.querySelector("#" + tpl).innerHTML;
-        detail.querySelector(".chat-back").addEventListener("click", () => {
-          title.textContent = "微信";
-          detail.hidden = true;
-          list.hidden = false;
-        });
-        if (key === "player") setFlag("readLinzhouWechat");
-      }
-      document.querySelectorAll("[data-chat]").forEach((row) => row.addEventListener("click", () => openChat(row.dataset.chat)));
-      document.querySelector("#momentsBtn").addEventListener("click", () => openChat("moments"));
-      document.querySelector("#discoverTab").addEventListener("click", () => openChat("moments"));
-      const sudokuLevels = {
-        1: { title: "第一关 · 热身", givens: "1..4.3..2....1.", answer: "1234431221433412" },
-        2: { title: "第二关 · 交叉", givens: ".2..3..1..4..3.", answer: "1243342121434321" },
-        3: { title: "第三关 · 一小时", givens: "....1..3..4.4...", answer: "2314142332414132" }
-      };
-      let currentSudokuLevel = 1;
-      function renderSudoku(level) {
-        currentSudokuLevel = Number(level);
-        const data = sudokuLevels[currentSudokuLevel];
-        const grid = document.querySelector("#sudokuGrid");
-        document.querySelectorAll(".sudoku-tabs button").forEach(btn => btn.classList.toggle("active", Number(btn.dataset.level) === currentSudokuLevel));
-        const state = loadGame();
-        if (currentSudokuLevel === 3 && !state.flags.sudoku3Start) {
-          state.flags.sudoku3Start = Date.now();
-          saveGame(state);
-        }
-        const remaining = getSudokuRemaining();
-        document.querySelector("#sudokuMeta").textContent = currentSudokuLevel === 3 && remaining > 0
-          ? `${data.title} · 还需要等待 ${Math.ceil(remaining / 60000)} 分钟`
-          : data.title;
-        grid.innerHTML = data.givens.split("").map((ch, i) => ch === "."
-          ? `<input maxlength="1" inputmode="numeric" data-index="${i}">`
-          : `<input value="${ch}" disabled>`).join("");
-      }
-      function getSudokuRemaining() {
-        if (currentSudokuLevel !== 3) return 0;
-        const start = loadGame().flags.sudoku3Start || Date.now();
-        return Math.max(0, 60 * 60 * 1000 - (Date.now() - start));
-      }
-      document.querySelectorAll(".sudoku-tabs button").forEach(btn => btn.addEventListener("click", () => renderSudoku(btn.dataset.level)));
-      document.querySelector("#checkSudoku").addEventListener("click", () => {
-        if (currentSudokuLevel === 3 && getSudokuRemaining() > 0) {
-          toast("第三关还没到时间。林舟把它当成一小时后的彩蛋。");
-          renderSudoku(3);
-          return;
-        }
-        const values = Array.from(document.querySelectorAll("#sudokuGrid input")).map(input => input.value || ".").join("");
-        if (values === sudokuLevels[currentSudokuLevel].answer) {
-          toast(currentSudokuLevel === 3 ? "彩蛋解锁：别回复 17 楼。" : "数独通过。");
-        } else {
-          toast("还有格子不对。");
-        }
-      });
+
       if (hasFlag("phoneUnlocked")) showScreen("homeScreen");
     </script>
   </body>

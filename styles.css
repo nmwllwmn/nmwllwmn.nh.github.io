@@ -1326,6 +1326,17 @@ th {
   background: #fbfbfb;
 }
 
+.chat-row.unread strong::after {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-left: 6px;
+  border-radius: 50%;
+  background: #f04444;
+  vertical-align: 1px;
+}
+
 .chat-row em {
   display: block;
   margin-top: 4px;
@@ -1371,6 +1382,10 @@ th {
   padding: 12px;
   background: #e8ece8;
   -webkit-overflow-scrolling: touch;
+}
+
+.chat-page .wechat-detail {
+  padding: 16px 12px 24px;
 }
 
 .wechat-tabs {
@@ -1427,9 +1442,20 @@ th {
   font-size: 12px;
 }
 
+.chat-time {
+  justify-self: center;
+  border-radius: 999px;
+  padding: 3px 9px;
+  background: rgba(0,0,0,0.08);
+  color: #777;
+  font-size: 11px;
+}
+
 .moments-feed {
   display: grid;
   gap: 10px;
+  overflow-y: auto;
+  padding: 12px 12px 72px;
 }
 
 .moments-feed article {
@@ -1446,6 +1472,33 @@ th {
   color: #888;
   font-size: 12px;
   font-style: normal;
+}
+
+.moments-cover {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  min-height: 150px;
+  padding: 18px;
+  color: white;
+  background:
+    linear-gradient(rgba(0,0,0,0.04), rgba(0,0,0,0.48)),
+    var(--phone-wallpaper, url("assets/lockscreen.jpg")),
+    linear-gradient(145deg, #344052, #13161c);
+  background-size: cover;
+  background-position: center;
+}
+
+.moments-cover div {
+  display: grid;
+  justify-items: end;
+  gap: 2px;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.55);
+}
+
+.moments-cover span {
+  font-size: 12px;
+  opacity: 0.82;
 }
 
 .browser-card {

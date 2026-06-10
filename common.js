@@ -175,6 +175,7 @@ function updatePhoneIsland() {
   const island = document.querySelector(".phone-music-island");
   if (!island) return;
   const music = getMusicState();
+  island.hidden = !music.playing;
   island.classList.toggle("playing", Boolean(music.playing));
   const open = document.querySelector("#islandOpen");
   if (open) open.textContent = music.playing ? "音乐播放中" : "音乐";
