@@ -37,25 +37,28 @@
 
       const sudokuLevels = {
         1: {
-          title: "第一关 · 热身 4x4",
+          title: "第一关 · 横竖 4x4",
           size: 4,
           boxCols: 2,
+          boxRows: 2,
+          mode: "rows-cols",
           givens: "1.344..2.1.334..",
-          answer: "1234431221433421"
         },
         2: {
-          title: "第二关 · 交叉 4x4",
+          title: "第二关 · 横竖交叉 4x4",
           size: 4,
           boxCols: 2,
+          boxRows: 2,
+          mode: "rows-cols-boxes",
           givens: ".2..3..1..4..3..",
-          answer: "1243342121434321"
         },
         3: {
           title: "第三关 · 深水 8x8",
           size: 8,
           boxCols: 4,
+          boxRows: 2,
+          mode: "rows-cols-boxes",
           givens: "1...........1....3...........3....5...........5....7...........7",
-          answer: "1234567856781234234567816781234534567812781234564567812381234567"
         }
       };
 
@@ -100,7 +103,7 @@
         grid.innerHTML = data.givens.split("").map((ch, index) => {
           const row = Math.floor(index / data.size);
           const col = index % data.size;
-          const boxEdge = `${col % data.boxCols === data.boxCols - 1 ? " box-right" : ""}${row % 2 === 1 ? " box-bottom" : ""}`;
+          const boxEdge = `${col % data.boxCols === data.boxCols - 1 ? " box-right" : ""}${row % data.boxRows === data.boxRows - 1 ? " box-bottom" : ""}`;
           if (ch === ".") {
             return `<button class="sudoku-cell editable${boxEdge}" data-index="${index}" type="button"></button>`;
           }
@@ -133,10 +136,9 @@
       });
 
       document.querySelector("#submitSudoku").addEventListener("click", () => {
-        const data = sudokuLevels[currentSudokuLevel];
-        const values = Array.from(document.querySelectorAll("#sudokuGrid .sudoku-cell")).map((cell) => cell.textContent || ".").join("");
-        if (values !== data.answer) {
-          gameToast("提交失败，还有格子不对。");
+        const result = validateSudoku();
+        if (!result.ok) {
+          gameToast(result.message);
           return;
         }
 
@@ -149,6 +151,57 @@
           gameToast("彩蛋解锁：别回复 17 楼。");
         }
       });
+
+      function validateSudoku() {
+        const data = sudokuLevels[currentSudokuLevel];
+        const cells = Array.from(document.querySelectorAll("#sudokuGrid .sudoku-cell")).map((cell) => cell.textContent.trim());
+        const allowed = new Set(Array.from({ length: data.size }, (_, i) => String(i + 1)));
+
+        if (cells.some((value) => !allowed.has(value))) {
+          return { ok: false, message: "提交失败，还有空格或无效数字。" };
+        }
+
+        const checkGroup = (values, label) => {
+          const unique = new Set(values);
+          if (unique.size !== data.size) return `${label} 有重复数字。`;
+          for (const value of unique) {
+            if (!allowed.has(value)) return `${label} 有无效数字。`;
+          }
+          return "";
+        };
+
+        for (let row = 0; row < data.size; row += 1) {
+          const values = cells.slice(row * data.size, row * data.size + data.size);
+          const error = checkGroup(values, `第 ${row + 1} 行`);
+          if (error) return { ok: false, message: error };
+        }
+
+        for (let col = 0; col < data.size; col += 1) {
+          const values = [];
+          for (let row = 0; row < data.size; row += 1) {
+            values.push(cells[row * data.size + col]);
+          }
+          const error = checkGroup(values, `第 ${col + 1} 列`);
+          if (error) return { ok: false, message: error };
+        }
+
+        if (data.mode === "rows-cols-boxes") {
+          for (let boxRow = 0; boxRow < data.size; boxRow += data.boxRows) {
+            for (let boxCol = 0; boxCol < data.size; boxCol += data.boxCols) {
+              const values = [];
+              for (let row = boxRow; row < boxRow + data.boxRows; row += 1) {
+                for (let col = boxCol; col < boxCol + data.boxCols; col += 1) {
+                  values.push(cells[row * data.size + col]);
+                }
+              }
+              const error = checkGroup(values, `第 ${Math.floor(boxRow / data.boxRows) + 1}-${Math.floor(boxCol / data.boxCols) + 1} 宫`);
+              if (error) return { ok: false, message: error };
+            }
+          }
+        }
+
+        return { ok: true, message: "" };
+      }
 
       function gameToast(message) {
         const box = document.querySelector("#sudokuToast");
