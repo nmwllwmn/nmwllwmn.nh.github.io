@@ -63,21 +63,21 @@
           <div class="pull-zone left" data-panel="notifications"></div>
           <div class="pull-zone right" data-panel="controls"></div>
           <div class="home-apps">
-            <button class="app-icon wechat-icon" data-app="wechat" type="button"><span><i>☘</i></span><strong>微信</strong></button>
-            <button class="app-icon contacts-icon" data-app="contacts" type="button"><span><i>人</i></span><strong>通讯录</strong></button>
-            <button class="app-icon browser-icon" data-app="browser" type="button"><span><i>↗</i></span><strong>浏览器</strong></button>
-            <button class="app-icon mail-icon" data-app="mail" type="button"><span><i>✉</i></span><strong>邮件</strong></button>
-            <button class="app-icon gallery-icon" data-app="gallery" type="button"><span><i>▧</i></span><strong>相册</strong></button>
-            <button class="app-icon map-icon" data-app="map" type="button"><span><i>⌖</i></span><strong>地图</strong></button>
-            <button class="app-icon notes-icon" data-app="notes" type="button"><span><i>✎</i></span><strong>备忘录</strong></button>
-            <button class="app-icon settings-icon" data-app="settings" type="button"><span><i>⚙</i></span><strong>设置</strong></button>
-            <button class="app-icon game-icon" data-app="game" type="button"><span><i>9</i></span><strong>游戏</strong></button>
-            <button class="app-icon music-icon" data-app="music" type="button"><span><i>♪</i></span><strong>音乐</strong></button>
+            <button class="app-icon wechat-icon" data-url="phone-wechat.html" type="button"><span><i>☘</i></span><strong>微信</strong></button>
+            <button class="app-icon contacts-icon" data-url="phone-contacts.html" type="button"><span><i>人</i></span><strong>通讯录</strong></button>
+            <button class="app-icon browser-icon" data-url="phone-browser.html" type="button"><span><i>↗</i></span><strong>浏览器</strong></button>
+            <button class="app-icon mail-icon" data-url="phone-mail.html" type="button"><span><i>✉</i></span><strong>邮件</strong></button>
+            <button class="app-icon gallery-icon" data-url="phone-gallery.html" type="button"><span><i>▧</i></span><strong>相册</strong></button>
+            <button class="app-icon map-icon" data-url="phone-map.html" type="button"><span><i>⌖</i></span><strong>地图</strong></button>
+            <button class="app-icon notes-icon" data-url="phone-notes.html" type="button"><span><i>✎</i></span><strong>备忘录</strong></button>
+            <button class="app-icon settings-icon" data-url="phone-settings.html" type="button"><span><i>⚙</i></span><strong>设置</strong></button>
+            <button class="app-icon game-icon" data-url="phone-game.html" type="button"><span><i>9</i></span><strong>游戏</strong></button>
+            <button class="app-icon music-icon" data-url="phone-music.html" type="button"><span><i>♪</i></span><strong>音乐</strong></button>
           </div>
           <div class="dock">
-            <button class="dock-icon dock-phone" data-app="phone" type="button">☎</button>
-            <button class="dock-icon dock-audio" data-app="audio" type="button">♫</button>
-            <button class="dock-icon dock-device" data-app="browser" type="button">▯</button>
+            <button class="dock-icon dock-phone" data-url="phone-call.html" type="button">☎</button>
+            <button class="dock-icon dock-audio" data-url="phone-music.html" type="button">♫</button>
+            <button class="dock-icon dock-device" data-url="phone-browser.html" type="button">▯</button>
           </div>
           <div class="gesture-bar"></div>
         </section>
@@ -293,20 +293,10 @@
         unlockStart = null;
         document.querySelector("#unlockBtn").style.transform = "";
       });
-      document.querySelectorAll("[data-app]").forEach((button) => {
+      document.querySelectorAll("[data-url]").forEach((button) => {
         button.addEventListener("click", () => {
           launchApp(button, () => {
-            if (button.dataset.app === "wechat") showScreen("wechatScreen");
-            if (button.dataset.app === "browser") showScreen("browserScreen");
-            if (button.dataset.app === "contacts") showScreen("contactsScreen");
-            if (button.dataset.app === "mail") showScreen("mailScreen");
-            if (button.dataset.app === "gallery") showScreen("galleryScreen");
-            if (button.dataset.app === "map") showScreen("mapScreen");
-            if (button.dataset.app === "notes") showScreen("notesScreen");
-            if (button.dataset.app === "settings") showScreen("settingsScreen");
-            if (button.dataset.app === "phone") showScreen("phoneScreen");
-            if (button.dataset.app === "audio" || button.dataset.app === "music") showScreen("musicScreen");
-            if (button.dataset.app === "game") { showScreen("gameScreen"); renderSudoku(currentSudokuLevel); }
+            window.location.href = button.dataset.url;
           });
         });
       });

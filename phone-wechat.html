@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>微信 - 林舟的手机</title><link rel="stylesheet" href="styles.css"></head>
+  <body class="chat-shell">
+    <main class="phone-stage">
+      <section class="mi-phone">
+        <div class="phone-island"><span></span><span></span><span></span></div>
+        <section class="mi-screen wechat-screen screen-enter">
+          <div class="wechat-head">
+            <a class="mini-back" href="chat.html">‹</a>
+            <strong id="wechatTitle">微信</strong>
+            <a class="mini-back" href="phone-wechat.html?chat=moments">朋友圈</a>
+          </div>
+          <div class="wechat-search">搜索</div>
+          <div id="wechatList" class="wechat-list"></div>
+          <div id="chatDetail" class="wechat-detail" hidden></div>
+          <nav class="wechat-tabs">
+            <a class="active" href="phone-wechat.html">微信</a>
+            <a href="phone-contacts.html">通讯录</a>
+            <a href="phone-wechat.html?chat=moments">发现</a>
+            <a href="phone-settings.html">我</a>
+          </nav>
+        </section>
+      </section>
+      <aside class="phone-note"><h1>微信</h1><p>这是林舟手机里的微信。点进每个会话都会进入新的 URL。</p></aside>
+    </main>
+    <script src="common.js"></script>
+    <script>
+      initGameShell({ stage: 1, page: "phone-wechat" });
+      const chats = {
+        parents: { title: "爸妈", avatar: "家", preview: "妈：记得吃早饭，别老熬夜。", tag: "置顶", html: `<div class="wechat-messages"><div class="bubble">妈：最近降温，外套带了没有？</div><div class="bubble me">带了，我晚上回来。</div><div class="bubble">爸：别老拍那些没人的地方，注意安全。</div><div class="bubble">妈：你明天中午给我回个电话。</div></div>` },
+        girlfriend: { title: "沈眠", avatar: "沈", preview: "你别又一个人跑出去查。", tag: "置顶", html: `<div class="wechat-messages"><div class="bubble">沈眠：你别又一个人跑出去查。</div><div class="bubble me">我只是去确认路线。</div><div class="bubble">沈眠：你说的“北桥”到底是什么？</div><div class="bubble me">如果官网说我完赛了，别信。</div></div>` },
+        player: { title: "阿远", avatar: "远", preview: "我：北桥不是终点。", tag: "昨天", html: `<div class="wechat-messages"><div class="bubble me">你明天中午之前如果联系不上我，别先发朋友圈。</div><div class="bubble">你又在查什么？</div><div class="bubble me">0606。<br>城迹社把它改过一次。</div><div class="bubble">什么改过？</div><div class="bubble me">路线。<br>如果官网说我完赛了，别信。</div><div class="bubble me">北桥不是终点。</div><div class="system-msg">消息发送失败。对方可能不在服务区。</div></div>` },
+        jiang: { title: "江予白", avatar: "江", preview: "我没登录过那个系统。", tag: "周日", html: `<div class="wechat-messages"><div class="bubble">江予白：林舟让我别再碰那个缓存。</div><div class="bubble me">哪个缓存？</div><div class="bubble">他说旧路线里少了一个点。</div><div class="bubble">我没登录过那个系统。</div></div>` },
+        chen: { title: "陈檐", avatar: "陈", preview: "你们有人联系上林舟吗？", tag: "周六", html: `<div class="wechat-messages"><div class="bubble">陈檐：你们有人联系上林舟吗？</div><div class="bubble">陈檐：我 20:55 就退赛了，他还说要去西桥拍一张。</div><div class="bubble">陈檐：后面的照片不像他拍的。</div></div>` },
+        moments: { title: "朋友圈", avatar: "朋", preview: "3 条新动态", tag: "·", html: `<div class="moments-feed"><article><strong>林舟</strong><p>今晚去走一条“不存在”的路线。</p><em>6 月 6 日 18:04</em></article><article><strong>江予白</strong><p>有些备份删了也会留下索引。</p><em>6 月 5 日 23:17</em></article><article><strong>陈檐</strong><p>别问 B17 了。</p><em>6 月 7 日 00:12</em></article></div>` }
+      };
+      const selected = new URLSearchParams(location.search).get("chat");
+      const list = document.querySelector("#wechatList");
+      const detail = document.querySelector("#chatDetail");
+      const title = document.querySelector("#wechatTitle");
+      if (selected && chats[selected]) {
+        title.textContent = chats[selected].title;
+        list.hidden = true;
+        detail.hidden = false;
+        detail.innerHTML = `<a class="mini-back chat-back" href="phone-wechat.html">‹ 返回微信</a>` + chats[selected].html;
+        if (selected === "player") setFlag("readLinzhouWechat");
+      } else {
+        list.innerHTML = Object.entries(chats).map(([key, chat]) => `<a class="chat-row ${chat.tag === "置顶" ? "pinned" : ""}" href="phone-wechat.html?chat=${key}"><span class="avatar ${key === "girlfriend" ? "love" : key === "parents" ? "family" : key === "moments" ? "green" : key === "jiang" ? "blue" : key === "chen" ? "orange" : "dark"}">${chat.avatar}</span><span><strong>${chat.title}</strong><em>${chat.preview}</em></span><time>${chat.tag}</time></a>`).join("");
+      }
+    </script>
+  </body>
+</html>

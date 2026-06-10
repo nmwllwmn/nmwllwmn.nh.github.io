@@ -1051,10 +1051,14 @@ th {
 }
 
 .mini-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   min-height: 34px;
   border: 0;
   background: transparent;
   color: #333;
+  text-decoration: none;
 }
 
 .wechat-list {
@@ -1075,6 +1079,8 @@ th {
   background: #fff;
   text-align: left;
   transition: background 0.12s ease, transform 0.12s ease;
+  color: #111;
+  text-decoration: none;
 }
 
 .chat-row:active {
@@ -1145,14 +1151,19 @@ th {
   background: #f8f8f8;
 }
 
-.wechat-tabs button {
+.wechat-tabs button,
+.wechat-tabs a {
+  display: grid;
+  place-items: center;
   border: 0;
   background: transparent;
   color: #555;
   font-size: 12px;
+  text-decoration: none;
 }
 
-.wechat-tabs button.active {
+.wechat-tabs button.active,
+.wechat-tabs a.active {
   color: #14b64a;
   font-weight: 700;
 }
