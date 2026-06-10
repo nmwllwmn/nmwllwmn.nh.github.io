@@ -15,7 +15,7 @@
           <form class="phone-mail-login" id="mailLogin">
             <div class="mail-logo">NHU</div>
             <h2>南洄大学统一身份认证</h2>
-            <label>邮箱账号<input id="mailUser" autocomplete="username" placeholder="学号 / 邮箱"></label>
+            <label>邮箱账号<input id="mailUser" autocomplete="username" value="linzhou@stu.nhu.edu.cn" placeholder="学号 / 邮箱"></label>
             <label>密码<input id="mailPass" type="password" autocomplete="current-password" placeholder="请输入密码"></label>
             <button class="btn primary" type="submit">登录校园邮箱</button>
             <p id="mailError" class="mail-error"></p>
@@ -30,13 +30,13 @@
         event.preventDefault();
         const user = normalize(document.querySelector("#mailUser").value);
         const pass = normalize(document.querySelector("#mailPass").value);
-        if ((user === "linzhou" || user === "20220606") && pass === "b17") {
+        if ((user === "linzhou" || user === "linzhou@stu.nhu.edu.cn" || user === "20220606") && pass === "0606") {
           setFlag("phoneMailLoggedIn");
           document.querySelector("#mailLogin").innerHTML = `
             <div class="mail-logo">NHU</div>
             <h2>收件箱</h2>
-            <article class="mail-preview"><strong>夜行赛系统</strong><span>Web Import 完成：S05-S07</span><em>6 月 6 日 21:22</em></article>
-            <article class="mail-preview"><strong>校园安全中心</strong><span>北桥摄像头维护通知</span><em>6 月 6 日 21:38</em></article>
+            <article class="mail-preview"><strong>夜行赛系统</strong><span>成绩同步异常提醒</span><em>6 月 6 日 21:22</em></article>
+            <article class="mail-preview"><strong>校园安全中心</strong><span>北桥片区设备维护通知</span><em>6 月 6 日 21:38</em></article>
           `;
         } else {
           document.querySelector("#mailError").textContent = "账号或密码错误。";

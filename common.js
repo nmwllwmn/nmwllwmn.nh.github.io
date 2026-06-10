@@ -77,7 +77,6 @@ function initGameShell(options = {}) {
   const { stage = 0, page = "" } = options;
   setStage(stage);
   document.body.dataset.page = page;
-  const isPhonePage = page.startsWith("phone");
   if (!document.querySelector(".game-widget")) {
     const widget = document.createElement("aside");
     widget.className = "game-widget";

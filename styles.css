@@ -930,10 +930,6 @@ th {
   background: linear-gradient(145deg, #38c46a, #159543);
 }
 
-.notes-icon span {
-  background: #f0c748;
-}
-
 .settings-icon span {
   background: linear-gradient(145deg, #a9a9a9, #5b5b5b);
 }
@@ -1016,8 +1012,7 @@ th {
 }
 
 .app-list article,
-.app-card,
-.music-card {
+.app-card {
   border-radius: 16px;
   padding: 14px;
   background: white;
@@ -1055,54 +1050,6 @@ th {
 
 .photo-grid .locked-photo {
   background: linear-gradient(145deg, #2b2d32, #111);
-}
-
-.note-paper {
-  margin: 14px;
-  background: #fff5b8;
-  line-height: 1.8;
-}
-
-.music-card {
-  margin: 14px;
-}
-
-.music-card audio {
-  width: 100%;
-  margin: 14px 0 8px;
-}
-
-.music-controls {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin: 10px 0;
-}
-
-.track-list {
-  display: grid;
-  gap: 8px;
-  margin-top: 12px;
-}
-
-.track-list button {
-  display: grid;
-  gap: 3px;
-  border: 0;
-  border-radius: 12px;
-  padding: 10px;
-  background: #f2f2f2;
-  text-align: left;
-}
-
-.track-list button.active {
-  background: #e4f1e9;
-  outline: 2px solid #65b883;
-}
-
-.track-list span {
-  color: #777;
-  font-size: 11px;
 }
 
 .sudoku-app {
@@ -1772,6 +1719,19 @@ th {
   display: none;
 }
 
+.gallery-lock[hidden],
+.gallery-content[hidden] {
+  display: none;
+}
+
+.gallery-lock {
+  display: grid;
+  place-items: center;
+  flex: 1;
+  padding: 20px;
+  background: #eef1f4;
+}
+
 .app-lock-card {
   width: 100%;
   border-radius: 24px;
@@ -1965,13 +1925,6 @@ body[data-page^="phone"] .game-widget .widget-card {
   padding: 8px;
   background: rgba(251, 248, 241, 0.78);
   backdrop-filter: blur(12px);
-}
-
-.music-status {
-  margin: 8px 0 0;
-  color: #777;
-  font-size: 12px;
-  line-height: 1.5;
 }
 
 .oldsite {
