@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>城迹社旧站</title><link rel="stylesheet" href="styles.css"></head>
+  <body class="oldsite">
+    <header class="site-top"><div class="site-id"><span class="site-mark">旧</span><div><h1>城迹社 2023 缓存站</h1><p>citytrace / cache / not secure</p></div></div><nav class="top-actions"><a class="plain-link" href="university.html">大学官网</a><a class="plain-link" href="wall.html">校园墙</a></nav></header>
+    <main class="layout stack">
+      <section class="doc"><h2>路线资料</h2><p>2023 夜行试跑资料已迁移。</p><p class="mono">route_20230606_old.pdf</p><p class="muted">文件不存在，但路径仍被搜索引擎缓存。</p></section>
+      <section class="doc">
+        <h2>活动相册</h2>
+        <div class="three-grid">
+          <div class="panel">S01 正门</div><div class="panel">S02 邮筒</div><div class="panel">S03 旧书摊</div><div class="panel">S04 西桥</div>
+          <div class="panel warning"><strong>图片加载失败</strong><p class="mono">alt="S08_beiqiao.jpg"</p></div>
+          <div class="panel">S05 地铁口</div><div class="panel">S06 钟楼</div><div class="panel">S07 公园</div>
+        </div>
+      </section>
+      <section class="doc"><h2>留言板</h2><p><span class="mono">2023-06-07 00:18</span> 有人看到听雨了吗？她不是跟试跑队伍一起的吗？</p><p><strong>管理员：</strong>请勿传播未经证实的信息。</p><button class="btn primary" id="markOld">记录 S08 和许听雨</button></section>
+    </main>
+    <script src="common.js"></script>
+    <script>
+      initGameShell({ stage: 5, page: "club2023" });
+      document.querySelector("#markOld").addEventListener("click", () => { setFlag("foundXutingyu"); addEvidence("C"); toast("已记录：S08_beiqiao.jpg，许听雨。去校园墙搜索这些词。"); });
+    </script>
+  </body>
+</html>

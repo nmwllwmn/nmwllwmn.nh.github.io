@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>南洄城市夜行定向赛</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="site-top">
+      <div class="site-id"><span class="site-mark">NT</span><div><h1>南洄城市夜行定向赛</h1><p>成绩归档与活动公告</p></div></div>
+      <nav class="top-actions"><a class="plain-link" href="chat.html">聊天</a><a class="plain-link" href="university.html">南洄大学官网</a></nav>
+    </header>
+    <main class="layout stack">
+      <section class="grid">
+        <article class="panel">
+          <h2>第七届夜行定向赛圆满结束</h2>
+          <p>本次活动全部路线均经安全审核。主办方不会设置任何位于封闭场馆、地下通道或施工区域内的签到点。</p>
+          <p><span class="tag">活动时间</span> 2026-06-06 19:30-23:30</p>
+        </article>
+        <article class="panel">
+          <h2>成绩查询</h2>
+          <form class="search-form" id="scoreForm">
+            <div class="search-row"><input name="q" placeholder="林舟 / 夜航03"><button class="btn" type="submit">查询</button></div>
+          </form>
+          <div id="scoreResult"></div>
+        </article>
+      </section>
+      <section class="panel">
+        <h2>参赛账号登录</h2>
+        <form class="login-form" id="eventLogin">
+          <input name="account" placeholder="活动账号">
+          <input name="password" type="password" placeholder="密码">
+          <button class="btn primary" type="submit">查看签到记录</button>
+        </form>
+      </section>
+      <section class="panel" id="records" hidden>
+        <h2>林舟签到记录</h2>
+        <table>
+          <thead><tr><th>编号</th><th>地点</th><th>系统时间</th><th>照片时间</th><th>上传方式</th></tr></thead>
+          <tbody>
+            <tr><td>S01</td><td>南洄大学正门</td><td>19:42</td><td>19:42</td><td>Mobile</td></tr>
+            <tr><td>S02</td><td>银杏路邮筒</td><td>20:06</td><td>20:06</td><td>Mobile</td></tr>
+            <tr><td>S03</td><td>河滨旧书摊</td><td>20:39</td><td>20:39</td><td>Mobile</td></tr>
+            <tr><td>S04</td><td>西桥观景台</td><td>21:08</td><td>21:08</td><td>Mobile</td></tr>
+            <tr class="bad"><td>S05</td><td>新城地铁口</td><td>21:46</td><td>18:12</td><td>Web Import</td></tr>
+            <tr class="bad"><td>S06</td><td>城南钟楼</td><td>22:28</td><td>18:41</td><td>Web Import</td></tr>
+            <tr class="bad"><td>S07</td><td>青麓公园东门</td><td>23:17</td><td>19:03</td><td>Web Import</td></tr>
+          </tbody>
+        </table>
+        <form class="answer-form" id="s04Form">
+          <label>林舟最后一条可信签到编号是？</label>
+          <div class="search-row"><input name="answer" placeholder="S??"><button class="btn primary" type="submit">提交</button></div>
+        </form>
+      </section>
+    </main>
+    <script src="common.js"></script>
+    <script>
+      initGameShell({ stage: 2, page: "event" });
+      if (hasFlag("loggedEventLinzhou")) document.querySelector("#records").hidden = false;
+      document.querySelector("#scoreForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const q = normalize(new FormData(e.target).get("q"));
+        document.querySelector("#scoreResult").innerHTML = q.includes("林舟") || q.includes("夜航03") || q.includes("yehang03") ? `
+          <table><thead><tr><th>姓名</th><th>队伍</th><th>状态</th><th>完赛时间</th></tr></thead>
+          <tbody><tr><td>林舟</td><td>夜航03</td><td>已完赛</td><td>23:17</td></tr><tr><td>江予白</td><td>夜航03</td><td>未完赛</td><td>21:12 退赛</td></tr><tr><td>陈檐</td><td>夜航03</td><td>未完赛</td><td>20:55 退赛</td></tr></tbody></table>` : `<p class="muted">没有找到公开成绩。</p>`;
+      });
+      document.querySelector("#eventLogin").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const data = new FormData(e.target);
+        if (normalize(data.get("account")) === "linzhou" && normalize(data.get("password")) === "0606") {
+          document.querySelector("#records").hidden = false;
+          setFlag("loggedEventLinzhou");
+          toast("已打开林舟签到记录。");
+        } else toast("账号或密码错误。林舟让你从 0606 开始查。");
+      });
+      document.querySelector("#s04Form").addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (normalize(new FormData(e.target).get("answer")) === "s04") {
+          addEvidence("A"); setFlag("solvedS04"); setStage(3);
+          toast("证据 A 已记录：S05-S07 为 Web Import。去学校官网查城迹社。");
+        } else toast("再比对系统时间、照片时间和上传方式。");
+      });
+    </script>
+  </body>
+</html>

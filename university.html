@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>南洄大学官网</title><link rel="stylesheet" href="styles.css"></head>
+  <body>
+    <header class="site-top">
+      <div class="site-id"><span class="site-mark">NHU</span><div><h1>南洄大学</h1><p>新闻公告 · 机构设置 · 校园服务</p></div></div>
+      <nav class="top-actions"><a class="plain-link" href="event.html">夜行赛官网</a><a class="plain-link" href="club2023.html">旧站缓存</a></nav>
+    </header>
+    <main class="layout stack">
+      <section class="panel">
+        <h2>站内搜索</h2>
+        <form id="uniSearch" class="search-form"><div class="search-row"><input name="q" placeholder="城迹社 / 北桥 / 许听雨 / 沈泊"><button class="btn" type="submit">搜索</button></div></form>
+      </section>
+      <section id="uniResults" class="stack"></section>
+      <section class="grid">
+        <article class="panel"><h2>学校新闻</h2><p>南洄大学城迹社获评 2026 年十佳学生社团。</p><p>第七届城市夜行定向赛报名通知。</p></article>
+        <article class="panel warning"><h2>系统提示</h2><p>部分 2023 年社团页面已迁移至归档缓存。若访问 404，请核对原始路径。</p></article>
+      </section>
+    </main>
+    <script src="common.js"></script>
+    <script>
+      initGameShell({ stage: 4, page: "university" });
+      document.querySelector("#uniSearch").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const q = normalize(new FormData(e.target).get("q"));
+        let html = "";
+        if (q.includes("城迹社")) {
+          html = `<article class="result"><h2>城迹社 2023 年暑期活动资料整理完成</h2><p>页面不存在或已被归档。</p><p class="mono">旧路径：/club/citytrace/2023/cache.html</p><a class="btn primary" href="club2023.html">访问缓存</a></article>`;
+        } else if (q.includes("北桥")) {
+          html = `<article class="result"><h2>关于北桥体育馆封闭管理的通知</h2><p>北桥体育馆自 2023 年 6 月 8 日起停止对外开放。北桥片区地下管线维修同步进行。</p></article>`;
+        } else if (q.includes("许听雨") || q.includes("听雨")) {
+          setFlag("foundXutingyu");
+          html = `<article class="result"><h2>关于 2023 级学生许某失联情况的说明</h2><p>暂无公开全文。</p><p class="muted">页面摘要：许听雨，2023，北桥片区。</p></article>`;
+        } else if (q.includes("沈泊")) {
+          html = `<article class="result"><h2>沈泊</h2><p>学生事务办公室行政助理。曾任城迹社社长。</p></article>`;
+        } else html = `<article class="result"><p>暂无相关结果。</p></article>`;
+        document.querySelector("#uniResults").innerHTML = html;
+      });
+    </script>
+  </body>
+</html>

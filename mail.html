@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>南洄大学邮箱</title><link rel="stylesheet" href="styles.css"></head>
+  <body>
+    <header class="site-top"><div class="site-id"><span class="site-mark">@</span><div><h1>南洄大学统一邮箱</h1><p>mail.nhu.edu.cn</p></div></div><nav class="top-actions"><a class="plain-link" href="drive.html">B17 网盘</a><a class="plain-link" href="nvr.html">NVR</a></nav></header>
+    <main class="layout stack">
+      <section class="panel">
+        <h2>邮箱登录</h2>
+        <form id="mailLogin" class="login-form">
+          <input name="account" placeholder="邮箱账号">
+          <input name="password" type="password" placeholder="密码">
+          <button class="btn primary" type="submit">登录</button>
+        </form>
+      </section>
+      <section id="mailbox" class="grid" hidden>
+        <article class="mail-item"><h2>林舟：你保存一下这个</h2><p>监控系统不是学校官网的入口。周祁发过一次临时链接，主题叫 NVR。如果我没回来，看 21:31 到 21:38。</p></article>
+        <article class="mail-item"><h2>周祁：NVR 临时访问</h2><p>仅限调试使用，勿外传。</p><p>入口：<a href="nvr.html">nvr.html</a></p><p class="mono">用户：guest<br>密码：cam042138</p></article>
+        <article class="mail-item"><h2>草稿箱：未发送</h2><p>我看见了。21:38 之后画面跳了一下。如果他们问，我就说我没登录过。</p></article>
+      </section>
+    </main>
+    <script src="common.js"></script>
+    <script>
+      initGameShell({ stage: 7, page: "mail" });
+      if (hasFlag("loggedMailJiang")) document.querySelector("#mailbox").hidden = false;
+      document.querySelector("#mailLogin").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const data = new FormData(e.target);
+        if (normalize(data.get("account")) === "jiangyb@stu.nhu.edu.cn" && normalize(data.get("password")) === "river17") {
+          setFlag("loggedMailJiang"); setStage(8);
+          document.querySelector("#mailbox").hidden = false;
+          toast("江予白邮箱已打开。NVR 临时访问线索已出现。");
+        } else toast("邮箱账号或密码错误。网盘聊天里说：河和 17。");
+      });
+    </script>
+  </body>
+</html>

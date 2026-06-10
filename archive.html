@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>归档终端</title><link rel="stylesheet" href="styles.css"></head>
+  <body class="archive-page">
+    <header class="site-top"><div class="site-id"><span class="site-mark">MYJ</span><div><h1>密页集归档终端</h1><p>MYJ-0606-S08 / evidence submit</p></div></div><nav class="top-actions"><a class="plain-link" href="map.html">地图</a><a class="plain-link" href="wall.html">校园墙</a></nav></header>
+    <main class="layout stack">
+      <section class="panel">
+        <h2>提交证据链</h2>
+        <form id="archiveForm" class="answer-form">
+          <input name="place" placeholder="最后真实地点">
+          <input name="time" placeholder="最后可靠时间">
+          <input name="person" placeholder="导入记录执行人">
+          <input name="imp" placeholder="证据编号">
+          <button class="btn primary" type="submit">归档</button>
+        </form>
+      </section>
+      <section id="ending"></section>
+    </main>
+    <script src="common.js"></script>
+    <script>
+      initGameShell({ stage: 10, page: "archive" });
+      document.querySelector("#archiveForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const data = new FormData(e.target);
+        const place = normalize(data.get("place"));
+        const time = normalize(data.get("time"));
+        const person = normalize(data.get("person"));
+        const imp = normalize(data.get("imp"));
+        const placeOk = ["s08","北桥","北桥体育馆"].includes(place);
+        const timeOk = time === "21:38" || time === "2138";
+        const personOk = person === "沈泊" || person === "shenbo_admin" || person === "shenboadmin";
+        const impOk = imp === "imp-2202";
+        if (placeOk && timeOk && personOk && impOk) {
+          setFlag("submittedArchive");
+          document.querySelector("#ending").innerHTML = `<article class="doc ending"><h2>真结局：最后一次签到</h2>你提交的不只是地点。
+你提交了旧路线、监控时间、导入编号和执行账号。
+
+归档终端短暂黑屏。一条三年前的记录被恢复。
+
+许听雨，2023-06-06，S08，上传失败。
+林舟，2026-06-06，S08，上传失败。
+
+两条失败记录相隔三年，时间只差一分钟。
+
+6 月 10 日 02:17，南洄大学发布公告，暂停城迹社全部活动。沈泊账号被停用，校园安全管理中心开始配合调查。
+
+你再次打开活动官网。林舟的状态不再是“已完赛”。
+
+它变成了：
+
+最后一次签到：S08 北桥体育馆
+状态：未归队
+
+彩蛋：真结局后回校园墙搜索 B17。</article>`;
+        } else if (placeOk && timeOk) {
+          document.querySelector("#ending").innerHTML = `<article class="doc ending"><h2>普通结局：北桥不是终点</h2>你提交了 S08 和 21:38。系统恢复了林舟最后一次失败上传。
+
+照片里是北桥体育馆侧门，画面几乎全黑。角落里有一行旧字：北桥不是终点。
+
+第二天，学校发布公告，称警方已介入林舟失踪调查。活动官网关闭了成绩查询。
+
+但没有人提到许听雨。也没有人解释，为什么林舟后半程会被系统补完。</article>`;
+        } else toast("归档失败。地点、时间、执行人、编号四项缺一不可。");
+      });
+    </script>
+  </body>
+</html>

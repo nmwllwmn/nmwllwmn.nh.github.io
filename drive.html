@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>B17 备份网盘</title><link rel="stylesheet" href="styles.css"></head>
+  <body>
+    <header class="site-top"><div class="site-id"><span class="site-mark">B17</span><div><h1>临时文件分享</h1><p>share.nhu-cloud.invalid / 备份目录</p></div></div><nav class="top-actions"><a class="plain-link" href="wall.html">校园墙</a><a class="plain-link" href="mail.html">学校邮箱</a></nav></header>
+    <main class="layout stack">
+      <section class="panel">
+        <h2>访问受限</h2>
+        <form id="driveLogin" class="login-form">
+          <input name="account" placeholder="目录编号">
+          <input name="password" type="password" placeholder="访问口令">
+          <button class="btn primary" type="submit">打开目录</button>
+        </form>
+      </section>
+      <section id="files" class="stack" hidden>
+        <article class="file-row"><h2>readme_first.txt</h2><p>如果你看到这里，说明校园墙那条还没被删。不要只看活动官网。看学校官网，看旧站，看邮件。予白不敢说，但他留了门。</p></article>
+        <article class="file-row"><h2>route_20230606_old.pdf</h2><p>S01 正门 -> S02 邮筒 -> S03 旧书摊 -> S04 西桥 -> <strong>S08 北桥体育馆</strong> -> S05 地铁口 -> S06 钟楼 -> S07 公园</p><button id="oldRouteBtn" class="btn primary">记录旧路线证据</button></article>
+        <article class="file-row"><h2>chat_jiangyb_0605.txt</h2><p>林舟：如果我出事，邮箱别用我的，查你的。</p><p>江予白：我不会再登录那个系统。</p><p>林舟：密码你改过吗？</p><p>江予白：没改，还是河和 17。</p><p class="mono">jiangyb@stu.nhu.edu.cn / river17</p></article>
+        <article class="file-row"><h2>photo_s05_original.jpg</h2><p class="muted">原始照片水印：18:12。与系统记录 21:46 不一致。</p></article>
+      </section>
+    </main>
+    <script src="common.js"></script>
+    <script>
+      initGameShell({ stage: 6, page: "drive" });
+      if (hasFlag("loggedDrive")) document.querySelector("#files").hidden = false;
+      document.querySelector("#driveLogin").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const data = new FormData(e.target);
+        const account = normalize(data.get("account"));
+        const password = normalize(data.get("password"));
+        if (account === "b17" && (password === "yuting0606" || password === "雨停在0606")) {
+          setFlag("loggedDrive"); setStage(7);
+          document.querySelector("#files").hidden = false;
+          toast("B17 备份目录已打开。");
+        } else toast("口令错误。校园墙说：雨停在 0606。");
+      });
+      document.querySelector("#oldRouteBtn").addEventListener("click", () => {
+        addEvidence("B"); setFlag("foundOldRoute"); toast("证据 B 已记录：2023 旧路线包含 S08。");
+      });
+    </script>
+  </body>
+</html>

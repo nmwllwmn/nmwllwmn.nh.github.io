@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>SECURICORP NVR</title><link rel="stylesheet" href="styles.css"></head>
+  <body class="nvr-page">
+    <header class="site-top"><div class="site-id"><span class="site-mark">CAM</span><div><h1>SECURICORP // NVR VIEWER</h1><p>UNIT NVR-8804 · SEC_NORTH</p></div></div><nav class="top-actions"><a class="plain-link" href="mail.html">邮箱</a><a class="plain-link" href="map.html">地图</a></nav></header>
+    <main class="wide-layout stack">
+      <section class="panel" id="nvrGate">
+        <h2>NVR 访问认证</h2>
+        <form id="nvrLogin" class="login-form"><input name="account" placeholder="user"><input name="password" type="password" placeholder="password"><button class="btn primary" type="submit">Connect</button></form>
+      </section>
+      <section class="nvr-grid" id="nvrApp" hidden>
+        <aside class="panel">
+          <h2>Active Feeds</h2>
+          <p class="muted">CAM 01 校门：OFFLINE</p>
+          <p class="muted">CAM 02 河滨：MAINTENANCE</p>
+          <p><strong>CAM 04 北桥北侧：REC</strong></p>
+          <hr>
+          <label>时间</label>
+          <input id="camTime" value="21:31" placeholder="21:38">
+          <label>模式</label>
+          <div class="stack"><button class="btn modeBtn" data-mode="">Day</button><button class="btn modeBtn" data-mode="night">Night</button><button class="btn modeBtn" data-mode="ir">IR</button></div>
+          <button class="btn primary" id="zoomBtn">PTZ 右下放大</button>
+          <form id="impForm" class="answer-form"><label>画面角落的导入日志编号</label><input name="answer" placeholder="IMP-????"><button class="btn primary" type="submit">记录</button></form>
+        </aside>
+        <section class="camera-screen" id="screen">
+          <div class="hidden-clue">S08 / IMP-2202</div>
+          <div class="osd"><div>CAM 04 · SEC_BEIQIAO_N</div><div><span id="osdTime">21:31</span> REC ●</div></div>
+        </section>
+      </section>
+    </main>
+    <script src="common.js"></script>
+    <script>
+      initGameShell({ stage: 8, page: "nvr" });
+      const openNvr = () => { document.querySelector("#nvrGate").hidden = true; document.querySelector("#nvrApp").hidden = false; };
+      if (hasFlag("loggedNvr")) openNvr();
+      document.querySelector("#nvrLogin").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const data = new FormData(e.target);
+        if (normalize(data.get("account")) === "guest" && normalize(data.get("password")) === "cam042138") {
+          setFlag("loggedNvr"); openNvr(); toast("NVR 已连接。把时间调到邮件提到的关键点。");
+        } else toast("认证失败。邮件里有临时账号。");
+      });
+      document.querySelector("#camTime").addEventListener("input", (e) => document.querySelector("#osdTime").textContent = e.target.value);
+      document.querySelectorAll(".modeBtn").forEach(btn => btn.addEventListener("click", () => { document.querySelector("#screen").className = "camera-screen " + btn.dataset.mode; }));
+      document.querySelector("#zoomBtn").addEventListener("click", () => {
+        document.querySelector("#screen").classList.add("zoomed");
+        if (normalize(document.querySelector("#camTime").value) === "21:38") toast("右下角出现了 S08 和 IMP-2202。");
+        else toast("画面放大了，但时间似乎还没调到关键点。");
+      });
+      document.querySelector("#impForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (normalize(new FormData(e.target).get("answer")) === "imp-2202") {
+          addEvidence("D"); setFlag("foundImp2202"); setStage(9); toast("证据 D 已记录：21:38 北桥监控异常。去地图搜索 IMP-2202。");
+        } else toast("需要先在 21:38 的 CAM 04 画面角落找到编号。");
+      });
+    </script>
+  </body>
+</html>
