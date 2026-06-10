@@ -1,2 +1,72 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>地图 - 林舟的手机</title><link rel="stylesheet" href="styles.css"></head><body class="chat-shell"><main class="phone-stage"><section class="mi-phone"><div class="phone-island"><span></span><span></span><span></span></div><section class="mi-screen app-screen screen-enter"><div class="app-head"><a class="mini-back" href="chat.html">‹</a><strong>地图</strong></div><div class="app-card"><h2>搜索历史</h2><p>西桥观景台</p><p>北桥体育馆</p><p>北桥地下通道 B 口</p><a class="btn primary" href="map.html" target="_blank" rel="noopener">打开城市地图</a></div></section></section><aside class="phone-note"><h1>地图</h1><p>林舟查过北桥，但活动路线里没有这个点。</p></aside></main><script src="common.js"></script><script>initGameShell({stage:1,page:"phone-map"});</script></body></html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>地图 - 林舟的手机</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body class="chat-shell">
+    <main class="phone-stage">
+      <section class="mi-phone">
+        <section class="mi-screen app-screen map-app screen-enter">
+          <div class="app-head"><a class="mini-back" href="chat.html">‹</a><strong>地图</strong></div>
+          <form class="browser-search" id="mapSearch">
+            <input name="q" placeholder="搜索地点 / 编号">
+            <button type="submit">搜索</button>
+          </form>
+          <section class="phone-map-canvas">
+            <div class="map-river"></div>
+            <button class="map-pin s04" data-place="s04" type="button">S04</button>
+            <button class="map-pin s08" data-place="s08" type="button">S08</button>
+            <button class="map-pin b17" data-place="b17" type="button">B17</button>
+            <button class="map-pin pump" data-place="pump" type="button">泵站</button>
+          </section>
+          <article class="map-result" id="mapResult">
+            <h2>最近搜索</h2>
+            <p>西桥观景台 / 北桥体育馆 / 北桥地下通道 B 口</p>
+            <p>林舟没有搜索“终点”，他一直在缩小北桥范围。</p>
+          </article>
+        </section>
+      </section>
+    </main>
+    <script src="common.js"></script>
+    <script>
+      initGameShell({ stage: 16, page: "phone-map" });
+
+      const places = {
+        s04: ["S04 西桥观景台", "官方路线的第四个点。旧路线从这里分叉去北桥。", () => {}],
+        s08: ["S08 北桥体育馆", "新版路线已删除。旧站缓存、相册照片和许听雨旧帖都指向这里。", () => addEvidence("B")],
+        b17: ["B17 地下通道 17 号门", "不是备份编号，是北桥体育馆地下连通道门牌。通往器材间和泵站检修间。", () => setFlag("foundB17")],
+        pump: ["北桥雨水泵站", "EXIF 偏移点。入口不在主馆，林舟草稿写过：排水声最大的地方。", () => setFlag("foundPumpStation")]
+      };
+
+      function showPlace(key) {
+        const place = places[key];
+        document.querySelector("#mapResult").innerHTML = `
+          <h2>${place[0]}</h2>
+          <p>${place[1]}</p>
+          <button class="btn primary" id="recordMap" type="button">记录地图线索</button>
+        `;
+        document.querySelector("#recordMap").addEventListener("click", () => {
+          place[2]();
+          toast("已记录地图线索。");
+        });
+      }
+
+      document.querySelectorAll(".map-pin").forEach((pin) => {
+        pin.addEventListener("click", () => showPlace(pin.dataset.place));
+      });
+
+      document.querySelector("#mapSearch").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const q = normalize(new FormData(event.target).get("q"));
+        if (q.includes("s08") || q.includes("北桥体育馆")) showPlace("s08");
+        else if (q.includes("b17") || q.includes("17号门") || q.includes("地下")) showPlace("b17");
+        else if (q.includes("泵站") || q.includes("排水")) showPlace("pump");
+        else if (q.includes("s04") || q.includes("西桥")) showPlace("s04");
+        else toast("没有找到地点。试试 S08、B17、泵站。");
+      });
+    </script>
+  </body>
+</html>

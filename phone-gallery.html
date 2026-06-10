@@ -18,26 +18,125 @@
               <a class="btn primary" href="phone-camera.html">打开相机</a>
             </div>
           </section>
+
           <section class="gallery-content" id="galleryContent" hidden>
-            <div class="photo-grid">
-              <button>S01<br>正门</button>
-              <button>S02<br>邮筒</button>
-              <button>S03<br>旧书摊</button>
-              <button>S04<br>西桥</button>
-              <button class="locked-photo">已隐藏</button>
-              <button>截图<br>路线</button>
+            <div class="album-tabs">
+              <button class="active" data-album="route" type="button">踩点</button>
+              <button data-album="hidden" type="button">隐藏</button>
+              <button data-album="meta" type="button">信息</button>
             </div>
-            <p class="app-tip">有一张照片被系统标记为隐藏，缩略图信息被覆盖。</p>
+            <div class="photo-grid" id="photoGrid"></div>
+            <article class="photo-detail" id="photoDetail">
+              <h2>选择一张照片</h2>
+              <p>林舟把一周前的踩点照片和比赛当天的截图混在一起。注意拍摄时间、地点和文件名。</p>
+            </article>
           </section>
         </section>
       </section>
     </main>
     <script src="common.js"></script>
     <script>
-      initGameShell({ stage: 3, page: "phone-gallery" });
+      initGameShell({ stage: 12, page: "phone-gallery" });
+
+      const albums = {
+        route: [
+          {
+            title: "S04 西桥",
+            meta: "2026-05-31 20:14 / 西桥观景台",
+            body: "官方路线到 S04 后应转向新城地铁口。照片边缘却拍到一张旧路线箭头：北桥方向。",
+            evidence: ""
+          },
+          {
+            title: "旧二维码",
+            meta: "2026-05-31 20:47 / 北桥体育馆外墙",
+            body: "二维码已经褪色，但识别出的短链仍指向 citytrace/2023/cache。林舟在备忘录里写过：旧站没有删干净。",
+            evidence: "B"
+          },
+          {
+            title: "S08 签到箱",
+            meta: "2026-05-31 21:03 / 北桥体育馆侧门",
+            body: "箱体上的标签是 S08，旁边贴着 2023 试跑封条。新版官网没有 S08。",
+            evidence: "B"
+          }
+        ],
+        hidden: [
+          {
+            title: "IMG_062141",
+            meta: "2026-06-06 21:41 / 已隐藏",
+            body: "画面严重抖动。地下通道门牌能看见 B17，门缝里有一张旧求救纸条：许听雨，2023-06-06，S08。",
+            evidence: "C"
+          },
+          {
+            title: "泵站入口",
+            meta: "EXIF: 北桥雨水泵站 / 海拔 -3m",
+            body: "照片定位不在体育馆主馆，而在东侧泵站。文件备注：排水声最大的地方。",
+            evidence: ""
+          },
+          {
+            title: "17 号门",
+            meta: "2026-06-06 21:38 / B17",
+            body: "林舟拍到门禁屏幕闪烁：NVR maintenance window 00:17-00:22。这个时间不是案发时间，是救援窗口。",
+            evidence: ""
+          }
+        ],
+        meta: [
+          {
+            title: "相册恢复记录",
+            meta: "系统日志 / 应用锁",
+            body: "应用锁在 21:41 后被远程触发。威胁短信和锁定时间一致，所以 062141 不是随机密码。",
+            evidence: ""
+          },
+          {
+            title: "数独备份",
+            meta: "game/cache/sudoku.final",
+            body: "缓存里有一行林舟留下的备注：B17-NVR-0017。第三关完成后会恢复完整提示。",
+            evidence: ""
+          }
+        ]
+      };
+
+      const grid = document.querySelector("#photoGrid");
+      const detail = document.querySelector("#photoDetail");
+
+      function renderAlbum(name) {
+        document.querySelectorAll(".album-tabs button").forEach((button) => {
+          button.classList.toggle("active", button.dataset.album === name);
+        });
+        grid.innerHTML = albums[name].map((photo, index) => `
+          <button class="${name === "hidden" ? "locked-photo" : ""}" data-album="${name}" data-index="${index}" type="button">
+            <span>${photo.title}</span>
+            <em>${photo.meta.split(" / ")[0]}</em>
+          </button>
+        `).join("");
+        grid.querySelectorAll("button").forEach((button) => {
+          button.addEventListener("click", () => openPhoto(button.dataset.album, Number(button.dataset.index)));
+        });
+      }
+
+      function openPhoto(album, index) {
+        const photo = albums[album][index];
+        detail.innerHTML = `
+          <h2>${photo.title}</h2>
+          <p class="mono">${photo.meta}</p>
+          <p>${photo.body}</p>
+          <button class="btn primary" id="recordPhoto" type="button">记录这条线索</button>
+        `;
+        document.querySelector("#recordPhoto").addEventListener("click", () => {
+          if (photo.evidence) addEvidence(photo.evidence);
+          if (photo.title.includes("17") || photo.body.includes("00:17")) setFlag("foundRescueWindow");
+          if (photo.body.includes("雨水泵站")) setFlag("foundPumpStation");
+          toast("已记入调查笔记：相册线索。");
+        });
+      }
+
+      document.querySelectorAll(".album-tabs button").forEach((button) => {
+        button.addEventListener("click", () => renderAlbum(button.dataset.album));
+      });
+
       if (hasFlag("albumLockOpened")) {
         document.querySelector("#galleryLock").hidden = true;
         document.querySelector("#galleryContent").hidden = false;
+        renderAlbum(hasFlag("sudokuSecretSolved") ? "hidden" : "route");
       }
     </script>
   </body>

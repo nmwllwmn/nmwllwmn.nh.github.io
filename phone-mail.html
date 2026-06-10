@@ -20,24 +20,93 @@
             <button class="btn primary" type="submit">登录校园邮箱</button>
             <p id="mailError" class="mail-error"></p>
           </form>
+          <section class="mail-app" id="mailApp" hidden>
+            <div class="mail-list" id="mailList"></div>
+            <article class="mail-detail" id="mailDetail">
+              <h2>收件箱</h2>
+              <p>林舟没有删除邮箱。几封自动通知能串起官网导入、NVR 和 B17。</p>
+            </article>
+          </section>
         </section>
       </section>
     </main>
     <script src="common.js"></script>
     <script>
-      initGameShell({ stage: 4, page: "phone-mail" });
+      initGameShell({ stage: 18, page: "phone-mail" });
+
+      const mails = [
+        {
+          from: "夜行赛系统",
+          title: "成绩同步异常提醒",
+          time: "6 月 6 日 21:22",
+          body: "队伍 夜航03 的 S05-S07 签到记录来自 Web Import，来源账号 shenbo_admin。导入批次：IMP-2202。",
+          action: () => { addEvidence("A"); addEvidence("E"); setFlag("foundShenboImport"); }
+        },
+        {
+          from: "校园安全中心",
+          title: "北桥片区设备维护通知",
+          time: "6 月 6 日 21:38",
+          body: "CAM 04 北桥北侧 21:38-21:44 存在画面覆盖。临时查看账号 guest，密码 cam042138。请勿外传。",
+          action: () => setFlag("foundNvrLogin")
+        },
+        {
+          from: "信息化办公室",
+          title: "旧站缓存清理失败",
+          time: "6 月 5 日 09:16",
+          body: "citytrace/2023/cache 下仍存在 route_20230606_old.pdf 索引。旧路线包含 S08 北桥体育馆，请城迹社自行确认是否继续清理。",
+          action: () => addEvidence("B")
+        },
+        {
+          from: "林舟",
+          title: "草稿：如果我没回来",
+          time: "未发送",
+          body: "别去主馆。排水声最大的地方才是入口。B17 的门禁会在维护窗口短暂掉线，00:17 到 00:22。",
+          action: () => { setFlag("foundPumpStation"); setFlag("foundRescueWindow"); }
+        }
+      ];
+
+      function openMailApp() {
+        document.querySelector("#mailLogin").hidden = true;
+        document.querySelector("#mailApp").hidden = false;
+        renderMailList();
+      }
+
+      function renderMailList() {
+        document.querySelector("#mailList").innerHTML = mails.map((mail, index) => `
+          <button class="mail-preview" data-index="${index}" type="button">
+            <strong>${mail.from}</strong>
+            <span>${mail.title}</span>
+            <em>${mail.time}</em>
+          </button>
+        `).join("");
+        document.querySelectorAll("#mailList .mail-preview").forEach((button) => {
+          button.addEventListener("click", () => openMail(Number(button.dataset.index)));
+        });
+      }
+
+      function openMail(index) {
+        const mail = mails[index];
+        document.querySelector("#mailDetail").innerHTML = `
+          <h2>${mail.title}</h2>
+          <p class="mono">${mail.from} · ${mail.time}</p>
+          <p>${mail.body}</p>
+          <button class="btn primary" id="recordMail" type="button">记录邮件线索</button>
+        `;
+        document.querySelector("#recordMail").addEventListener("click", () => {
+          mail.action();
+          toast("已记录邮件线索。");
+        });
+      }
+
+      if (hasFlag("phoneMailLoggedIn")) openMailApp();
+
       document.querySelector("#mailLogin").addEventListener("submit", (event) => {
         event.preventDefault();
         const user = normalize(document.querySelector("#mailUser").value);
         const pass = normalize(document.querySelector("#mailPass").value);
         if ((user === "linzhou" || user === "linzhou@stu.nhu.edu.cn" || user === "20220606") && pass === "0606") {
           setFlag("phoneMailLoggedIn");
-          document.querySelector("#mailLogin").innerHTML = `
-            <div class="mail-logo">NHU</div>
-            <h2>收件箱</h2>
-            <article class="mail-preview"><strong>夜行赛系统</strong><span>成绩同步异常提醒</span><em>6 月 6 日 21:22</em></article>
-            <article class="mail-preview"><strong>校园安全中心</strong><span>北桥片区设备维护通知</span><em>6 月 6 日 21:38</em></article>
-          `;
+          openMailApp();
         } else {
           document.querySelector("#mailError").textContent = "账号或密码错误。";
         }

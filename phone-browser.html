@@ -11,13 +11,17 @@
       <section class="mi-phone">
         <section class="mi-screen browser-screen screen-enter">
           <div class="wechat-head"><a class="mini-back" href="chat.html">‹</a><strong>浏览器</strong><span></span></div>
-          <div class="browser-bar">搜索或输入网址</div>
+          <form class="browser-search" id="browserSearch">
+            <input name="q" placeholder="搜索本机历史 / 输入关键词">
+            <button type="submit">搜索</button>
+          </form>
           <section class="browser-history" id="browserHistory">
             <h2>历史记录</h2>
-            <button data-page="event" type="button"><strong>南洄城市夜行定向赛</strong><span>night.nhu.edu.cn/result</span></button>
-            <button data-page="university" type="button"><strong>南洄大学官网</strong><span>www.nhu.edu.cn</span></button>
-            <button data-page="club" type="button"><strong>城迹社旧站缓存</strong><span>www.nhu.edu.cn/club/citytrace/2023/cache</span></button>
-            <button data-page="map" type="button"><strong>北桥体育馆 搜索结果</strong><span>map.nanhui.local/search?q=北桥体育馆</span></button>
+            <button data-page="event" type="button"><strong>南洄城市夜行定向赛 · 成绩查询</strong><span>night.nhu.edu.cn/result?team=night-03</span></button>
+            <button data-page="oldsite" type="button"><strong>城迹社旧站缓存</strong><span>www.nhu.edu.cn/club/citytrace/2023/cache</span></button>
+            <button data-page="xutingyu" type="button"><strong>许听雨 北桥 2023</strong><span>search.local?q=许听雨+北桥</span></button>
+            <button data-page="b17" type="button"><strong>B17 门禁掉线</strong><span>sec.nhu.local/logs/b17</span></button>
+            <button data-page="archive" type="button"><strong>密页集归档终端</strong><span>myj.local/archive/0606</span></button>
           </section>
           <section class="browser-page" id="browserPage" hidden>
             <div class="browser-page-head"><button class="mini-back" id="browserBack" type="button">‹</button><strong id="browserTitle">网页</strong></div>
@@ -28,24 +32,65 @@
     </main>
     <script src="common.js"></script>
     <script>
-      initGameShell({ stage: 6, page: "phone-browser" });
+      initGameShell({ stage: 10, page: "phone-browser" });
       const pages = {
-        event: ["南洄城市夜行定向赛", "<h2>第七届夜行定向赛</h2><p>林舟的成绩显示已完赛，但 S05-S07 的上传方式为 Web Import。</p><p class='mono'>账号 linzhou / 初始口令 0606</p>"],
-        university: ["南洄大学官网", "<h2>站内搜索记录</h2><p>城迹社、北桥体育馆、许听雨。</p><p>北桥体育馆自 2023 年 6 月 8 日起停止对外开放。</p>"],
-        club: ["城迹社旧站缓存", "<h2>2023 路线资料</h2><p>旧路径仍能看到 route_20230606_old.pdf 的索引。</p><p>公开页面已迁移。</p>"],
-        map: ["北桥体育馆", "<h2>地图搜索</h2><p>状态：封闭。旧入口：北桥地下通道 B 口。</p><p class='mono'>S08 / 北桥体育馆</p>"]
+        event: {
+          title: "夜行赛成绩查询",
+          html: "<h2>夜航03</h2><p>林舟显示 23:17 已完赛，但 S05、S06、S07 的上传方式均为 Web Import。</p><p class='mono'>linzhou / 0606 / Web Import</p>",
+          action: () => addEvidence("A")
+        },
+        oldsite: {
+          title: "城迹社旧站缓存",
+          html: "<h2>route_20230606_old.pdf</h2><p>旧站缓存仍保留 2023 试跑路线索引。S01-S07 之外还有 S08：北桥体育馆。</p><p>新版公告删除了 S08，也删除了 2023 试跑说明。</p>",
+          action: () => addEvidence("B")
+        },
+        xutingyu: {
+          title: "许听雨 北桥 2023",
+          html: "<h2>搜索快照</h2><p>校内旧帖提到：许听雨曾参加 2023 年 6 月 6 日城迹社试跑，最后出现地点为北桥体育馆。</p><p>原帖已不可访问，缓存标题含 B17。</p>",
+          action: () => addEvidence("C")
+        },
+        b17: {
+          title: "B17 门禁掉线",
+          html: "<h2>sec.nhu.local/logs/b17</h2><p>备份日志：B17 门禁每晚 00:17-00:22 进入维护窗口。NVR 同步延迟 300 秒。</p><p class='mono'>rescue window: 00:17</p>",
+          action: () => setFlag("foundRescueWindow")
+        },
+        archive: {
+          title: "密页集归档终端",
+          html: "<h2>MYJ-0606-S08</h2><p>林舟把归档入口留在浏览器历史里。只有证据链完整时，提交才有意义。</p><p><a class='btn primary' href='archive.html'>打开归档终端</a></p>",
+          action: () => setStage(40)
+        }
       };
+
       const history = document.querySelector("#browserHistory");
       const page = document.querySelector("#browserPage");
-      document.querySelectorAll("[data-page]").forEach((button) => {
-        button.addEventListener("click", () => {
-          const data = pages[button.dataset.page];
-          document.querySelector("#browserTitle").textContent = data[0];
-          document.querySelector("#browserContent").innerHTML = data[1];
-          history.hidden = true;
-          page.hidden = false;
+
+      function openPage(key) {
+        const data = pages[key];
+        document.querySelector("#browserTitle").textContent = data.title;
+        document.querySelector("#browserContent").innerHTML = `${data.html}<button class="btn primary" id="recordBrowser" type="button">记录网页线索</button>`;
+        document.querySelector("#recordBrowser").addEventListener("click", () => {
+          data.action();
+          toast("已记录浏览器线索。");
         });
+        history.hidden = true;
+        page.hidden = false;
+      }
+
+      document.querySelectorAll("[data-page]").forEach((button) => {
+        button.addEventListener("click", () => openPage(button.dataset.page));
       });
+
+      document.querySelector("#browserSearch").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const q = normalize(new FormData(event.target).get("q"));
+        if (q.includes("s08") || q.includes("旧站") || q.includes("2023")) openPage("oldsite");
+        else if (q.includes("许听雨") || q.includes("xutingyu")) openPage("xutingyu");
+        else if (q.includes("b17") || q.includes("0017")) openPage("b17");
+        else if (q.includes("归档") || q.includes("myj") || q.includes("archive")) openPage("archive");
+        else if (q.includes("林舟") || q.includes("完赛") || q.includes("webimport")) openPage("event");
+        else toast("本机历史没有匹配记录。试试 S08、B17、许听雨。");
+      });
+
       document.querySelector("#browserBack").addEventListener("click", () => {
         page.hidden = true;
         history.hidden = false;

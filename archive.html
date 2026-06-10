@@ -1,16 +1,29 @@
 <!doctype html>
 <html lang="zh-CN">
-  <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>归档终端</title><link rel="stylesheet" href="styles.css"></head>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>归档终端</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
   <body class="archive-page">
-    <header class="site-top"><div class="site-id"><span class="site-mark">MYJ</span><div><h1>密页集归档终端</h1><p>MYJ-0606-S08 / evidence submit</p></div></div><nav class="top-actions"><a class="plain-link" href="map.html">地图</a><a class="plain-link" href="wall.html">校园墙</a></nav></header>
+    <header class="site-top">
+      <div class="site-id"><span class="site-mark">MYJ</span><div><h1>密页集归档终端</h1><p>MYJ-0606-S08 / evidence submit</p></div></div>
+      <nav class="top-actions"><a class="plain-link" href="chat.html">林舟手机</a><a class="plain-link" href="nvr.html">NVR</a><a class="plain-link" href="map.html">城市地图</a></nav>
+    </header>
     <main class="layout stack">
       <section class="panel">
         <h2>提交证据链</h2>
-        <form id="archiveForm" class="answer-form">
+        <p class="muted">基础四项能指认伪造完赛记录；救援四项决定你是否能找到林舟。</p>
+        <form id="archiveForm" class="answer-form archive-form">
           <input name="place" placeholder="最后真实地点">
-          <input name="time" placeholder="最后可靠时间">
+          <input name="time" placeholder="关键监控时间">
           <input name="person" placeholder="导入记录执行人">
           <input name="imp" placeholder="证据编号">
+          <input name="door" placeholder="地下入口 / 门牌">
+          <input name="entry" placeholder="实际进入点">
+          <input name="window" placeholder="救援时间窗口">
+          <input name="proof" placeholder="隐藏证据来源">
           <button class="btn primary" type="submit">归档</button>
         </form>
       </section>
@@ -26,60 +39,73 @@
         const time = normalize(data.get("time"));
         const person = normalize(data.get("person"));
         const imp = normalize(data.get("imp"));
-        const placeOk = ["s08","北桥","北桥体育馆"].includes(place);
+        const door = normalize(data.get("door"));
+        const entry = normalize(data.get("entry"));
+        const windowTime = normalize(data.get("window"));
+        const proof = normalize(data.get("proof"));
+
+        const placeOk = ["s08", "北桥", "北桥体育馆"].includes(place);
         const timeOk = time === "21:38" || time === "2138";
         const personOk = person === "沈泊" || person === "shenbo_admin" || person === "shenboadmin";
         const impOk = imp === "imp-2202";
-        if (placeOk && timeOk && personOk && impOk) {
-          setFlag("submittedArchive");
-          const hidden = hasFlag("sudokuSecretSolved");
-          document.querySelector("#ending").innerHTML = hidden ? `<article class="doc ending"><h2>隐藏结局：第十七格</h2>你先解开了林舟手机里的数独。
+        const truthOk = placeOk && timeOk && personOk && impOk;
+        const rescueOk = ["b17", "17", "17号门", "地下通道17号门"].includes(door)
+          && (entry.includes("泵站") || entry.includes("雨水"))
+          && (windowTime === "00:17" || windowTime === "0017" || windowTime.includes("00:17"))
+          && (proof.includes("exif") || proof.includes("相册") || proof.includes("数独") || proof.includes("nvr"));
 
-第三关最后出现的不是分数，而是一行很短的提示：
+        if (truthOk && rescueOk) {
+          setFlag("rescuedLinzhou");
+          document.querySelector("#ending").innerHTML = `<article class="doc ending"><h2>隐藏结局：未完成的签到</h2>你没有去北桥主馆。
 
-别回复 17 楼。
+你把旧站 S08、相册 EXIF、B17 门禁日志和 00:17 维护窗口一起提交。归档终端没有立刻报警，而是先用林舟邮箱发出一封延迟邮件。
 
-你把 S08、21:38、沈泊和 IMP-2202 一起提交后，归档终端没有立刻关闭。
-它额外恢复了一个旧论坛索引。
+00:17  B17 门禁进入维护窗口
+00:18  林舟手机短暂恢复信号
+00:19  录音和照片上传完成
+00:21  泵站检修门被打开
+00:24  校园安全中心接警记录被外部同步
 
-B17 不是备份编号。
-它也是第 17 条留言。
+林舟被找到时，手机还剩 2% 电量。最后一张照片没有对准黑手，只拍到墙上的旧签到牌：
 
-留言内容只有一句：
+S08 北桥体育馆
+状态：未完成
 
-“第 8 个点已经放回去了。现在去找第 17 楼。”
+这一次，没有人能替他点完最后三个签到。</article>`;
+        } else if (truthOk && hasFlag("sudokuSecretSolved")) {
+          document.querySelector("#ending").innerHTML = `<article class="doc ending"><h2>真相结局：旧站未删除</h2>你提交了 S08、21:38、沈泊和 IMP-2202。
 
-关联档案已打开：
-MYJ-0606-S08 -> MYJ-B17-FLOOR
-</article>` : `<article class="doc ending"><h2>真结局：最后一次签到</h2>你提交的不只是地点。
-你提交了旧路线、监控时间、导入编号和执行账号。
+数独第三关恢复的缓存证明，B17 不是普通备份编号，而是旧站把 S08 地下入口藏起来的索引。相册里的隐藏照片也证明，2023 年许听雨不是个人夜跑失联。
 
-归档终端短暂黑屏。一条三年前的记录被恢复。
+你找到了旧站点的秘密，也找到了伪造记录的人。
 
-许听雨，2023-06-06，S08，上传失败。
-林舟，2026-06-06，S08，上传失败。
+但你没有给出实际入口和救援窗口。
 
-两条失败记录相隔三年，时间只差一分钟。
+归档终端停在一行字上：
 
-6 月 10 日 02:17，南洄大学发布公告，暂停城迹社全部活动。沈泊账号被停用，校园安全管理中心开始配合调查。
+真相已归档。
+林舟仍未归队。</article>`;
+        } else if (truthOk) {
+          document.querySelector("#ending").innerHTML = `<article class="doc ending"><h2>普通结局：最后一次签到</h2>你证明了林舟没有完赛。
 
-你再次打开活动官网。林舟的状态不再是“已完赛”。
+S05-S07 是 Web Import，导入批次 IMP-2202 来自 shenbo_admin。NVR 在 21:38 覆盖了北桥画面。沈泊被锁定为伪造记录的人。
 
-它变成了：
+你按证据去了北桥体育馆主馆。
 
-最后一次签到：S08 北桥体育馆
-状态：未归队
+屏幕变黑前，手机震动了一下。活动官网刷新出一条新记录：
 
-彩蛋：真结局后回校园墙搜索 B17。</article>`;
+阿远
+状态：已完赛
+最后一次签到：S08</article>`;
         } else if (placeOk && timeOk) {
-          document.querySelector("#ending").innerHTML = `<article class="doc ending"><h2>普通结局：北桥不是终点</h2>你提交了 S08 和 21:38。系统恢复了林舟最后一次失败上传。
+          document.querySelector("#ending").innerHTML = `<article class="doc ending"><h2>坏结局：北桥不是终点</h2>你找到了 S08 和 21:38，但没有找出是谁补写记录，也没有找到 IMP-2202。
 
-照片里是北桥体育馆侧门，画面几乎全黑。角落里有一行旧字：北桥不是终点。
+北桥体育馆的门是锁着的。你听见地下有水声，却不知道入口在哪里。
 
-第二天，学校发布公告，称警方已介入林舟失踪调查。活动官网关闭了成绩查询。
-
-但没有人提到许听雨。也没有人解释，为什么林舟后半程会被系统补完。</article>`;
-        } else toast("归档失败。地点、时间、执行人、编号四项缺一不可。");
+第二天，官网关闭了成绩查询。林舟的状态仍然是：已完赛。</article>`;
+        } else {
+          toast("归档失败。至少需要地点、时间、执行人、编号四项。");
+        }
       });
     </script>
   </body>
