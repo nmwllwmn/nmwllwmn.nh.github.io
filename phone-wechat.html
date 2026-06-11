@@ -16,7 +16,9 @@
             <span></span>
           </div>
 
-          <input id="wechatSearch" class="wechat-search-input" autocomplete="off" placeholder="搜索">
+          <form id="wechatSearchForm">
+            <input id="wechatSearch" class="wechat-search-input" autocomplete="off" placeholder="搜索">
+          </form>
 
           <div class="wechat-list" id="wechatList"></div>
 
@@ -32,6 +34,7 @@
     <script src="wechat-data.js"></script>
     <script>
       initGameShell({ stage: 4, page: "phone-wechat" });
+      const searchKeyword = new URLSearchParams(location.search).get("q") || "";
 
       const chatRows = Object.entries(WECHAT_CHATS).map(([key, chat]) => ({
         key,
@@ -62,11 +65,14 @@
         }).join("") || `<p class="empty-state">没有找到聊天记录。</p>`;
       }
 
-      document.querySelector("#wechatSearch").addEventListener("input", (event) => {
-        renderRows(event.target.value);
+      document.querySelector("#wechatSearch").value = searchKeyword;
+      document.querySelector("#wechatSearchForm").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const keyword = document.querySelector("#wechatSearch").value.trim();
+        location.href = keyword ? `phone-wechat.html?q=${encodeURIComponent(keyword)}` : "phone-wechat.html";
       });
 
-      renderRows();
+      renderRows(searchKeyword);
     </script>
   </body>
 </html>

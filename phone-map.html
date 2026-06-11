@@ -33,6 +33,7 @@
     <script src="common.js"></script>
     <script>
       initGameShell({ stage: 16, page: "phone-map" });
+      const params = new URLSearchParams(location.search);
 
       const places = {
         s04: ["S04 西桥观景台", "官方路线的第四个点。旧路线从这里分叉去北桥。", () => {}],
@@ -56,22 +57,27 @@
       }
 
       document.querySelectorAll(".map-pin").forEach((pin) => {
-        pin.addEventListener("click", () => showPlace(pin.dataset.place));
+        pin.addEventListener("click", () => {
+          location.href = `phone-map.html?place=${encodeURIComponent(pin.dataset.place)}`;
+        });
       });
 
       document.querySelector("#mapSearch").addEventListener("submit", (event) => {
         event.preventDefault();
         const q = normalize(new FormData(event.target).get("q"));
         if (q.includes("imp2202") || q.includes("imp-2202")) {
-          if (hasFlag("foundNvrLogin") || hasFlag("foundImp2202") || hasEvidence("D")) showPlace("imp");
+          if (hasFlag("foundNvrLogin") || hasFlag("foundImp2202") || hasEvidence("D")) location.href = "phone-map.html?place=imp";
           else toast("没有找到公开任务。需要更具体的导入编号来源。");
         }
-        else if (q.includes("s08") || q.includes("北桥体育馆")) showPlace("s08");
-        else if (q.includes("b17") || q.includes("17号门") || q.includes("地下")) showPlace("b17");
-        else if (q.includes("泵站") || q.includes("排水")) showPlace("pump");
-        else if (q.includes("s04") || q.includes("西桥")) showPlace("s04");
+        else if (q.includes("s08") || q.includes("北桥体育馆")) location.href = "phone-map.html?place=s08";
+        else if (q.includes("b17") || q.includes("17号门") || q.includes("地下")) location.href = "phone-map.html?place=b17";
+        else if (q.includes("泵站") || q.includes("排水")) location.href = "phone-map.html?place=pump";
+        else if (q.includes("s04") || q.includes("西桥")) location.href = "phone-map.html?place=s04";
         else toast("没有找到地点。试试 S08、B17、泵站。");
       });
+
+      const initialPlace = params.get("place");
+      if (initialPlace && places[initialPlace]) showPlace(initialPlace);
     </script>
   </body>
 </html>

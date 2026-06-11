@@ -785,6 +785,46 @@ th {
   background: white;
 }
 
+body[data-page^="phone"] .notebook-toggle {
+  top: auto;
+  right: 22px;
+  bottom: 22px;
+  width: 52px;
+  height: 52px;
+  min-height: 52px;
+  border-radius: 999px;
+  padding: 0;
+  justify-content: center;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.18);
+}
+
+body[data-page^="phone"] .notebook-toggle strong {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+body[data-page^="phone"] .notebook-toggle span {
+  width: 34px;
+  height: 34px;
+}
+
+body[data-page^="phone"] .notebook-panel {
+  left: 12px;
+  right: 12px;
+  top: auto;
+  bottom: 86px;
+  width: auto;
+  max-height: min(70vh, 560px);
+  overflow-y: auto;
+}
+
+body[data-page^="phone"] #notebookText {
+  min-height: 210px;
+}
+
 .note-head,
 .notebook-head {
   display: flex;
@@ -1005,7 +1045,7 @@ th {
 }
 
 .mi-screen.screen-enter {
-  animation: screenEnter 0.24s cubic-bezier(0.2, 0.8, 0.2, 1);
+  animation: none;
 }
 
 @keyframes screenEnter {
@@ -1856,6 +1896,12 @@ th {
   font-size: 13px;
 }
 
+.wechat-search-form,
+#wechatSearchForm {
+  flex: 0 0 auto;
+  margin: 0;
+}
+
 .wechat-search-input {
   width: calc(100% - 24px);
   flex: 0 0 auto;
@@ -2002,7 +2048,8 @@ th {
   padding-bottom: 4px;
   border-top: 1px solid rgba(0,0,0,0.08);
   background: rgba(248,248,248,0.96);
-  backdrop-filter: blur(18px);
+  z-index: 6;
+  backdrop-filter: none;
 }
 
 .wechat-tabs button,
@@ -2201,15 +2248,18 @@ th {
 .wechat-contact-list,
 .call-list {
   display: grid;
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
-  padding-bottom: 88px;
+  align-content: start;
+  padding-bottom: 78px;
   background: #fff;
 }
 
 .contact-row,
 .call-row {
   display: grid;
-  grid-template-columns: 46px minmax(0, 1fr) auto;
+  grid-template-columns: 46px minmax(0, 1fr);
   gap: 12px;
   align-items: center;
   min-height: 70px;
@@ -2217,6 +2267,26 @@ th {
   padding: 11px 14px;
   color: #111;
   text-decoration: none;
+}
+
+.contact-row .avatar,
+.call-row .avatar {
+  grid-row: 1 / 3;
+}
+
+.contact-row strong,
+.contact-row em,
+.call-row strong,
+.call-row em {
+  grid-column: 2;
+  min-width: 0;
+}
+
+.contact-row em,
+.call-row em {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .contact-row em,
@@ -2629,6 +2699,7 @@ th {
   padding: 10px 12px;
   background: rgba(255,255,255,0.94);
   color: #111;
+  text-decoration: none;
   text-align: left;
 }
 
@@ -2656,6 +2727,23 @@ th {
 .sms-row time {
   color: #9099a4;
   font-size: 11px;
+}
+
+body[data-page^="phone"] .mi-screen,
+body[data-page^="phone"] .wechat-tabs,
+body[data-page^="phone"] .phone-progress-battery,
+body[data-page^="phone"] .notebook-toggle {
+  will-change: auto;
+}
+
+body[data-page^="phone"] * {
+  backdrop-filter: none !important;
+}
+
+body[data-page^="phone"] .screen-enter,
+body[data-page^="phone"] .shade-open,
+body[data-page^="phone"] .phone-app-toast {
+  animation: none !important;
 }
 
 .sms-avatar {
@@ -3440,5 +3528,45 @@ body[data-page^="phone"] .btn.primary,
 
   .archive-form {
     grid-template-columns: 1fr;
+  }
+
+  body[data-page^="phone"] .notebook-toggle {
+    top: auto;
+    right: 22px;
+    bottom: 22px;
+    width: 52px;
+    height: 52px;
+    min-height: 52px;
+    border-radius: 999px;
+    padding: 0;
+    justify-content: center;
+    box-shadow: 0 10px 26px rgba(0,0,0,0.18);
+  }
+
+  body[data-page^="phone"] .notebook-toggle strong {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  body[data-page^="phone"] .notebook-toggle span {
+    width: 34px;
+    height: 34px;
+  }
+
+  body[data-page^="phone"] .notebook-panel {
+    left: 12px;
+    right: 12px;
+    top: auto;
+    bottom: 86px;
+    width: auto;
+    max-height: min(70vh, 560px);
+    overflow-y: auto;
+  }
+
+  body[data-page^="phone"] #notebookText {
+    min-height: 210px;
   }
 }
