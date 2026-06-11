@@ -26,6 +26,7 @@
       const hasTruth = Boolean(evidence.A && evidence.B && evidence.C && evidence.D && evidence.E);
       const hasSudokuCache = Boolean(flags.sudokuSecretSolved);
       const hasRescueRoute = Boolean(flags.foundB17 && flags.foundPumpStation && flags.foundRescueWindow);
+      const hasAlbumReport = Boolean(flags.albumPhotoReported || flags.reportedMysteryMan);
       const hasHiddenEnding = Boolean(hasTruth && hasSudokuCache && hasRescueRoute);
 
       function item(title, body, locked = false) {
@@ -47,7 +48,14 @@
       ];
 
       let ending = "";
-      if (hasHiddenEnding) {
+      if (hasTruth && hasSudokuCache && hasAlbumReport) {
+        ending = `<article class="archive-phone-ending truth">
+          <h2>彩蛋结局：抓住幕后黑手</h2>
+          <p>你用数独第三关恢复出的密码打开相册，把隐藏照片、旧站缓存、NVR 覆盖记录和导入账号一起提交给警方。</p>
+          <p>幕后黑手被带走了。三年前的旧路线和今年被补写的成绩终于连成完整证据链。</p>
+          <p class="mono">报警回执已生成。<br>林舟仍未找到。</p>
+        </article>`;
+      } else if (hasHiddenEnding) {
         setFlag("rescuedLinzhou");
         ending = `<article class="archive-phone-ending rescue">
           <h2>隐藏结局：未完成的签到</h2>
@@ -56,11 +64,10 @@
           <p>林舟被找到时，手机还剩 2% 电量。S08 仍显示：未完成。</p>
         </article>`;
       } else if (hasTruth && flags.sudokuSecretSolved) {
-        setFlag("reportedMysteryMan");
         ending = `<article class="archive-phone-ending truth">
           <h2>真相结局：旧站未删除</h2>
-          <p>数独缓存恢复出隐藏相册索引。你没有贸然去北桥，而是把旧站、NVR、导入任务和相册线索备份到了密页集。</p>
-          <p class="mono">报警回执已生成。<br>林舟仍未归队。</p>
+          <p>数独缓存恢复出相册密码。你已经知道旧站、NVR 和导入任务之间存在人为串改，但还没有把隐藏照片作为报警证据提交。</p>
+          <p class="mono">相册密码：062141<br>林舟仍未归队。</p>
         </article>`;
       } else if (hasTruth) {
         ending = `<article class="archive-phone-ending danger">

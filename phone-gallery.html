@@ -14,8 +14,12 @@
           <section class="gallery-lock" id="galleryLock">
             <div class="app-lock-card">
               <strong>相册已锁定</strong>
-              <p>请先通过相机右下角相册入口验证应用锁。</p>
-              <a class="btn primary" href="phone-camera.html">打开相机</a>
+              <p>请输入 6 位应用锁密码</p>
+              <form class="inline-unlock" id="galleryPasswordForm">
+                <input id="galleryPassword" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="相册密码">
+                <button class="btn primary" type="submit">解锁</button>
+              </form>
+              <em id="galleryPasswordError"></em>
             </div>
           </section>
 
@@ -99,14 +103,8 @@
       const detail = document.querySelector("#photoDetail");
 
       function renderAlbum(name) {
-        if (name === "hidden" && !hasFlag("sudokuSecretSolved")) {
-          toast("隐藏相册仍在数独缓存里。先完成第三关。");
-          name = "route";
-        }
         document.querySelectorAll(".album-tabs button").forEach((button) => {
           button.classList.toggle("active", button.dataset.album === name);
-          button.disabled = button.dataset.album === "hidden" && !hasFlag("sudokuSecretSolved");
-          button.classList.toggle("locked", button.disabled);
         });
         grid.innerHTML = albums[name].map((photo, index) => `
           <button class="${name === "hidden" ? "locked-photo" : ""}" data-album="${name}" data-index="${index}" type="button">
@@ -133,6 +131,13 @@
           if (clueText.includes("B17")) setFlag("foundB17");
           if (clueText.includes("17 号门") || clueText.includes("00:17")) setFlag("foundRescueWindow");
           if (clueText.includes("雨水泵站") || clueText.includes("泵站")) setFlag("foundPumpStation");
+          if (album === "hidden") {
+            setFlag("reportedMysteryMan");
+            setFlag("albumPhotoReported");
+            toast("证据已备份，报警回执生成。");
+            setTimeout(() => { location.href = "archive.html"; }, 700);
+            return;
+          }
           toast("已记入调查笔记：相册线索。");
         });
       }
@@ -146,6 +151,20 @@
         document.querySelector("#galleryContent").hidden = false;
         renderAlbum(hasFlag("sudokuSecretSolved") ? "hidden" : "route");
       }
+
+      document.querySelector("#galleryPasswordForm").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const password = normalize(document.querySelector("#galleryPassword").value);
+        const error = document.querySelector("#galleryPasswordError");
+        if (password === "062141") {
+          setFlag("albumLockOpened");
+          document.querySelector("#galleryLock").hidden = true;
+          document.querySelector("#galleryContent").hidden = false;
+          renderAlbum("hidden");
+        } else {
+          error.textContent = "密码错误。数独第三关缓存里有完整提示。";
+        }
+      });
     </script>
   </body>
 </html>

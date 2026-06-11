@@ -88,8 +88,13 @@
       const history = document.querySelector("#browserHistory");
       const page = document.querySelector("#browserPage");
 
+      function goPage(key) {
+        location.href = `phone-browser.html?site=${encodeURIComponent(key)}`;
+      }
+
       function openPage(key) {
         const data = pages[key];
+        if (!data) return;
         document.querySelector("#browserTitle").textContent = data.title;
         const recordButton = data.action ? `<button class="btn primary" id="recordBrowser" type="button">记录网页线索</button>` : "";
         document.querySelector("#browserContent").innerHTML = `${data.html}${recordButton}`;
@@ -116,29 +121,31 @@
         page.hidden = false;
       }
 
-      document.querySelectorAll("[data-page]").forEach((button) => {
-        button.addEventListener("click", () => openPage(button.dataset.page));
+      document.querySelectorAll("#browserHistory button[data-page]").forEach((button) => {
+        button.addEventListener("click", () => goPage(button.dataset.page));
       });
 
       document.querySelector("#browserSearch").addEventListener("submit", (event) => {
         event.preventDefault();
         const q = normalize(new FormData(event.target).get("q"));
-        if (q.includes("官网") || q.includes("南洄大学")) openPage("university");
-        else if (q.includes("校园墙") || q.includes("wall")) openPage("wall");
-        else if (q.includes("网盘") || q.includes("备份") || q.includes("drive")) openPage("drive");
-        else if (q.includes("nvr") || q.includes("监控") || q.includes("cam04")) openPage("nvr");
-        else if (q.includes("s08") || q.includes("旧站") || q.includes("2023")) openPage("oldsite");
-        else if (q.includes("许听雨") || q.includes("xutingyu")) openPage("xutingyu");
-        else if (q.includes("b17") || q.includes("0017")) openPage("b17");
-        else if (q.includes("归档") || q.includes("myj") || q.includes("archive")) openPage("archive");
-        else if (q.includes("林舟") || q.includes("完赛") || q.includes("webimport")) openPage("event");
+        if (q.includes("官网") || q.includes("南洄大学")) goPage("university");
+        else if (q.includes("校园墙") || q.includes("wall")) goPage("wall");
+        else if (q.includes("网盘") || q.includes("备份") || q.includes("drive")) goPage("drive");
+        else if (q.includes("nvr") || q.includes("监控") || q.includes("cam04")) goPage("nvr");
+        else if (q.includes("s08") || q.includes("旧站") || q.includes("2023")) goPage("oldsite");
+        else if (q.includes("许听雨") || q.includes("xutingyu")) goPage("xutingyu");
+        else if (q.includes("b17") || q.includes("0017")) goPage("b17");
+        else if (q.includes("归档") || q.includes("myj") || q.includes("archive")) goPage("archive");
+        else if (q.includes("林舟") || q.includes("完赛") || q.includes("webimport")) goPage("event");
         else toast("本机历史没有匹配记录。试试 S08、B17、许听雨。");
       });
 
       document.querySelector("#browserBack").addEventListener("click", () => {
-        page.hidden = true;
-        history.hidden = false;
+        location.href = "phone-browser.html";
       });
+
+      const site = new URLSearchParams(location.search).get("site");
+      if (site && pages[site]) openPage(site);
     </script>
   </body>
 </html>
