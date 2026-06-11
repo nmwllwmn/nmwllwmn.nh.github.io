@@ -9,7 +9,6 @@
   <body class="chat-shell">
     <main class="phone-stage">
       <section class="mi-phone">
-        <div class="phone-island"><span></span><span></span><span></span></div>
         <section class="mi-screen wechat-screen chat-page screen-enter">
           <div class="wechat-head chat-head">
             <a class="mini-back" href="phone-wechat.html">‹</a>
@@ -18,9 +17,9 @@
           </div>
           <div class="wechat-detail" id="chatDetail"></div>
           <form class="wechat-composer">
-            <button type="button">＋</button>
+            <button type="button" aria-label="语音">↕</button>
             <input type="text" placeholder="消息" aria-label="消息输入框">
-            <button type="button">☺</button>
+            <button type="button" aria-label="更多">＋</button>
           </form>
         </section>
       </section>
@@ -33,32 +32,36 @@
         mom: {
           title: "妈妈",
           avatar: "妈",
+          readFlag: "readChatMom",
           messages: [
             ["time", "6 月 6 日 17:42"],
-            ["other", "最近降温，外套带了没有？"],
-            ["me", "带了，我晚上回来。"],
-            ["other", "明天中午回个电话，好吗？"],
+            ["other", "最近降温，外套带了吗？"],
+            ["me", "带了，晚上走完就回来。"],
+            ["other", "别太晚。明天中午之前回个电话，好吗？"],
             ["time", "6 月 7 日 12:06"],
             ["call-missed", "未接微信语音通话"],
-            ["other", "电话怎么一直打不通？"]
+            ["other", "电话怎么一直打不通？妈妈有点担心。"]
           ]
         },
         dad: {
           title: "爸爸",
           avatar: "爸",
+          readFlag: "readChatDad",
           messages: [
             ["time", "6 月 6 日 17:46"],
             ["other", "你妈说你晚上还要出去？"],
             ["me", "定向赛，走完就回。"],
             ["other", "别老拍那些没人的地方，注意安全。"],
+            ["me", "知道。"],
             ["time", "6 月 7 日 11:49"],
             ["call-missed", "未接微信语音通话"],
-            ["other", "你手机怎么不接？"]
+            ["other", "你手机怎么不接？看到回电话。"]
           ]
         },
         girlfriend: {
           title: "沈眠",
-          avatar: "沈",
+          avatar: "眠",
+          readFlag: "readChatGirlfriend",
           messages: [
             ["time", "6 月 6 日 18:19"],
             ["other", "你别又一个人跑出去查。"],
@@ -66,44 +69,53 @@
             ["other", "你说的“北桥”到底是什么？"],
             ["me", "如果官网说我完赛了，别信。"],
             ["call-in", "微信语音通话 · 已接通 01:42"],
-            ["other", "林舟，回我。"],
+            ["other", "林舟，回我。你是不是看见 B17 了？"],
             ["time", "6 月 6 日 23:58"],
-            ["call-missed", "未接微信语音通话"],
-            ["other", "你是不是看见 B17 了？"]
+            ["call-missed", "未接微信语音通话"]
           ]
         },
         player: {
           title: "阿远",
           avatar: "远",
+          readFlag: "readChatPlayer",
           messages: [
             ["time", "6 月 6 日 18:04"],
             ["me", "你明天中午之前如果联系不上我，别先发朋友圈。"],
             ["other", "你又在查什么？"],
-            ["me", "0606。\n城迹社把它改过一次。"],
+            ["me", "0606。"],
+            ["me", "城迹社把路线改过一次。"],
             ["other", "什么改过？"],
-            ["me", "路线。\n如果官网说我完赛了，别信。"],
+            ["me", "路线。"],
+            ["me", "如果官网说我完赛了，别信。"],
             ["me", "北桥不是终点。"],
             ["time", "6 月 6 日 22:17"],
             ["call-out", "微信语音通话 · 未接通"],
             ["other", "我刚才没接到。你现在在哪？"]
           ],
-          flag: "readLinzhouWechat",
-          readFlag: "readChatPlayer"
+          action: () => {
+            setFlag("readLinzhouWechat");
+            setStage(8);
+          }
         },
         jiang: {
           title: "江予白",
           avatar: "江",
+          readFlag: "readChatJiang",
           messages: [
             ["time", "6 月 5 日 23:12"],
             ["other", "你昨晚是不是还在看旧路线？"],
             ["me", "嗯，少了一个点。"],
             ["other", "我只拿到过导出的表，后台不是我进的。"],
-            ["me", "那是谁导入的 S05-S07？"]
-          ]
+            ["me", "那是谁导入的 S05-S07？"],
+            ["other", "表里有个批次号，IMP 开头。我不敢再查了。"]
+          ],
+          action: () => setFlag("foundImportBatchHint")
         },
         team: {
           title: "夜航03小队(4)",
           avatar: "队",
+          readFlag: "readChatTeam",
+          group: true,
           messages: [
             ["time", "6 月 6 日 20:55"],
             ["chen", "我退赛了。西桥那边太暗。"],
@@ -112,29 +124,55 @@
             ["time", "6 月 7 日 00:12"],
             ["chen", "有人联系上林舟吗？"],
             ["yuan", "我打了微信语音，没接。"],
-            ["chen", "后面的照片不像他拍的。"]
-          ]
+            ["jiang", "后面的照片不像他拍的。导入时间也不对。"],
+            ["chen", "别在群里说了。"]
+          ],
+          action: () => setFlag("readTeamDoubt")
         }
       };
-      const avatarMap = { chen: "陈", jiang: "江", yuan: "远" };
+
+      const avatarMap = {
+        chen: "檐",
+        jiang: "江",
+        yuan: "远"
+      };
+
+      const nameMap = {
+        chen: "陈檐",
+        jiang: "江予白",
+        yuan: "阿远"
+      };
 
       const key = new URLSearchParams(location.search).get("chat") || "player";
       const chat = chats[key] || chats.player;
+
       document.querySelector("#chatTitle").textContent = chat.title;
       document.title = `${chat.title} - 微信`;
+
+      function messageHtml([type, text]) {
+        if (type === "time") return `<div class="chat-time">${text}</div>`;
+        if (type === "system") return `<div class="system-msg">${text}</div>`;
+        if (type.startsWith("call")) return `<div class="wechat-call ${type}">${text}</div>`;
+
+        const isMe = type === "me";
+        const avatar = isMe ? "舟" : (avatarMap[type] || chat.avatar || chat.title.slice(0, 1));
+        const sender = chat.group && !isMe && nameMap[type] ? `<b>${nameMap[type]}</b>` : "";
+        return `
+          <div class="message-line ${isMe ? "me" : ""}">
+            <span class="msg-avatar">${avatar}</span>
+            <div class="bubble ${isMe ? "me" : ""}">${sender}${text.replace(/\n/g, "<br>")}</div>
+          </div>
+        `;
+      }
+
       document.querySelector("#chatDetail").innerHTML = `
         <div class="wechat-messages">
-          ${chat.messages.map(([type, text]) => {
-            if (type === "time") return `<div class="chat-time">${text}</div>`;
-            if (type === "system") return `<div class="system-msg">${text}</div>`;
-            if (type.startsWith("call")) return `<div class="wechat-call ${type}">${text}</div>`;
-            const avatar = type === "me" ? "舟" : (avatarMap[type] || chat.avatar || chat.title.slice(0, 1));
-            return `<div class="message-line ${type === "me" ? "me" : ""}"><span class="msg-avatar">${avatar}</span><div class="bubble ${type === "me" ? "me" : ""}">${text.replace(/\n/g, "<br>")}</div></div>`;
-          }).join("")}
+          ${chat.messages.map(messageHtml).join("")}
         </div>
       `;
-      if (chat.flag) setFlag(chat.flag);
+
       if (chat.readFlag) setFlag(chat.readFlag);
+      if (chat.action) chat.action();
     </script>
   </body>
 </html>

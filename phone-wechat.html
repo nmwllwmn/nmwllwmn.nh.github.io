@@ -9,46 +9,17 @@
   <body class="chat-shell">
     <main class="phone-stage">
       <section class="mi-phone">
-        <div class="phone-island"><span></span><span></span><span></span></div>
         <section class="mi-screen wechat-screen screen-enter">
           <div class="wechat-head">
             <a class="mini-back" href="chat.html">‹</a>
             <strong>微信</strong>
             <a class="mini-back" href="phone-moments.html">朋友圈</a>
           </div>
-          <div class="wechat-search">搜索</div>
-          <div class="wechat-list">
-            <a class="chat-row pinned" href="phone-wechat-chat.html?chat=mom">
-              <span class="avatar family">妈</span>
-              <span><strong>妈妈</strong><em>电话怎么一直打不通？</em></span>
-              <time>置顶</time>
-            </a>
-            <a class="chat-row pinned" href="phone-wechat-chat.html?chat=dad">
-              <span class="avatar family dad">爸</span>
-              <span><strong>爸爸</strong><em>别老拍那些没人的地方，注意安全。</em></span>
-              <time>置顶</time>
-            </a>
-            <a class="chat-row pinned" href="phone-wechat-chat.html?chat=girlfriend">
-              <span class="avatar love">沈</span>
-              <span><strong>沈眠</strong><em>如果官网说我完赛了，别信。</em></span>
-              <time>置顶</time>
-            </a>
-            <a class="chat-row" id="playerRow" href="phone-wechat-chat.html?chat=player">
-              <span class="avatar dark">远</span>
-              <span><strong>阿远</strong><em>林舟：北桥不是终点。</em></span>
-              <time>昨天</time>
-            </a>
-            <a class="chat-row" href="phone-wechat-chat.html?chat=jiang">
-              <span class="avatar blue">江</span>
-              <span><strong>江予白</strong><em>我只拿到过导出的表。</em></span>
-              <time>周日</time>
-            </a>
-            <a class="chat-row" href="phone-wechat-chat.html?chat=team">
-              <span class="avatar orange">队</span>
-              <span><strong>夜航03小队</strong><em>阿远：我打了微信语音，没接。</em></span>
-              <time>周六</time>
-            </a>
-          </div>
+
+          <input id="wechatSearch" class="wechat-search-input" autocomplete="off" placeholder="搜索">
+
+          <div class="wechat-list" id="wechatList"></div>
+
           <nav class="wechat-tabs">
             <a class="active" href="phone-wechat.html">消息</a>
             <a href="phone-wechat-contacts.html">通讯录</a>
@@ -60,9 +31,90 @@
     <script src="common.js"></script>
     <script>
       initGameShell({ stage: 4, page: "phone-wechat" });
-      if (!hasFlag("readChatPlayer")) {
-        document.querySelector("#playerRow").classList.add("unread");
+
+      const chatRows = [
+        {
+          key: "mom",
+          name: "妈妈",
+          avatar: "妈",
+          tone: "family",
+          pinned: true,
+          preview: "电话怎么一直打不通？",
+          time: "置顶",
+          unreadFlag: "readChatMom"
+        },
+        {
+          key: "dad",
+          name: "爸爸",
+          avatar: "爸",
+          tone: "family dad",
+          pinned: true,
+          preview: "别老拍那些没人的地方，注意安全。",
+          time: "置顶",
+          unreadFlag: "readChatDad"
+        },
+        {
+          key: "girlfriend",
+          name: "沈眠",
+          avatar: "眠",
+          tone: "love",
+          pinned: true,
+          preview: "如果官网说我完赛了，别信。",
+          time: "置顶",
+          unreadFlag: "readChatGirlfriend"
+        },
+        {
+          key: "player",
+          name: "阿远",
+          avatar: "远",
+          tone: "dark",
+          preview: "林舟：北桥不是终点。",
+          time: "昨天",
+          unreadFlag: "readChatPlayer"
+        },
+        {
+          key: "jiang",
+          name: "江予白",
+          avatar: "江",
+          tone: "blue",
+          preview: "我只拿到过导出的表。",
+          time: "周日",
+          unreadFlag: "readChatJiang"
+        },
+        {
+          key: "team",
+          name: "夜航03小队",
+          avatar: "队",
+          tone: "orange",
+          preview: "阿远：我打了微信语音，没接。",
+          time: "周六",
+          unreadFlag: "readChatTeam"
+        }
+      ];
+
+      function renderRows(keyword = "") {
+        const query = normalize(keyword);
+        const rows = chatRows.filter((row) => normalize(row.name + row.preview).includes(query));
+        document.querySelector("#wechatList").innerHTML = rows.map((row) => {
+          const unread = !hasFlag(row.unreadFlag);
+          return `
+            <a class="chat-row ${row.pinned ? "pinned" : ""} ${unread ? "unread" : ""}" href="phone-wechat-chat.html?chat=${row.key}">
+              <span class="avatar ${row.tone}">${row.avatar}</span>
+              <span>
+                <strong>${row.name}</strong>
+                <em>${row.preview}</em>
+              </span>
+              <time>${row.time}</time>
+            </a>
+          `;
+        }).join("") || `<p class="empty-state">没有找到聊天记录。</p>`;
       }
+
+      document.querySelector("#wechatSearch").addEventListener("input", (event) => {
+        renderRows(event.target.value);
+      });
+
+      renderRows();
     </script>
   </body>
 </html>

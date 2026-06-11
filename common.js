@@ -38,6 +38,11 @@ function setStage(stage) {
   scheduleThreatEvents();
 }
 
+function getRemainingBattery(state = loadGame()) {
+  const stage = Math.max(0, Math.min(MAX_STAGE, Number(state.stage) || 0));
+  return Math.max(0, 100 - Math.round((stage / MAX_STAGE) * 100));
+}
+
 function setFlag(key, value = true) {
   const state = loadGame();
   state.flags[key] = value;
@@ -79,6 +84,7 @@ function initGameShell(options = {}) {
   const { stage = 0, page = "" } = options;
   document.body.dataset.page = page;
   setStage(stage);
+  ensurePhoneBattery(page);
   if (!document.querySelector(".game-widget")) {
     const widget = document.createElement("aside");
     widget.className = "game-widget";
@@ -151,12 +157,34 @@ function updateWidget() {
   const state = loadGame();
   const stageNow = document.querySelector("#stageNow");
   if (stageNow) stageNow.textContent = String(state.stage).padStart(2, "0");
+  const battery = getRemainingBattery(state);
+  document.querySelectorAll("[data-phone-battery]").forEach((el) => {
+    el.textContent = `${battery}%`;
+  });
+  document.querySelectorAll("[data-phone-battery-bar]").forEach((el) => {
+    el.style.setProperty("--battery", `${battery}%`);
+    el.classList.toggle("low", battery <= 18);
+  });
   const list = document.querySelector("#evidenceList");
   if (list) {
     list.innerHTML = Object.entries(evidenceLabels)
       .map(([key, label]) => `<li class="${state.evidence[key] ? "done" : ""}">${state.evidence[key] ? "已获得" : "未获得"} · ${key} ${label}</li>`)
       .join("");
   }
+}
+
+function ensurePhoneBattery(page) {
+  if (!page || !page.startsWith("phone")) return;
+  const phone = document.querySelector(".mi-phone");
+  if (!phone || phone.querySelector(".phone-progress-battery")) return;
+  const battery = document.createElement("div");
+  battery.className = "phone-progress-battery";
+  battery.innerHTML = `
+    <span data-phone-battery>100%</span>
+    <i data-phone-battery-bar></i>
+  `;
+  phone.appendChild(battery);
+  updateWidget();
 }
 
 function isSafeFromThreats(state = loadGame()) {

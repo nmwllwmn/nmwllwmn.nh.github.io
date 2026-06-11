@@ -9,22 +9,24 @@
   <body class="chat-shell">
     <main class="phone-stage">
       <section class="mi-phone">
-        <div class="phone-island"><span></span><span></span><span></span></div>
         <section class="mi-screen app-screen screen-enter">
           <div class="app-head"><a class="mini-back" href="chat.html">‹</a><strong>校园邮箱</strong></div>
+
           <form class="phone-mail-login" id="mailLogin">
             <div class="mail-logo">NHU</div>
             <h2>南洄大学统一身份认证</h2>
-            <label>邮箱账号<input id="mailUser" autocomplete="username" value="linzhou@stu.nhu.edu.cn" placeholder="学号 / 邮箱"></label>
+            <p class="mail-login-hint">账号和密码需要从林舟手机里的备忘录确认。</p>
+            <label>邮箱账号<input id="mailUser" autocomplete="username" placeholder="学号 / 邮箱"></label>
             <label>密码<input id="mailPass" type="password" autocomplete="current-password" placeholder="请输入密码"></label>
             <button class="btn primary" type="submit">登录校园邮箱</button>
             <p id="mailError" class="mail-error"></p>
           </form>
+
           <section class="mail-app" id="mailApp" hidden>
             <div class="mail-list" id="mailList"></div>
             <article class="mail-detail" id="mailDetail">
               <h2>收件箱</h2>
-              <p>林舟没有删除邮箱。几封自动通知能串起官网导入、NVR 和 B17。</p>
+              <p>几封系统邮件把官网导入、NVR 和 B17 串在了一起。</p>
             </article>
           </section>
         </section>
@@ -39,6 +41,7 @@
           from: "夜行赛系统",
           title: "成绩同步异常提醒",
           time: "6 月 6 日 21:22",
+          preview: "队伍 夜航03 的后半程记录存在导入异常。",
           body: "队伍 夜航03 的 S05-S07 签到记录来自 Web Import，来源账号 shenbo_admin。导入批次：IMP-2202。",
           action: () => { addEvidence("A"); addEvidence("E"); setFlag("foundShenboImport"); }
         },
@@ -46,13 +49,15 @@
           from: "校园安全中心",
           title: "北桥片区设备维护通知",
           time: "6 月 6 日 21:38",
+          preview: "CAM 04 北桥北侧存在画面覆盖。",
           body: "CAM 04 北桥北侧 21:38-21:44 存在画面覆盖。临时查看账号 guest，密码 cam042138。请勿外传。",
-          action: () => setFlag("foundNvrLogin")
+          action: () => { addEvidence("D"); setFlag("foundNvrLogin"); }
         },
         {
           from: "信息化办公室",
           title: "旧站缓存清理失败",
           time: "6 月 5 日 09:16",
+          preview: "citytrace/2023/cache 下仍存在旧路线索引。",
           body: "citytrace/2023/cache 下仍存在 route_20230606_old.pdf 索引。旧路线包含 S08 北桥体育馆，请城迹社自行确认是否继续清理。",
           action: () => addEvidence("B")
         },
@@ -60,6 +65,7 @@
           from: "林舟",
           title: "草稿：如果我没回来",
           time: "未发送",
+          preview: "别去主馆。排水声最大的地方才是入口。",
           body: "别去主馆。排水声最大的地方才是入口。B17 的门禁会在维护窗口短暂掉线，00:17 到 00:22。",
           action: () => { setFlag("foundPumpStation"); setFlag("foundRescueWindow"); }
         }
@@ -73,10 +79,11 @@
 
       function renderMailList() {
         document.querySelector("#mailList").innerHTML = mails.map((mail, index) => `
-          <button class="mail-preview" data-index="${index}" type="button">
+          <button class="mail-preview ${hasFlag(`readMail${index}`) ? "" : "unread-mail"}" data-index="${index}" type="button">
             <strong>${mail.from}</strong>
             <span>${mail.title}</span>
             <em>${mail.time}</em>
+            <small>${mail.preview}</small>
           </button>
         `).join("");
         document.querySelectorAll("#mailList .mail-preview").forEach((button) => {
@@ -86,6 +93,7 @@
 
       function openMail(index) {
         const mail = mails[index];
+        setFlag(`readMail${index}`);
         document.querySelector("#mailDetail").innerHTML = `
           <h2>${mail.title}</h2>
           <p class="mono">${mail.from} · ${mail.time}</p>
@@ -95,7 +103,9 @@
         document.querySelector("#recordMail").addEventListener("click", () => {
           mail.action();
           toast("已记录邮件线索。");
+          renderMailList();
         });
+        renderMailList();
       }
 
       if (hasFlag("phoneMailLoggedIn")) openMailApp();
