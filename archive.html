@@ -28,6 +28,7 @@
       const hasRescueRoute = Boolean(flags.foundB17 && flags.foundPumpStation && flags.foundRescueWindow);
       const hasAlbumReport = Boolean(flags.albumPhotoReported || flags.reportedMysteryMan);
       const hasHiddenEnding = Boolean(hasTruth && hasSudokuCache && hasRescueRoute);
+      const hasAlbumEnding = Boolean(hasTruth && hasSudokuCache && hasAlbumReport);
 
       function item(title, body, locked = false) {
         return `<article class="archive-phone-card ${locked ? "locked" : ""}">
@@ -48,32 +49,54 @@
       ];
 
       let ending = "";
-      if (hasTruth && hasSudokuCache && hasAlbumReport) {
-        ending = `<article class="archive-phone-ending truth">
-          <h2>彩蛋结局：抓住幕后黑手</h2>
-          <p>你用数独第三关恢复出的密码打开相册，把隐藏照片、旧站缓存、NVR 覆盖记录和导入账号一起提交给警方。</p>
-          <p>幕后黑手被带走了。三年前的旧路线和今年被补写的成绩终于连成完整证据链。</p>
-          <p class="mono">报警回执已生成。<br>林舟仍未找到。</p>
-        </article>`;
-      } else if (hasHiddenEnding) {
+      if (hasHiddenEnding) {
         setFlag("rescuedLinzhou");
         ending = `<article class="archive-phone-ending rescue">
           <h2>隐藏结局：未完成的签到</h2>
-          <p>你没有去主馆。你把林舟手机里的旧站、相册 EXIF、B17 门禁和 NVR 时间拼在一起，绕开了 21:38 的假画面。</p>
-          <p class="mono">00:17 B17 门禁进入维护窗口<br>00:19 录音和照片上传完成<br>00:24 校园安全中心接警记录被同步</p>
-          <p>林舟被找到时，手机还剩 2% 电量。S08 仍显示：未完成。</p>
+          <p>你没有去主馆，也没有把 21:38 的画面当成终点。旧站、NVR、B17 门禁和泵站入口指向同一条地下维护线。</p>
+          <ol class="ending-timeline">
+            <li><span>00:17</span>B17 门禁进入维护窗口，地下通道短暂开放。</li>
+            <li><span>00:19</span>泵站侧门被确认，录音和照片同步上传。</li>
+            <li><span>00:24</span>校园安全中心接警记录写入，北桥假画面失效。</li>
+          </ol>
+          <p>林舟被找到时，手机还剩 2% 电量。他没有完成比赛，S08 也从来不是终点。</p>
+          <p class="ending-verdict">救援完成 / 林舟已找到</p>
+        </article>`;
+      } else if (hasAlbumEnding) {
+        ending = `<article class="archive-phone-ending truth">
+          <h2>彩蛋结局：抓住幕后黑手</h2>
+          <p>你把隐藏照片、旧站缓存、NVR 覆盖记录和导入账号一起提交给警方。证据链足够完整，照片里的人被带走了。</p>
+          <ol class="ending-timeline">
+            <li><span>21:38</span>北桥 CAM 04 出现覆盖，画面残留 IMP-2202。</li>
+            <li><span>21:41</span>未知号码要求删除照片，暴露相册线索。</li>
+            <li><span>回执</span>警方接收隐藏照片和后台导入记录。</li>
+          </ol>
+          <p>三年前的旧路线和今年被补写的成绩终于连成证据链。但你没有拼出 B17、泵站和 00:17 的完整救援路线。</p>
+          <p class="ending-verdict">嫌疑人已控制 / 林舟仍未找到</p>
         </article>`;
       } else if (hasTruth && flags.sudokuSecretSolved) {
         ending = `<article class="archive-phone-ending truth">
           <h2>真相结局：旧站未删除</h2>
-          <p>数独缓存恢复出相册密码。你已经知道旧站、NVR 和导入任务之间存在人为串改，但还没有把隐藏照片作为报警证据提交。</p>
-          <p class="mono">相册密码：062141<br>林舟仍未归队。</p>
+          <p>数独缓存恢复出相册密码。你已经知道旧站、NVR 和导入任务之间存在人为串改，也知道林舟的完赛记录不是自然生成的。</p>
+          <ol class="ending-timeline">
+            <li><span>已确认</span>S05-S07 为 Web Import，执行账号指向沈泊。</li>
+            <li><span>已确认</span>2023 旧路线存在 S08，许听雨与北桥有关。</li>
+            <li><span>未完成</span>隐藏照片、B17、泵站和 00:17 尚未形成救援闭环。</li>
+          </ol>
+          <p>你可以报警，但这一次只能证明有人改过路线和成绩。林舟仍在手机信号之外。</p>
+          <p class="ending-verdict">真相成立 / 救援路线不完整</p>
         </article>`;
       } else if (hasTruth) {
         ending = `<article class="archive-phone-ending danger">
           <h2>普通结局：最后一次签到</h2>
-          <p>你已经知道林舟没有完赛，也知道是谁补写了后半程。但你还不知道真正入口在哪里。</p>
-          <p>手机震动了一下。未知号码再次打来。</p>
+          <p>五条核心证据已经拼齐：林舟没有自然完赛，后半程被 Web Import 补写，IMP-2202 指向执行账号。</p>
+          <ol class="ending-timeline">
+            <li><span>缺口</span>数独缓存未恢复，相册密码仍没有被确认。</li>
+            <li><span>缺口</span>B17、泵站入口和 00:17 维护窗口仍缺任一环。</li>
+            <li><span>来电</span>未知号码再次打来，提醒你“北桥没有第八个点”。</li>
+          </ol>
+          <p>你知道林舟没有完成比赛，却还不知道真正入口在哪里。</p>
+          <p class="ending-verdict">证据齐全 / 行动失败</p>
         </article>`;
       } else {
         ending = `<article class="archive-phone-ending pending">
