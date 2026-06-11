@@ -139,15 +139,15 @@
 
       function launchApp(button, callback) {
         const phone = document.querySelector(".mi-phone");
-        const rect = button.getBoundingClientRect();
-        const phoneRect = phone.getBoundingClientRect();
-        phone.style.setProperty("--launch-x", `${rect.left - phoneRect.left + rect.width / 2}px`);
-        phone.style.setProperty("--launch-y", `${rect.top - phoneRect.top + rect.height / 2}px`);
+        button.classList.add("opening");
         phone.classList.remove("launching");
         void phone.offsetWidth;
         phone.classList.add("launching");
-        setTimeout(callback, 130);
-        setTimeout(() => phone.classList.remove("launching"), 330);
+        setTimeout(callback, 80);
+        setTimeout(() => {
+          button.classList.remove("opening");
+          phone.classList.remove("launching");
+        }, 180);
       }
 
       document.querySelectorAll("[data-url]").forEach((button) => {

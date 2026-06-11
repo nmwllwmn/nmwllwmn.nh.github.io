@@ -1004,32 +1004,26 @@ body[data-page^="phone"] #notebookText {
   content: "";
   position: absolute;
   z-index: 60;
-  width: 24px;
-  height: 24px;
-  left: var(--launch-x, 50%);
-  top: var(--launch-y, 50%);
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.48);
+  inset: 14px;
+  border-radius: 34px;
+  background: rgba(255,255,255,0.08);
   opacity: 0;
   pointer-events: none;
-  transform: translate(-50%, -50%) scale(0.1);
 }
 
 .mi-phone.launching::after {
-  animation: appLaunchRipple 0.36s cubic-bezier(0.2, 0.8, 0.2, 1);
+  animation: appLaunchDim 0.18s ease-out;
 }
 
-@keyframes appLaunchRipple {
+@keyframes appLaunchDim {
   0% {
-    opacity: 0.7;
-    transform: translate(-50%, -50%) scale(0.1);
+    opacity: 0;
   }
-  80% {
-    opacity: 0.18;
+  35% {
+    opacity: 1;
   }
   100% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(26);
   }
 }
 
@@ -1302,7 +1296,7 @@ body[data-page^="phone"] #notebookText {
   color: white;
   text-shadow: 0 1px 8px rgba(0,0,0,0.72);
   transform: translateY(0) scale(1);
-  transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.18s ease;
+  transition: transform 0.12s ease, filter 0.12s ease;
   will-change: transform;
 }
 
@@ -1327,16 +1321,18 @@ body[data-page^="phone"] #notebookText {
 }
 
 .app-icon:hover {
-  transform: translateY(-7px) scale(1.055);
+  transform: translateY(-2px);
+  filter: brightness(1.04);
+}
+
+.app-icon:active,
+.app-icon.opening {
+  transform: scale(0.96);
   filter: brightness(1.08);
 }
 
-.app-icon:active {
-  transform: translateY(-2px) scale(0.92);
-  filter: brightness(1.15);
-}
-
 .app-icon span {
+  position: relative;
   display: grid;
   place-items: center;
   width: 57px;
@@ -1347,6 +1343,22 @@ body[data-page^="phone"] #notebookText {
     0 12px 24px rgba(0,0,0,0.28),
     inset 0 1px 0 rgba(255,255,255,0.34),
     inset 0 -12px 22px rgba(0,0,0,0.12);
+  overflow: hidden;
+}
+
+.app-icon span::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.18);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s ease;
+}
+
+.app-icon:active span::after,
+.app-icon.opening span::after {
+  opacity: 1;
 }
 
 .app-icon span i {
