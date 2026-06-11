@@ -19,6 +19,11 @@
   --phone-accent-2: #18b56f;
   --phone-surface: #f7f8fa;
   --phone-line: #e4e8ee;
+  --phone-w: min(372px, calc(100vw - 44px));
+  --phone-ratio: 9 / 19.5;
+  --phone-border: 10px;
+  --phone-radius: 44px;
+  --screen-radius: 34px;
 }
 
 * {
@@ -887,12 +892,12 @@ body[data-page^="phone"] #notebookText {
 
 .phone-stage {
   display: grid;
-  grid-template-columns: minmax(300px, 380px);
+  grid-template-columns: var(--phone-w);
   gap: 22px;
   align-items: start;
   justify-items: center;
   justify-content: center;
-  width: min(620px, calc(100% - 28px));
+  width: 100%;
   min-height: calc(100vh - 52px);
   margin: 0 auto;
   padding-top: 6vh;
@@ -900,10 +905,11 @@ body[data-page^="phone"] #notebookText {
 
 .mi-phone {
   position: relative;
-  width: min(372px, 100%);
-  aspect-ratio: 9 / 19.5;
-  border: 10px solid var(--phone-shell);
-  border-radius: 44px;
+  width: var(--phone-w);
+  aspect-ratio: var(--phone-ratio);
+  flex: 0 0 auto;
+  border: var(--phone-border) solid var(--phone-shell);
+  border-radius: var(--phone-radius);
   background:
     linear-gradient(145deg, rgba(255,255,255,0.1), transparent 22%),
     var(--phone-shell);
@@ -1031,7 +1037,9 @@ body[data-page^="phone"] #notebookText {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  border-radius: 34px;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--screen-radius);
   background: #f4f5f4;
   touch-action: none;
 }
@@ -1449,6 +1457,7 @@ body[data-page^="phone"] #notebookText {
 .wechat-screen,
 .browser-screen,
 .app-screen {
+  height: 100%;
   background: var(--phone-surface);
   color: #111;
 }
@@ -1463,6 +1472,7 @@ body[data-page^="phone"] #notebookText {
 .app-screen {
   display: flex;
   flex-direction: column;
+  min-height: 0;
 }
 
 .app-screen[hidden] {
@@ -3426,14 +3436,13 @@ body[data-page^="phone"] .btn.primary,
   }
 
   .phone-stage {
-    grid-template-columns: 1fr;
+    grid-template-columns: var(--phone-w);
     gap: 20px;
     align-items: start;
     padding-top: 5vh;
   }
 
   .mi-phone {
-    width: min(360px, 100%);
     margin: 0 auto;
   }
 
@@ -3465,19 +3474,24 @@ body[data-page^="phone"] .btn.primary,
 }
 
 @media (max-width: 420px) {
+  :root {
+    --phone-w: min(352px, calc(100vw - 24px));
+    --phone-border: 8px;
+    --phone-radius: 42px;
+    --screen-radius: 34px;
+  }
+
   .chat-shell {
     padding: 12px 0;
   }
 
   .phone-stage {
-    width: min(100%, calc(100% - 16px));
     min-height: calc(100vh - 24px);
     padding-top: 1vh;
   }
 
   .mi-phone {
-    width: min(352px, 100%);
-    border-width: 8px;
+    margin: 0 auto;
   }
 
   .lock-time {
