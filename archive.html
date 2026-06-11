@@ -24,7 +24,9 @@
       const evidence = state.evidence || {};
       const flags = state.flags || {};
       const hasTruth = Boolean(evidence.A && evidence.B && evidence.C && evidence.D && evidence.E);
+      const hasSudokuCache = Boolean(flags.sudokuSecretSolved);
       const hasRescueRoute = Boolean(flags.foundB17 && flags.foundPumpStation && flags.foundRescueWindow);
+      const hasHiddenEnding = Boolean(hasTruth && hasSudokuCache && hasRescueRoute);
 
       function item(title, body, locked = false) {
         return `<article class="archive-phone-card ${locked ? "locked" : ""}">
@@ -40,11 +42,12 @@
         item("许听雨 / 2023", evidence.C ? "许听雨参加过 2023 年 6 月 6 日试跑，最后出现地点与 S08 重合。" : "还缺少许听雨与 S08 的关联。", !evidence.C),
         item("IMP-2202", evidence.A && evidence.E ? "林舟 S05-S07 的完赛记录来自 Web Import，执行账号指向 shenbo_admin。" : "还没有把 Web Import 和执行账号连起来。", !(evidence.A && evidence.E)),
         item("21:38 / NVR", evidence.D ? "北桥 CAM 04 在 21:38 后出现覆盖。画面角落残留 IMP-2202。" : "还没有查看关键时间的 NVR。", !evidence.D),
+        item("数独缓存", hasSudokuCache ? "第三关完成后，隐藏相册索引已经恢复，可以继续核对 B17、泵站和 00:17。" : "还没有完成数独第三关，隐藏相册索引仍未恢复。", !hasSudokuCache),
         item("B17 / 救援路线", hasRescueRoute ? "B17 不是编号备注，是地下通道 17 号门。入口在北桥雨水泵站，维护窗口为 00:17-00:22。" : "还缺 B17、泵站入口或 00:17 维护窗口。", !hasRescueRoute)
       ];
 
       let ending = "";
-      if (hasTruth && hasRescueRoute) {
+      if (hasHiddenEnding) {
         setFlag("rescuedLinzhou");
         ending = `<article class="archive-phone-ending rescue">
           <h2>隐藏结局：未完成的签到</h2>
@@ -56,7 +59,7 @@
         setFlag("reportedMysteryMan");
         ending = `<article class="archive-phone-ending truth">
           <h2>真相结局：旧站未删除</h2>
-          <p>数独缓存恢复出匿名号码与 shenbo_admin 的绑定记录。你没有贸然去北桥，而是把证据备份到了密页集。</p>
+          <p>数独缓存恢复出隐藏相册索引。你没有贸然去北桥，而是把旧站、NVR、导入任务和相册线索备份到了密页集。</p>
           <p class="mono">报警回执已生成。<br>林舟仍未归队。</p>
         </article>`;
       } else if (hasTruth) {

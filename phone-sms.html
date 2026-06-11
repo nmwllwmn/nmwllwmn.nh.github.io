@@ -12,11 +12,6 @@
         <section class="mi-screen sms-app screen-enter">
           <div class="app-head"><a class="mini-back" href="chat.html">‹</a><strong>短信</strong></div>
           <section class="sms-list" id="smsList">
-            <button class="sms-row unread" data-thread="unknown" type="button">
-              <span class="sms-avatar">?</span>
-              <span><strong>未知号码</strong><em>删除你手机不该拍的照片。</em></span>
-              <time>21:41</time>
-            </button>
             <button class="sms-row" data-thread="school" type="button">
               <span class="sms-avatar school">南</span>
               <span><strong>南洄大学</strong><em>统一身份认证验证码已过期。</em></span>
@@ -30,14 +25,7 @@
           </section>
           <section class="sms-thread" id="smsThread" hidden>
             <div class="sms-thread-head"><button class="mini-back" id="smsBack" type="button">‹</button><strong id="smsTitle">未知号码</strong></div>
-            <div class="sms-date">6 月 6 日 21:41</div>
-            <article class="sms-message">
-              <p>删除你手机不该拍的照片。</p>
-            </article>
-            <div class="sms-date">6 月 6 日 21:43</div>
-            <article class="sms-message">
-              <p>别再试图打开相册。</p>
-            </article>
+            <div id="smsThreadBody"></div>
             <form class="sms-composer">
               <input placeholder="短信" aria-label="短信输入框">
               <button type="button">发送</button>
@@ -51,18 +39,59 @@
       initGameShell({ stage: 4, page: "phone-sms" });
       const list = document.querySelector("#smsList");
       const thread = document.querySelector("#smsThread");
+
+      function renderThreatSms() {
+        const old = document.querySelector('[data-thread="unknown"]');
+        if (old) old.remove();
+        const messages = getThreatMessages();
+        if (!messages.length) return;
+        const row = document.createElement("button");
+        row.className = `sms-row ${hasFlag("readThreatSms") ? "" : "unread"}`;
+        row.dataset.thread = "unknown";
+        row.type = "button";
+        row.innerHTML = `
+          <span class="sms-avatar">?</span>
+          <span><strong>未知号码</strong><em>${messages[messages.length - 1]}</em></span>
+          <time>刚刚</time>
+        `;
+        list.prepend(row);
+        row.addEventListener("click", openThreatThread);
+      }
+
+      function openThreatThread() {
+        const messages = getThreatMessages();
+        document.querySelector("#smsTitle").textContent = "未知号码";
+        document.querySelector("#smsThreadBody").innerHTML = messages.map((message, index) => `
+          <div class="sms-date">6 月 6 日 ${String(21 + Math.floor(index / 4)).padStart(2, "0")}:${String(41 + index * 2).padStart(2, "0")}</div>
+          <article class="sms-message"><p>${message}</p></article>
+        `).join("");
+        list.hidden = true;
+        thread.hidden = false;
+        setFlag("readThreatSms");
+        renderThreatSms();
+      }
+
       document.querySelectorAll(".sms-row").forEach((row) => {
         row.addEventListener("click", () => {
+          if (row.dataset.thread === "unknown") {
+            openThreatThread();
+            return;
+          }
+          document.querySelector("#smsTitle").textContent = row.querySelector("strong").textContent;
+          document.querySelector("#smsThreadBody").innerHTML = `
+            <div class="sms-date">${row.querySelector("time").textContent}</div>
+            <article class="sms-message"><p>${row.querySelector("em").textContent}</p></article>
+          `;
           list.hidden = true;
           thread.hidden = false;
           row.classList.remove("unread");
-          setFlag("readThreatSms");
         });
       });
       document.querySelector("#smsBack").addEventListener("click", () => {
         thread.hidden = true;
         list.hidden = false;
       });
+      renderThreatSms();
     </script>
   </body>
 </html>

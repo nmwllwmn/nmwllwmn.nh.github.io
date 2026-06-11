@@ -17,8 +17,12 @@
           </form>
           <section class="browser-history" id="browserHistory">
             <h2>历史记录</h2>
+            <button data-page="university" type="button"><strong>南洄大学官网</strong><span>www.nhu.edu.cn/search</span></button>
             <button data-page="event" type="button"><strong>南洄城市夜行定向赛 · 成绩查询</strong><span>night.nhu.edu.cn/result?team=night-03</span></button>
             <button data-page="oldsite" type="button"><strong>城迹社旧站缓存</strong><span>www.nhu.edu.cn/club/citytrace/2023/cache</span></button>
+            <button data-page="wall" type="button"><strong>南洄校园墙</strong><span>wall.nhu.edu.cn/search?北桥</span></button>
+            <button data-page="drive" type="button"><strong>B17 备份目录</strong><span>share.nhu-cloud.invalid/B17</span></button>
+            <button data-page="nvr" type="button"><strong>SECURICORP NVR</strong><span>sec.nhu.local/nvr/cam04</span></button>
             <button data-page="xutingyu" type="button"><strong>许听雨 北桥 2023</strong><span>search.local?q=许听雨+北桥</span></button>
             <button data-page="b17" type="button"><strong>B17 门禁掉线</strong><span>sec.nhu.local/logs/b17</span></button>
             <button data-page="archive" type="button"><strong>密页集本机备份</strong><span>myj.local/cache/0606</span></button>
@@ -34,6 +38,11 @@
     <script>
       initGameShell({ stage: 10, page: "phone-browser" });
       const pages = {
+        university: {
+          title: "南洄大学官网",
+          html: "<h2>站内搜索：北桥</h2><p>官网只保留新版夜行定向赛页面，路线从 S01 到 S07，北桥体育馆相关附件已被移除。</p><p class='mono'>notice: old route moved to citytrace/2023/cache</p>",
+          action: () => setFlag("foundOldSiteHint")
+        },
         event: {
           title: "夜行赛成绩查询",
           html: "<h2>夜航03</h2><p>林舟显示 23:17 已完赛，但 S05、S06、S07 的上传方式均为 Web Import。</p><p class='mono'>linzhou / 0606 / Web Import</p>",
@@ -43,6 +52,21 @@
           title: "城迹社旧站缓存",
           html: "<h2>route_20230606_old.pdf</h2><p>旧站缓存仍保留 2023 试跑路线索引。S01-S07 之外还有 S08：北桥体育馆。</p><p>新版公告删除了 S08，也删除了 2023 试跑说明。</p>",
           action: () => addEvidence("B")
+        },
+        wall: {
+          title: "南洄校园墙",
+          html: "<h2>别再问 B17 了</h2><p>匿名帖只剩缓存摘要：三年前有人在北桥留下过一句话。</p><p><strong>评论 17：</strong>如果你真的在查，去找 B17，不是楼层，是门。</p>",
+          action: () => setFlag("foundB17")
+        },
+        drive: {
+          title: "B17 备份目录",
+          html: "<h2>share.nhu-cloud.invalid / B17</h2><p>目录里有一张抖动照片和一段残缺录音。照片边缘能看到地下通道 17 号门，录音里反复出现排水声。</p><p class='mono'>hint: pump station / 00:17</p>",
+          action: () => { setFlag("foundB17"); setFlag("foundPumpStation"); }
+        },
+        nvr: {
+          title: "SECURICORP NVR",
+          html: "<h2>CAM 04 · 北桥北侧</h2><p>临时账号 guest / cam042138。把时间调到 21:38 后，画面右下角出现 S08 和 IMP-2202。</p><form class='inline-unlock' id='browserNvrForm'><input name='answer' placeholder='输入画面角落编号'><button class='btn primary' type='submit'>记录</button></form>",
+          action: null
         },
         xutingyu: {
           title: "许听雨 北桥 2023",
@@ -67,11 +91,27 @@
       function openPage(key) {
         const data = pages[key];
         document.querySelector("#browserTitle").textContent = data.title;
-        document.querySelector("#browserContent").innerHTML = `${data.html}<button class="btn primary" id="recordBrowser" type="button">记录网页线索</button>`;
-        document.querySelector("#recordBrowser").addEventListener("click", () => {
-          data.action();
-          toast("已记录浏览器线索。");
-        });
+        const recordButton = data.action ? `<button class="btn primary" id="recordBrowser" type="button">记录网页线索</button>` : "";
+        document.querySelector("#browserContent").innerHTML = `${data.html}${recordButton}`;
+        if (data.action) {
+          document.querySelector("#recordBrowser").addEventListener("click", () => {
+            data.action();
+            toast("已记录浏览器线索。");
+          });
+        }
+        const nvrForm = document.querySelector("#browserNvrForm");
+        if (nvrForm) {
+          nvrForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+            if (normalize(new FormData(event.target).get("answer")) === "imp-2202") {
+              addEvidence("D");
+              setFlag("foundImp2202");
+              toast("证据 D 已记录：21:38 北桥监控异常。");
+            } else {
+              toast("编号不对。邮件里提到要看 21:38 的 CAM 04。");
+            }
+          });
+        }
         history.hidden = true;
         page.hidden = false;
       }
@@ -83,7 +123,11 @@
       document.querySelector("#browserSearch").addEventListener("submit", (event) => {
         event.preventDefault();
         const q = normalize(new FormData(event.target).get("q"));
-        if (q.includes("s08") || q.includes("旧站") || q.includes("2023")) openPage("oldsite");
+        if (q.includes("官网") || q.includes("南洄大学")) openPage("university");
+        else if (q.includes("校园墙") || q.includes("wall")) openPage("wall");
+        else if (q.includes("网盘") || q.includes("备份") || q.includes("drive")) openPage("drive");
+        else if (q.includes("nvr") || q.includes("监控") || q.includes("cam04")) openPage("nvr");
+        else if (q.includes("s08") || q.includes("旧站") || q.includes("2023")) openPage("oldsite");
         else if (q.includes("许听雨") || q.includes("xutingyu")) openPage("xutingyu");
         else if (q.includes("b17") || q.includes("0017")) openPage("b17");
         else if (q.includes("归档") || q.includes("myj") || q.includes("archive")) openPage("archive");

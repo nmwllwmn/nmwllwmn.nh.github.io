@@ -63,7 +63,7 @@
             <button class="app-icon contacts-icon" data-url="phone-wechat-contacts.html" type="button"><span><i>人</i></span><strong>通讯录</strong></button>
             <button class="app-icon browser-icon" data-url="phone-browser.html" type="button"><span><i>南</i></span><strong>浏览器</strong></button>
             <button class="app-icon mail-icon" data-url="phone-mail.html" data-badge="4" type="button"><span><i>✉</i></span><strong>邮件</strong></button>
-            <button class="app-icon sms-icon" data-url="phone-sms.html" data-badge="2" type="button"><span><i>✦</i></span><strong>短信</strong></button>
+            <button class="app-icon sms-icon" data-url="phone-sms.html" type="button"><span><i>✦</i></span><strong>短信</strong></button>
             <button class="app-icon notes-icon" data-url="phone-notes.html" type="button"><span><i>记</i></span><strong>备忘录</strong></button>
             <button class="app-icon gallery-icon" data-url="phone-gallery.html" data-badge="!" type="button"><span><i>▧</i></span><strong>相册</strong></button>
             <button class="app-icon camera-icon" data-url="phone-camera.html" type="button"><span><i>◉</i></span><strong>相机</strong></button>
@@ -84,6 +84,10 @@
     <script src="common.js"></script>
     <script>
       initGameShell({ stage: 2, page: "phone" });
+      const smsIcon = document.querySelector(".sms-icon");
+      const threatCount = getThreatMessages().length;
+      if (threatCount > 0) smsIcon.dataset.badge = String(threatCount);
+      else smsIcon.removeAttribute("data-badge");
 
       const screens = ["lockScreen", "homeScreen"];
       function showScreen(id) {
@@ -149,7 +153,7 @@
       document.querySelectorAll("[data-url]").forEach((button) => {
         button.addEventListener("click", () => {
           launchApp(button, () => {
-            window.open(button.dataset.url, "_blank", "noopener");
+            location.href = button.dataset.url;
           });
         });
       });

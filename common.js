@@ -1,4 +1,5 @@
 const STORE_KEY = "last-checkin-webarg-v2";
+const NOTE_KEY = "last-checkin-investigation-notes-v1";
 const MAX_STAGE = 40;
 
 const defaultState = {
@@ -16,17 +17,19 @@ const evidenceLabels = {
   E: "IMP-2202 由沈泊执行"
 };
 
-const clueProgressChecks = [
-  (state) => state.flags.phoneUnlocked,
-  (state) => state.flags.readLinzhouWechat,
-  (state) => state.flags.readThreatSms,
-  (state) => state.flags.albumLockOpened,
-  (state) => state.evidence.A,
-  (state) => state.evidence.B,
-  (state) => state.evidence.C,
-  (state) => state.flags.foundNvrLogin,
-  (state) => state.evidence.D || state.flags.foundImp2202,
-  (state) => state.evidence.E || state.flags.foundShenbo
+const clueProgressSteps = [
+  { weight: 4, done: (state) => state.flags.phoneUnlocked },
+  { weight: 8, done: (state) => state.flags.readLinzhouWechat },
+  { weight: 4, done: (state) => state.flags.readTeamDoubt || state.flags.foundImportBatchHint },
+  { weight: 4, done: (state) => state.flags.readThreatSms },
+  { weight: 6, done: (state) => state.flags.albumLockOpened },
+  { weight: 12, done: (state) => state.evidence.A },
+  { weight: 12, done: (state) => state.evidence.B },
+  { weight: 12, done: (state) => state.evidence.C },
+  { weight: 6, done: (state) => state.flags.phoneMailLoggedIn || state.flags.loggedMailJiang },
+  { weight: 6, done: (state) => state.flags.foundNvrLogin },
+  { weight: 12, done: (state) => state.evidence.D || state.flags.foundImp2202 },
+  { weight: 14, done: (state) => state.evidence.E || state.flags.foundShenbo }
 ];
 
 function loadGame() {
@@ -39,6 +42,21 @@ function loadGame() {
 
 function saveGame(state) {
   localStorage.setItem(STORE_KEY, JSON.stringify(state));
+}
+
+function loadNotebook() {
+  const saved = localStorage.getItem(NOTE_KEY);
+  if (saved !== null) return saved;
+  const legacyNotes = loadGame().notes || "";
+  if (legacyNotes) localStorage.setItem(NOTE_KEY, legacyNotes);
+  return legacyNotes;
+}
+
+function saveNotebook(value) {
+  localStorage.setItem(NOTE_KEY, value);
+  const state = loadGame();
+  state.notes = value;
+  saveGame(state);
 }
 
 function setStage(stage) {
@@ -54,11 +72,11 @@ function setStage(stage) {
 function getRemainingBattery(state = loadGame()) {
   const evidence = state.evidence || {};
   const flags = state.flags || {};
-  if (evidence.A && evidence.B && evidence.C && evidence.D && evidence.E) return 0;
+  const coreComplete = Boolean(evidence.A && evidence.B && evidence.C && evidence.D && evidence.E);
+  if (coreComplete) return 0;
   const safeState = { ...state, evidence, flags };
-  const solved = clueProgressChecks.filter((check) => Boolean(check(safeState))).length;
-  const progress = Math.min(39, Math.round((solved / clueProgressChecks.length) * MAX_STAGE));
-  return Math.max(1, 100 - Math.round((progress / MAX_STAGE) * 100));
+  const progress = clueProgressSteps.reduce((total, step) => total + (step.done(safeState) ? step.weight : 0), 0);
+  return Math.max(1, 100 - Math.min(99, progress));
 }
 
 function setFlag(key, value = true) {
@@ -103,6 +121,7 @@ function initGameShell(options = {}) {
   document.body.dataset.page = page;
   setStage(stage);
   ensurePhoneBattery(page);
+  initNotebook();
   if (!document.querySelector(".game-widget")) {
     const widget = document.createElement("aside");
     widget.className = "game-widget";
@@ -112,63 +131,94 @@ function initGameShell(options = {}) {
         <div class="stage-num"><span id="stageNow">00</span> / ${MAX_STAGE}</div>
       </div>
       <div class="widget-card">
-        <button class="small-btn" id="noteToggle" type="button">打开笔记</button>
         <button class="small-btn" id="resetGame" type="button">重置</button>
         <ul class="evidence-list" id="evidenceList"></ul>
       </div>
     `;
     document.body.appendChild(widget);
   }
-  if (!document.querySelector(".note-panel")) {
+  document.querySelector("#resetGame").addEventListener("click", () => {
+    localStorage.removeItem(STORE_KEY);
+    toast("进度已重置，调查笔记已保留。");
+    setTimeout(() => location.href = "index.html", 500);
+  });
+  updateWidget();
+  scheduleThreatEvents();
+}
+
+function initNotebook() {
+  if (!document.querySelector(".notebook-toggle")) {
+    const toggle = document.createElement("button");
+    toggle.className = "notebook-toggle";
+    toggle.id = "notebookToggle";
+    toggle.type = "button";
+    toggle.setAttribute("aria-expanded", "false");
+    toggle.setAttribute("aria-controls", "notebookPanel");
+    toggle.innerHTML = `<span>记</span><strong>调查笔记</strong>`;
+    document.body.appendChild(toggle);
+  }
+
+  if (!document.querySelector(".notebook-panel")) {
     const panel = document.createElement("section");
-    panel.className = "note-panel";
+    panel.className = "notebook-panel";
+    panel.id = "notebookPanel";
     panel.hidden = true;
     panel.innerHTML = `
-      <div class="note-head">
+      <div class="notebook-head">
         <div>
           <h2>调查笔记</h2>
           <p class="muted">记录关键词、编号、时间、人名、密码。内容自动保存在本机浏览器。</p>
         </div>
-        <button class="small-btn" id="noteClose" type="button">收起</button>
+        <button class="small-btn" id="notebookClose" type="button">收起</button>
       </div>
-      <textarea id="noteText" placeholder="记录关键词、编号、时间、人名、密码。
+      <textarea id="notebookText" spellcheck="false" placeholder="记录关键词、编号、时间、人名、密码。
 例如：0606 / S04 / B17 / 21:38 / IMP-2202"></textarea>
-      <div class="note-actions">
-        <span class="muted" id="noteStatus">已自动保存</span>
+      <div class="notebook-actions">
+        <span class="muted" id="notebookStatus">已自动保存</span>
+        <button class="small-btn" id="notebookCopy" type="button">复制全部</button>
+        <button class="small-btn danger" id="notebookClear" type="button">清空</button>
       </div>
     `;
     document.body.appendChild(panel);
   }
 
-  const state = loadGame();
-  const noteText = document.querySelector("#noteText");
-  const noteStatus = document.querySelector("#noteStatus");
-  noteText.value = state.notes || "";
-  noteText.addEventListener("input", (event) => {
-    const next = loadGame();
-    next.notes = event.target.value;
-    saveGame(next);
-    if (noteStatus) {
-      noteStatus.textContent = "已自动保存";
+  const toggle = document.querySelector("#notebookToggle");
+  const panel = document.querySelector("#notebookPanel");
+  const text = document.querySelector("#notebookText");
+  const status = document.querySelector("#notebookStatus");
+  const setOpen = (open) => {
+    panel.hidden = !open;
+    toggle.setAttribute("aria-expanded", String(open));
+    toggle.classList.toggle("active", open);
+    if (open) text.focus();
+  };
+
+  text.value = loadNotebook();
+  text.addEventListener("input", (event) => {
+    saveNotebook(event.target.value);
+    status.textContent = "已自动保存";
+  });
+
+  toggle.addEventListener("click", () => setOpen(panel.hidden));
+  document.querySelector("#notebookClose").addEventListener("click", () => setOpen(false));
+  document.querySelector("#notebookCopy").addEventListener("click", async () => {
+    const value = text.value;
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(value);
+    } else {
+      text.focus();
+      text.select();
+      document.execCommand("copy");
     }
+    status.textContent = "已复制";
   });
-  document.querySelector("#noteToggle").addEventListener("click", () => {
-    const panel = document.querySelector(".note-panel");
-    panel.hidden = !panel.hidden;
-    document.querySelector("#noteToggle").textContent = panel.hidden ? "打开笔记" : "收起笔记";
-    if (!panel.hidden) document.querySelector("#noteText").focus();
+  document.querySelector("#notebookClear").addEventListener("click", () => {
+    if (!text.value || !confirm("确定清空调查笔记？")) return;
+    text.value = "";
+    saveNotebook("");
+    status.textContent = "已清空";
+    text.focus();
   });
-  document.querySelector("#noteClose").addEventListener("click", () => {
-    document.querySelector(".note-panel").hidden = true;
-    document.querySelector("#noteToggle").textContent = "打开笔记";
-  });
-  document.querySelector("#resetGame").addEventListener("click", () => {
-    localStorage.removeItem(STORE_KEY);
-    toast("进度已重置。");
-    setTimeout(() => location.href = "index.html", 500);
-  });
-  updateWidget();
-  scheduleThreatEvents();
 }
 
 function updateWidget() {
@@ -209,6 +259,42 @@ function isSafeFromThreats(state = loadGame()) {
   return Boolean(state.flags.rescuedLinzhou || state.flags.sudokuSecretSolved || state.flags.reportedMysteryMan);
 }
 
+function getThreatLevel(state = loadGame()) {
+  if (isSafeFromThreats(state)) return "";
+  const battery = getRemainingBattery(state);
+  if (battery <= 8) return "final";
+  if (battery <= 18) return "late";
+  if (battery <= 30) return "early";
+  return "";
+}
+
+function getThreatMessages(level = getThreatLevel()) {
+  const groups = {
+    early: [
+      "别再查北桥。",
+      "林舟已经完赛。",
+      "你手机快没电了。"
+    ],
+    late: [
+      "删掉你看到的东西。",
+      "北桥没有第八个点。",
+      "不要打开密页集。",
+      "最后警告。"
+    ],
+    final: [
+      "停下。",
+      "你已经越界了。",
+      "别来北桥。",
+      "最后一次警告。",
+      "手机会自己关机。"
+    ]
+  };
+  if (level === "final") return [...groups.early, ...groups.late, ...groups.final];
+  if (level === "late") return [...groups.early, ...groups.late];
+  if (level === "early") return groups.early;
+  return [];
+}
+
 function scheduleThreatEvents() {
   if (window.threatEventTimer) clearTimeout(window.threatEventTimer);
   window.threatEventTimer = setTimeout(runThreatEvents, 240);
@@ -217,23 +303,25 @@ function scheduleThreatEvents() {
 function runThreatEvents() {
   const state = loadGame();
   const page = document.body.dataset.page || "";
-  const safe = isSafeFromThreats(state);
-  const quietPage = page === "phone-archive";
+  const threatPage = page === "phone";
+  const level = getThreatLevel(state);
 
-  if (quietPage) return;
+  if (!threatPage) return;
 
-  if (state.stage >= 32 && !state.flags.threatSmsSeen && !safe) {
+  if ((level === "early" || level === "late" || level === "final") && !state.flags.threatSmsSeen) {
     markThreatFlag("threatSmsSeen");
-    showThreatSmsBarrage();
+    showThreatSmsBarrage("early");
   }
 
-  if (state.stage >= 36 && !state.flags.threatCallSeen && !safe) {
+  if ((level === "late" || level === "final") && !state.flags.threatCallSeen) {
     markThreatFlag("threatCallSeen");
+    showThreatSmsBarrage("late");
     showThreatCall();
   }
 
-  if (state.stage >= 40 && !state.flags.knockoutSeen && !safe && page !== "phone-archive") {
+  if (level === "final" && !state.flags.knockoutSeen && page === "phone") {
     markThreatFlag("knockoutSeen");
+    showThreatSmsBarrage("final");
     showKnockout();
   }
 }
@@ -245,14 +333,9 @@ function markThreatFlag(key) {
   updateWidget();
 }
 
-function showThreatSmsBarrage() {
-  const messages = [
-    "不要再查了。",
-    "林舟已经完赛。",
-    "删掉你看到的东西。",
-    "北桥没有第八个点。",
-    "最后警告。"
-  ];
+function showThreatSmsBarrage(level = "early") {
+  const all = getThreatMessages(level);
+  const messages = level === "early" ? all : all.slice(-4);
   const wrap = document.createElement("div");
   wrap.className = "threat-barrage";
   document.body.appendChild(wrap);

@@ -25,6 +25,10 @@
   box-sizing: border-box;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 html {
   min-height: 100%;
 }
@@ -725,11 +729,12 @@ th {
   font-weight: 700;
 }
 
-.note-panel {
+.note-panel,
+.notebook-panel {
   position: fixed;
   right: 14px;
-  top: 170px;
-  z-index: 90;
+  top: 72px;
+  z-index: 140;
   width: min(420px, calc(100% - 28px));
   border: 1px solid var(--line);
   border-radius: 4px;
@@ -738,27 +743,77 @@ th {
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
 }
 
-.note-panel[hidden] {
+.note-panel[hidden],
+.notebook-panel[hidden] {
   display: none;
 }
 
-.note-head {
+.notebook-toggle {
+  position: fixed;
+  right: 14px;
+  top: 14px;
+  z-index: 141;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  border: 1px solid rgba(215, 203, 187, 0.88);
+  border-radius: 999px;
+  padding: 6px 12px 6px 7px;
+  background: rgba(251, 248, 241, 0.96);
+  color: #1e252b;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.14);
+  font-weight: 800;
+}
+
+.notebook-toggle span {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: #f0c748;
+  color: #171b1f;
+}
+
+.notebook-toggle strong {
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.notebook-toggle.active {
+  background: white;
+}
+
+.note-head,
+.notebook-head {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
 }
 
-.note-head h2 {
+.note-head h2,
+.notebook-head h2 {
   margin: 0 0 4px;
 }
 
-.note-actions {
+.note-actions,
+.notebook-actions {
   display: flex;
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
   margin-top: 10px;
+}
+
+#notebookText {
+  min-height: 260px;
+}
+
+.small-btn.danger {
+  border-color: rgba(190, 40, 52, 0.38);
+  color: #b92331;
 }
 
 .evidence-list {
@@ -1474,6 +1529,13 @@ th {
   box-shadow: 0 3px 10px rgba(0,0,0,0.08);
 }
 
+.album-tabs button.locked,
+.album-tabs button:disabled {
+  color: #7c858c;
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
 .photo-grid button span,
 .photo-grid button em {
   display: block;
@@ -1665,6 +1727,16 @@ th {
   border-bottom: 1px solid rgba(0,0,0,0.05);
   background: rgba(237, 237, 237, 0.96);
   backdrop-filter: blur(18px);
+}
+
+.wechat-head > a:not(.mini-back),
+.wechat-head > span {
+  justify-self: end;
+  color: #4f5964;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .wechat-search {

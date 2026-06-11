@@ -99,8 +99,14 @@
       const detail = document.querySelector("#photoDetail");
 
       function renderAlbum(name) {
+        if (name === "hidden" && !hasFlag("sudokuSecretSolved")) {
+          toast("隐藏相册仍在数独缓存里。先完成第三关。");
+          name = "route";
+        }
         document.querySelectorAll(".album-tabs button").forEach((button) => {
           button.classList.toggle("active", button.dataset.album === name);
+          button.disabled = button.dataset.album === "hidden" && !hasFlag("sudokuSecretSolved");
+          button.classList.toggle("locked", button.disabled);
         });
         grid.innerHTML = albums[name].map((photo, index) => `
           <button class="${name === "hidden" ? "locked-photo" : ""}" data-album="${name}" data-index="${index}" type="button">
@@ -115,6 +121,7 @@
 
       function openPhoto(album, index) {
         const photo = albums[album][index];
+        const clueText = `${photo.title} ${photo.meta} ${photo.body}`;
         detail.innerHTML = `
           <h2>${photo.title}</h2>
           <p class="mono">${photo.meta}</p>
@@ -123,8 +130,9 @@
         `;
         document.querySelector("#recordPhoto").addEventListener("click", () => {
           if (photo.evidence) addEvidence(photo.evidence);
-          if (photo.title.includes("17") || photo.body.includes("00:17")) setFlag("foundRescueWindow");
-          if (photo.body.includes("雨水泵站")) setFlag("foundPumpStation");
+          if (clueText.includes("B17")) setFlag("foundB17");
+          if (clueText.includes("17 号门") || clueText.includes("00:17")) setFlag("foundRescueWindow");
+          if (clueText.includes("雨水泵站") || clueText.includes("泵站")) setFlag("foundPumpStation");
           toast("已记入调查笔记：相册线索。");
         });
       }
