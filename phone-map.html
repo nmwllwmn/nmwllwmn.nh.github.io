@@ -38,7 +38,8 @@
         s04: ["S04 西桥观景台", "官方路线的第四个点。旧路线从这里分叉去北桥。", () => {}],
         s08: ["S08 北桥体育馆", "新版路线已删除。旧站缓存、相册照片和许听雨旧帖都指向这里。", () => addEvidence("B")],
         b17: ["B17 地下通道 17 号门", "不是备份编号，是北桥体育馆地下连通道门牌。通往器材间和泵站检修间。", () => setFlag("foundB17")],
-        pump: ["北桥雨水泵站", "EXIF 偏移点。入口不在主馆，林舟草稿写过：排水声最大的地方。", () => setFlag("foundPumpStation")]
+        pump: ["北桥雨水泵站", "EXIF 偏移点。入口不在主馆，林舟草稿写过：排水声最大的地方。", () => setFlag("foundPumpStation")],
+        imp: ["IMP-2202 导入任务", "执行账号：shenbo_admin。执行时间：2026-06-06 22:02。内容：补全 linzhou 的 S05-S07 签到记录。", () => { addEvidence("E"); setFlag("foundShenbo"); }]
       };
 
       function showPlace(key) {
@@ -61,7 +62,11 @@
       document.querySelector("#mapSearch").addEventListener("submit", (event) => {
         event.preventDefault();
         const q = normalize(new FormData(event.target).get("q"));
-        if (q.includes("s08") || q.includes("北桥体育馆")) showPlace("s08");
+        if (q.includes("imp2202") || q.includes("imp-2202")) {
+          if (hasFlag("foundNvrLogin") || hasFlag("foundImp2202") || hasEvidence("D")) showPlace("imp");
+          else toast("没有找到公开任务。需要更具体的导入编号来源。");
+        }
+        else if (q.includes("s08") || q.includes("北桥体育馆")) showPlace("s08");
         else if (q.includes("b17") || q.includes("17号门") || q.includes("地下")) showPlace("b17");
         else if (q.includes("泵站") || q.includes("排水")) showPlace("pump");
         else if (q.includes("s04") || q.includes("西桥")) showPlace("s04");

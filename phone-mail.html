@@ -15,7 +15,7 @@
           <form class="phone-mail-login" id="mailLogin">
             <div class="mail-logo">NHU</div>
             <h2>南洄大学统一身份认证</h2>
-            <p class="mail-login-hint">账号和密码需要从林舟手机里的备忘录确认。</p>
+            <p class="mail-login-hint">林舟自己的邮箱进不去。备忘录和微信里提到，真正留门的是江予白。</p>
             <label>邮箱账号<input id="mailUser" autocomplete="username" placeholder="学号 / 邮箱"></label>
             <label>密码<input id="mailPass" type="password" autocomplete="current-password" placeholder="请输入密码"></label>
             <button class="btn primary" type="submit">登录校园邮箱</button>
@@ -42,8 +42,8 @@
           title: "成绩同步异常提醒",
           time: "6 月 6 日 21:22",
           preview: "队伍 夜航03 的后半程记录存在导入异常。",
-          body: "队伍 夜航03 的 S05-S07 签到记录来自 Web Import，来源账号 shenbo_admin。导入批次：IMP-2202。",
-          action: () => { addEvidence("A"); addEvidence("E"); setFlag("foundShenboImport"); }
+          body: "队伍 夜航03 的 S05-S07 签到记录来自 Web Import。导入人和批次号在系统邮件里被打码，只剩下导出时间 22:02。",
+          action: () => { addEvidence("A"); setFlag("foundImportAnomaly"); }
         },
         {
           from: "校园安全中心",
@@ -114,9 +114,11 @@
         event.preventDefault();
         const user = normalize(document.querySelector("#mailUser").value);
         const pass = normalize(document.querySelector("#mailPass").value);
-        if ((user === "linzhou" || user === "linzhou@stu.nhu.edu.cn" || user === "20220606") && pass === "0606") {
+        if ((user === "jiangyb" || user === "jiangyb@stu.nhu.edu.cn") && pass === "river17") {
           setFlag("phoneMailLoggedIn");
           openMailApp();
+        } else if ((user === "linzhou" || user === "linzhou@stu.nhu.edu.cn" || user === "20220606") && pass === "0606") {
+          document.querySelector("#mailError").textContent = "林舟邮箱需要二次验证，当前设备无法登录。";
         } else {
           document.querySelector("#mailError").textContent = "账号或密码错误。";
         }

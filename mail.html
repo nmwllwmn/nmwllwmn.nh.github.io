@@ -12,22 +12,29 @@
           <button class="btn primary" type="submit">登录</button>
         </form>
       </section>
-      <section id="mailbox" class="grid" hidden>
-        <article class="mail-item"><h2>林舟：你保存一下这个</h2><p>监控系统不是学校官网的入口。周祁发过一次临时链接，主题叫 NVR。如果我没回来，看 21:31 到 21:38。</p></article>
-        <article class="mail-item"><h2>周祁：NVR 临时访问</h2><p>仅限调试使用，勿外传。</p><p>入口：<a href="nvr.html">nvr.html</a></p><p class="mono">用户：guest<br>密码：cam042138</p></article>
-        <article class="mail-item"><h2>草稿箱：未发送</h2><p>我看见了。21:38 之后画面跳了一下。如果他们问，我就说我没登录过。</p></article>
-      </section>
+      <section id="mailbox" class="grid" hidden></section>
     </main>
     <script src="common.js"></script>
     <script>
       initGameShell({ stage: 28, page: "mail" });
-      if (hasFlag("loggedMailJiang")) document.querySelector("#mailbox").hidden = false;
+      const mailboxHtml = [
+        "<article class='mail-item'><h2>林舟：你保存一下这个</h2><p>监控系统不是学校官网的入口。周祁发过一次临时链接，主题叫 NVR。如果我没回来，看 21:31 到 21:38。</p></article>",
+        "<article class='mail-item'><h2>周祁：NVR 临时访问</h2><p>仅限调试使用，勿外传。</p><p>入口：<a href='nvr.html'>nvr.html</a></p><p class='mono'>用户：guest<br>密码：cam042138</p></article>",
+        "<article class='mail-item'><h2>草稿箱：未发送</h2><p>我看见了。21:38 之后画面跳了一下。如果他们问，我就说我没登录过。</p></article>"
+      ].join("");
+
+      function openMailbox() {
+        document.querySelector("#mailbox").innerHTML = mailboxHtml;
+        document.querySelector("#mailbox").hidden = false;
+      }
+
+      if (hasFlag("loggedMailJiang")) openMailbox();
       document.querySelector("#mailLogin").addEventListener("submit", (e) => {
         e.preventDefault();
         const data = new FormData(e.target);
         if (normalize(data.get("account")) === "jiangyb@stu.nhu.edu.cn" && normalize(data.get("password")) === "river17") {
           setFlag("loggedMailJiang"); setStage(30);
-          document.querySelector("#mailbox").hidden = false;
+          openMailbox();
           toast("江予白邮箱已打开。NVR 临时访问线索已出现。");
         } else toast("邮箱账号或密码错误。网盘聊天里说：河和 17。");
       });

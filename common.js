@@ -16,6 +16,19 @@ const evidenceLabels = {
   E: "IMP-2202 由沈泊执行"
 };
 
+const clueProgressChecks = [
+  (state) => state.flags.phoneUnlocked,
+  (state) => state.flags.readLinzhouWechat,
+  (state) => state.flags.readThreatSms,
+  (state) => state.flags.albumLockOpened,
+  (state) => state.evidence.A,
+  (state) => state.evidence.B,
+  (state) => state.evidence.C,
+  (state) => state.flags.foundNvrLogin,
+  (state) => state.evidence.D || state.flags.foundImp2202,
+  (state) => state.evidence.E || state.flags.foundShenbo
+];
+
 function loadGame() {
   try {
     return { ...defaultState, ...JSON.parse(localStorage.getItem(STORE_KEY) || "{}") };
@@ -39,8 +52,13 @@ function setStage(stage) {
 }
 
 function getRemainingBattery(state = loadGame()) {
-  const stage = Math.max(0, Math.min(MAX_STAGE, Number(state.stage) || 0));
-  return Math.max(0, 100 - Math.round((stage / MAX_STAGE) * 100));
+  const evidence = state.evidence || {};
+  const flags = state.flags || {};
+  if (evidence.A && evidence.B && evidence.C && evidence.D && evidence.E) return 0;
+  const safeState = { ...state, evidence, flags };
+  const solved = clueProgressChecks.filter((check) => Boolean(check(safeState))).length;
+  const progress = Math.min(39, Math.round((solved / clueProgressChecks.length) * MAX_STAGE));
+  return Math.max(1, 100 - Math.round((progress / MAX_STAGE) * 100));
 }
 
 function setFlag(key, value = true) {
