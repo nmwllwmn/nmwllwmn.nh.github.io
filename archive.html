@@ -12,6 +12,33 @@
         <section class="mi-screen app-screen archive-app screen-enter">
           <div class="app-head"><a class="mini-back" href="phone-browser.html">‹</a><strong>密页集</strong></div>
           <section class="archive-phone-feed" id="archiveFeed"></section>
+          <section class="emergency-ending" id="emergencyEnding" hidden>
+            <div class="emergency-call" id="emergencyCall">
+              <div class="emergency-number">110</div>
+              <p>正在自动拨号...</p>
+            </div>
+            <div class="police-dialog" id="policeDialog" hidden>
+              <article class="police-line operator">
+                <strong>110 接警中心</strong>
+                <p>您好，110。请问您遇到了什么情况？</p>
+              </article>
+              <article class="police-line player">
+                <strong>你</strong>
+                <p>我要举报一起失踪案相关的证据。照片里的人出现在北桥雨水泵站，时间和监控覆盖记录对得上。</p>
+              </article>
+              <article class="police-line operator">
+                <strong>110 接警中心</strong>
+                <p>请保持电话畅通，不要靠近现场。我们已经通知辖区警力前往。</p>
+              </article>
+            </div>
+            <div class="black-ending" id="blackEnding" hidden>
+              <h2>隐藏结局：雨夜来电</h2>
+              <p>你把照片、旧站缓存、NVR 覆盖记录和导入账号交给了警方。</p>
+              <p>照片里的人被带走了。</p>
+              <p>但林舟仍然失踪。</p>
+              <button class="btn primary" id="endingRestart" type="button">重新开始探索</button>
+            </div>
+          </section>
         </section>
       </section>
     </main>
@@ -23,11 +50,31 @@
       const state = loadGame();
       const evidence = state.evidence || {};
       const flags = state.flags || {};
+      const forcedEnding = new URLSearchParams(location.search).get("ending");
       const hasTruth = Boolean(evidence.A && evidence.B && evidence.C && evidence.D && evidence.E);
       const hasSudokuCache = Boolean(flags.sudokuSecretSolved);
       const hasRescueRoute = Boolean(flags.foundB17 && flags.foundPumpStation && flags.foundRescueWindow);
       const hasAlbumReport = Boolean(flags.albumPhotoReported || flags.reportedMysteryMan);
       const hasHiddenEnding = Boolean(hasTruth && hasSudokuCache && hasRescueRoute);
+
+      if (forcedEnding === "album-report" || hasAlbumReport) {
+        setFlag("reportedMysteryMan");
+        setFlag("albumPhotoReported");
+        document.querySelector("#archiveFeed").hidden = true;
+        document.querySelector("#emergencyEnding").hidden = false;
+        setTimeout(() => {
+          document.querySelector("#emergencyCall p").textContent = "已接通";
+          document.querySelector("#policeDialog").hidden = false;
+        }, 1200);
+        setTimeout(() => {
+          document.querySelector("#emergencyCall").hidden = true;
+          document.querySelector("#policeDialog").hidden = true;
+          document.querySelector("#blackEnding").hidden = false;
+        }, 5200);
+        document.querySelector("#endingRestart").addEventListener("click", () => {
+          restartExploration({ keepNotebook: true });
+        });
+      } else {
 
       function item(title, body, locked = false) {
         return `<article class="archive-phone-card ${locked ? "locked" : ""}">
@@ -83,6 +130,7 @@
       }
 
       feed.innerHTML = cards.join("") + ending;
+      }
     </script>
   </body>
 </html>

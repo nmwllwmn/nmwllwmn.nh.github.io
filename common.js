@@ -59,6 +59,13 @@ function saveNotebook(value) {
   saveGame(state);
 }
 
+function restartExploration(options = {}) {
+  const { keepNotebook = true } = options;
+  localStorage.removeItem(STORE_KEY);
+  if (!keepNotebook) localStorage.removeItem(NOTE_KEY);
+  location.href = "index.html";
+}
+
 function setStage(stage) {
   const state = loadGame();
   if (stage > state.stage) {
@@ -178,6 +185,9 @@ function initNotebook() {
         <button class="small-btn" id="notebookCopy" type="button">复制全部</button>
         <button class="small-btn danger" id="notebookClear" type="button">清空</button>
       </div>
+      <div class="notebook-restart">
+        <button class="small-btn danger" id="notebookRestart" type="button">重新开始探索</button>
+      </div>
     `;
     document.body.appendChild(panel);
   }
@@ -218,6 +228,10 @@ function initNotebook() {
     saveNotebook("");
     status.textContent = "已清空";
     text.focus();
+  });
+  document.querySelector("#notebookRestart").addEventListener("click", () => {
+    if (!confirm("确定重新开始探索？调查进度会清空，调查笔记会保留。")) return;
+    restartExploration({ keepNotebook: true });
   });
 }
 

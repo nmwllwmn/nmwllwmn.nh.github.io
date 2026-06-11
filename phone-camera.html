@@ -73,8 +73,7 @@
       }
 
       document.querySelector("#openAlbumLock").addEventListener("click", () => {
-        lock.hidden = false;
-        resetPin("");
+        location.href = "phone-gallery.html";
       });
       document.querySelectorAll(".camera-broken-control").forEach((button) => {
         button.addEventListener("click", () => {
@@ -105,8 +104,7 @@
           renderPin();
           if (pin.length === 6) {
             if (pin === "062141") {
-              setFlag("albumLockOpened");
-              location.href = "phone-gallery.html";
+              location.href = "phone-gallery.html?view=grid";
             } else {
               resetPin("密码错误");
             }
