@@ -16,10 +16,15 @@
             <div class="app-lock-card">
               <strong>相册已锁定</strong>
               <p>请输入 6 位应用锁密码</p>
-              <form class="inline-unlock" id="galleryPasswordForm">
-                <input id="galleryPassword" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="相册密码">
-                <button class="btn primary" type="submit">解锁</button>
-              </form>
+              <div class="lock-dots" id="galleryLockDots" aria-label="已输入位数">
+                <span></span><span></span><span></span><span></span><span></span><span></span>
+              </div>
+              <div class="lock-pad app-lock-pad" id="galleryLockPad">
+                <button type="button">1</button><button type="button">2</button><button type="button">3</button>
+                <button type="button">4</button><button type="button">5</button><button type="button">6</button>
+                <button type="button">7</button><button type="button">8</button><button type="button">9</button>
+                <button type="button" data-action="clear">清除</button><button type="button">0</button><button type="button" data-action="backspace">退格</button>
+              </div>
               <em id="galleryPasswordError"></em>
             </div>
           </section>
@@ -36,15 +41,20 @@
           </section>
 
           <section class="gallery-content photo-view" id="galleryPhotoView" hidden>
-            <figure class="evidence-photo-full">
+            <a class="evidence-photo-full" href="phone-gallery.html?view=full" aria-label="全屏查看照片">
               <img src="assets/hidden-photo-mastermind.png" alt="雨夜黑衣人在泵站入口附近回头">
-            </figure>
+            </a>
             <article class="photo-detail">
               <h2>IMG_062141</h2>
               <p class="mono">2026-06-06 21:41 / 北桥雨水泵站 / B17 外侧</p>
               <p>照片里的人站在地下通道入口外，手里拿着手机。位置、时间和 NVR 覆盖窗口吻合。</p>
               <button class="btn primary" id="recordPhoto" type="button">记录这条线索</button>
             </article>
+          </section>
+
+          <section class="gallery-content full-photo-view" id="galleryFullView" hidden>
+            <a class="mini-back full-photo-back" href="phone-gallery.html?view=photo">‹</a>
+            <img src="assets/hidden-photo-mastermind.png" alt="雨夜黑衣人在泵站入口附近回头">
           </section>
         </section>
       </section>
@@ -57,31 +67,21 @@
       const lock = document.querySelector("#galleryLock");
       const grid = document.querySelector("#galleryGridView");
       const photo = document.querySelector("#galleryPhotoView");
+      const full = document.querySelector("#galleryFullView");
 
       function showGalleryView(name) {
         lock.hidden = name !== "lock";
         grid.hidden = name !== "grid";
         photo.hidden = name !== "photo";
+        full.hidden = name !== "full";
       }
 
-      if (view === "grid" || view === "photo") {
+      if (view === "grid" || view === "photo" || view === "full") {
         setFlag("albumLockOpened");
         showGalleryView(view);
       } else {
         showGalleryView("lock");
       }
-
-      document.querySelector("#galleryPasswordForm").addEventListener("submit", (event) => {
-        event.preventDefault();
-        const password = normalize(document.querySelector("#galleryPassword").value);
-        const error = document.querySelector("#galleryPasswordError");
-        if (password === "062141") {
-          setFlag("albumLockOpened");
-          location.href = "phone-gallery.html?view=grid";
-        } else {
-          error.textContent = "密码错误。数独第三关缓存里有完整提示。";
-        }
-      });
 
       document.querySelector("#recordPhoto")?.addEventListener("click", () => {
         addEvidence("C");
@@ -89,7 +89,51 @@
         setFlag("foundPumpStation");
         setFlag("reportedMysteryMan");
         setFlag("albumPhotoReported");
-        location.href = "archive.html?ending=album-report";
+        location.href = "ending.html?type=album-report";
+      });
+
+      const dots = Array.from(document.querySelectorAll("#galleryLockDots span"));
+      const error = document.querySelector("#galleryPasswordError");
+      let pin = "";
+
+      function renderPin() {
+        dots.forEach((dot, index) => {
+          dot.classList.toggle("filled", index < pin.length);
+        });
+      }
+
+      function resetPin(message = "") {
+        pin = "";
+        error.textContent = message;
+        renderPin();
+      }
+
+      document.querySelectorAll("#galleryLockPad button").forEach((button) => {
+        button.addEventListener("click", () => {
+          const action = button.dataset.action;
+          if (action === "clear") {
+            resetPin("");
+            return;
+          }
+          if (action === "backspace") {
+            pin = pin.slice(0, -1);
+            error.textContent = "";
+            renderPin();
+            return;
+          }
+          if (pin.length >= 6) return;
+          pin += button.textContent.trim();
+          error.textContent = "";
+          renderPin();
+          if (pin.length === 6) {
+            if (pin === "062141") {
+              setFlag("albumLockOpened");
+              setTimeout(() => { location.href = "phone-gallery.html?view=grid"; }, 160);
+            } else {
+              setTimeout(() => resetPin("密码错误。数独第三关缓存里有完整提示。"), 180);
+            }
+          }
+        });
       });
     </script>
   </body>

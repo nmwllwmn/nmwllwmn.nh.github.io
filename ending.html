@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>结局 - 最后一次签到</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body class="chat-shell">
+    <main class="phone-stage">
+      <section class="mi-phone">
+        <section class="mi-screen app-screen ending-app screen-enter">
+          <div class="app-head"><a class="mini-back" href="phone-gallery.html?view=photo">‹</a><strong>结局</strong></div>
+          <section class="emergency-ending" id="emergencyEnding">
+            <div class="emergency-call" id="emergencyCall">
+              <div class="emergency-number">110</div>
+              <p id="callStatus">正在自动拨号...</p>
+            </div>
+            <div class="police-dialog" id="policeDialog" hidden></div>
+            <div class="black-ending" id="blackEnding" hidden>
+              <h2>隐藏结局：雨夜来电</h2>
+              <p>你从林舟的手机里找到了那张被隐藏的照片。</p>
+              <p>照片里的人被警方带走了。</p>
+              <p>但林舟仍然失踪。</p>
+              <button class="btn primary" id="endingRestart" type="button">重新开始探索</button>
+            </div>
+          </section>
+        </section>
+      </section>
+    </main>
+    <script src="common.js"></script>
+    <script>
+      initGameShell({ stage: 40, page: "phone-ending" });
+      setFlag("reportedMysteryMan");
+      setFlag("albumPhotoReported");
+
+      const dialog = document.querySelector("#policeDialog");
+      const lines = [
+        {
+          who: "110 接警中心",
+          side: "operator",
+          text: "您好，110。请问您遇到了什么情况？"
+        },
+        {
+          who: "你",
+          side: "player",
+          text: "我朋友林舟失踪了。我从他的手机相册里发现了一张隐藏照片。"
+        },
+        {
+          who: "你",
+          side: "player",
+          text: "照片是在北桥雨水泵站附近拍的。画面里有一个黑衣人，他拿着手机站在入口旁边。"
+        },
+        {
+          who: "你",
+          side: "player",
+          text: "这张照片被单独锁在应用锁后面，文件名和拍摄时间都像是林舟故意留下来的。"
+        },
+        {
+          who: "110 接警中心",
+          side: "operator",
+          text: "请不要靠近现场。请保留这部手机和照片原件，我们会通知辖区警力前往核查。"
+        },
+        {
+          who: "110 接警中心",
+          side: "operator",
+          text: "我们已经记录报警信息。请保持电话畅通，等待警方联系。"
+        }
+      ];
+
+      function appendLine(line) {
+        const item = document.createElement("article");
+        item.className = `police-line ${line.side}`;
+        item.innerHTML = `<strong>${line.who}</strong><p>${line.text}</p>`;
+        dialog.appendChild(item);
+        item.scrollIntoView({ block: "end" });
+      }
+
+      setTimeout(() => {
+        document.querySelector("#callStatus").textContent = "已接通";
+        dialog.hidden = false;
+      }, 1300);
+
+      lines.forEach((line, index) => {
+        setTimeout(() => appendLine(line), 2300 + index * 2200);
+      });
+
+      setTimeout(() => {
+        document.querySelector("#emergencyCall").hidden = true;
+        dialog.hidden = true;
+        document.querySelector("#blackEnding").hidden = false;
+      }, 2300 + lines.length * 2200 + 1800);
+
+      document.querySelector("#endingRestart").addEventListener("click", () => {
+        restartExploration({ keepNotebook: true });
+      });
+    </script>
+  </body>
+</html>

@@ -1559,6 +1559,7 @@ th {
 }
 
 .evidence-photo-full {
+  display: block;
   margin: 12px 14px 12px;
   overflow: hidden;
   border-radius: 12px;
@@ -1571,6 +1572,40 @@ th {
   width: 100%;
   max-height: 430px;
   object-fit: cover;
+}
+
+.full-photo-view {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 100%;
+  padding: 0;
+  background: #020304;
+}
+
+.full-photo-view[hidden] {
+  display: none;
+}
+
+.full-photo-view img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.full-photo-back {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.48);
+  color: white;
+  text-decoration: none;
 }
 
 .photo-grid .locked-photo {
@@ -2486,12 +2521,25 @@ th {
 
 .app-lock-card {
   width: 100%;
+  max-width: 286px;
   border-radius: 18px;
   padding: 20px;
-  background: rgba(248,248,248,0.96);
+  background: rgba(248,248,248,0.98);
   color: #111;
   text-align: center;
   box-shadow: 0 22px 64px rgba(0,0,0,0.34);
+}
+
+.gallery-lock .app-lock-card {
+  border-radius: 26px;
+  padding: 24px 18px 18px;
+  background: linear-gradient(180deg, #ffffff, #f4f6f8);
+  box-shadow: 0 18px 44px rgba(33,43,54,0.16);
+}
+
+.gallery-lock .app-lock-card strong {
+  display: block;
+  font-size: 20px;
 }
 
 .app-lock-card p,
@@ -2532,6 +2580,23 @@ th {
   background: #ececec;
   color: #111;
   font-weight: 700;
+}
+
+.app-lock-pad {
+  margin-top: 16px;
+}
+
+.app-lock-pad button {
+  min-height: 54px;
+  border-radius: 999px;
+  background: #e5e9ee;
+  font-size: 18px;
+}
+
+.app-lock-pad button[data-action] {
+  background: transparent;
+  color: #66717d;
+  font-size: 13px;
 }
 
 .sms-app {
@@ -3070,6 +3135,21 @@ body[data-page^="phone"] .btn.primary,
 .archive-app {
   background: #10151c;
   color: #e9edf4;
+}
+
+.ending-app {
+  background: #05070a;
+  color: #edf2f7;
+}
+
+.ending-app .app-head {
+  border-color: rgba(255,255,255,0.08);
+  background: rgba(5,7,10,0.94);
+}
+
+.ending-app .app-head strong,
+.ending-app .mini-back {
+  color: #edf2f7;
 }
 
 .archive-app .app-head {
