@@ -29,68 +29,20 @@
       </section>
     </main>
     <script src="common.js"></script>
+    <script src="wechat-data.js"></script>
     <script>
       initGameShell({ stage: 4, page: "phone-wechat" });
 
-      const chatRows = [
-        {
-          key: "mom",
-          name: "妈妈",
-          avatar: "妈",
-          tone: "family",
-          pinned: true,
-          preview: "电话怎么一直打不通？",
-          time: "置顶",
-          unreadFlag: "readChatMom"
-        },
-        {
-          key: "dad",
-          name: "爸爸",
-          avatar: "爸",
-          tone: "family dad",
-          pinned: true,
-          preview: "别老拍那些没人的地方，注意安全。",
-          time: "置顶",
-          unreadFlag: "readChatDad"
-        },
-        {
-          key: "girlfriend",
-          name: "沈眠",
-          avatar: "眠",
-          tone: "love",
-          pinned: true,
-          preview: "如果官网说我完赛了，别信。",
-          time: "置顶",
-          unreadFlag: "readChatGirlfriend"
-        },
-        {
-          key: "player",
-          name: "阿远",
-          avatar: "远",
-          tone: "dark",
-          preview: "林舟：北桥不是终点。",
-          time: "昨天",
-          unreadFlag: "readChatPlayer"
-        },
-        {
-          key: "jiang",
-          name: "江予白",
-          avatar: "江",
-          tone: "blue",
-          preview: "我只拿到过导出的表。",
-          time: "周日",
-          unreadFlag: "readChatJiang"
-        },
-        {
-          key: "team",
-          name: "夜航03小队",
-          avatar: "队",
-          tone: "orange",
-          preview: "阿远：我打了微信语音，没接。",
-          time: "周六",
-          unreadFlag: "readChatTeam"
-        }
-      ];
+      const chatRows = Object.entries(WECHAT_CHATS).map(([key, chat]) => ({
+        key,
+        name: chat.listTitle || chat.title,
+        avatar: chat.avatar,
+        tone: chat.tone,
+        pinned: chat.pinned,
+        preview: getWechatPreview(chat),
+        time: chat.time,
+        unreadFlag: chat.readFlag
+      }));
 
       function renderRows(keyword = "") {
         const query = normalize(keyword);
