@@ -3264,6 +3264,7 @@ body[data-page^="phone"] * {
 }
 
 body[data-page^="phone"] .screen-enter,
+body.chat-shell .mi-screen.screen-enter,
 body[data-page^="phone"] .shade-open,
 body[data-page^="phone"] .phone-app-toast {
   animation: none !important;
