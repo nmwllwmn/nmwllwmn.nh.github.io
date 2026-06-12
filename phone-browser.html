@@ -58,12 +58,12 @@
         },
         wall: {
           title: "南洄校园墙",
-          html: "<h2>别再问 B17 了</h2><p>匿名帖只剩缓存摘要：三年前有人在北桥留下过一句话。</p><p><strong>评论 17：</strong>如果你真的在查，去找 B17，不是楼层，是门。</p>",
+          html: "<h2>别再问 B17 了</h2><p>匿名帖只剩缓存摘要：三年前有人在北桥留下过一句话。</p><p><strong>评论 17：</strong>B17 不是楼层。门响过一次，后来监控就黑了。</p>",
           action: () => setFlag("foundB17")
         },
         drive: {
           title: "B17 备份目录",
-          html: "<h2>share.nhu-cloud.invalid / B17</h2><p>目录里有一张抖动照片和一段残缺录音。照片边缘能看到地下通道 17 号门，录音里反复出现排水声。</p><p class='mono'>hint: pump station / 00:17</p>",
+          html: "<h2>share.nhu-cloud.invalid / B17</h2><p>目录里有一张抖动照片和一段残缺录音。照片边缘能看到地下通道 17 号门，录音底噪里有连续排水声。</p><p class='mono'>audio_tag: pump_station / offset 00:17</p>",
           action: () => { setFlag("foundB17"); setFlag("foundPumpStation"); }
         },
         nvr: {
@@ -224,7 +224,7 @@
               consolePanel.hidden = false;
               toast("NVR 登录成功。");
             } else {
-              toast("登录失败。邮件里只有临时查看账号。");
+              toast("登录失败。");
             }
           });
 

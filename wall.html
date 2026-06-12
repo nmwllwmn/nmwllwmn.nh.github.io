@@ -15,7 +15,7 @@
         const q = normalize(new FormData(e.target).get("q"));
         let html = "";
         if (q.includes("北桥") || q.includes("b17")) {
-          html += `<article class="post"><h2>别再问 B17 了</h2><p>三年前有人在北桥留下过一句话，后来帖子都没了。</p><p><strong>评论 17：</strong>如果你真的在查，去找 B17，不是楼层，是备份。</p></article>`;
+          html += `<article class="post"><h2>别再问 B17 了</h2><p>三年前有人在北桥留下过一句话，后来帖子都没了。</p><p><strong>评论 17：</strong>B17 不是楼层。门响过一次，后来监控就黑了。</p></article>`;
           if (hasFlag("submittedArchive")) {
             html += `<article class="post"><h2>第 17 条留言</h2><p>谢谢你把第 8 个点放回去了。</p><p>但路线还没有结束。</p><p class="mono">MYJ-0606-S08 · 关联档案：旧论坛 17 楼</p></article>`;
             setFlag("easterEggSeen");

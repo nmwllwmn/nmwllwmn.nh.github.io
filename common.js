@@ -247,7 +247,7 @@ function initNotebook() {
       <div class="notebook-head">
         <div>
           <h2>调查笔记</h2>
-          <p class="muted">记录关键词、编号、时间、人名、密码。内容自动保存在本机浏览器。</p>
+          <p class="muted">记录你觉得不对劲的碎片。内容自动保存在本机浏览器。</p>
         </div>
         <button class="small-btn" id="notebookClose" type="button">收起</button>
       </div>
@@ -255,8 +255,7 @@ function initNotebook() {
         <h3>已记录线索</h3>
         <ul id="notebookEvidenceList"></ul>
       </section>
-      <textarea id="notebookText" spellcheck="false" placeholder="记录关键词、编号、时间、人名、密码。
-例如：0606 / S04 / B17 / 21:38 / IMP-2202"></textarea>
+      <textarea id="notebookText" spellcheck="false" placeholder="时间、人名、编号、异常页面，都可以先记下来。"></textarea>
       <div class="notebook-actions">
         <span class="muted" id="notebookStatus">已自动保存</span>
         <button class="small-btn" id="notebookCopy" type="button">复制全部</button>

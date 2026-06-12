@@ -38,7 +38,7 @@
         const data = new FormData(e.target);
         if (normalize(data.get("account")) === "guest" && normalize(data.get("password")) === "cam042138") {
           setFlag("loggedNvr"); openNvr(); toast("NVR 已连接。把时间调到邮件提到的关键点。");
-        } else toast("认证失败。邮件里有临时账号。");
+        } else toast("认证失败。");
       });
       document.querySelector("#camTime").addEventListener("input", (e) => document.querySelector("#osdTime").textContent = e.target.value);
       document.querySelectorAll(".modeBtn").forEach(btn => btn.addEventListener("click", () => { document.querySelector("#screen").className = "camera-screen " + btn.dataset.mode; }));
