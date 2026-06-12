@@ -497,8 +497,30 @@ function updateWidget() {
   }
 }
 
+function updatePhoneSystemBars() {
+  const now = new Date();
+  const time = now.toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit", hour12: false });
+  document.querySelectorAll("[data-phone-system-time]").forEach((el) => {
+    el.textContent = time;
+  });
+}
+
 function ensurePhoneBattery(page) {
   if (!page || !page.startsWith("phone")) return;
+  const screen = document.querySelector(".mi-screen:not(.lock-screen):not(.home-screen)");
+  if (screen && !screen.querySelector(".phone-system-bar")) {
+    const bar = document.createElement("div");
+    bar.className = "phone-system-bar";
+    bar.innerHTML = `
+      <span data-phone-system-time>--:--</span>
+      <span class="phone-system-right">5G <i class="status-battery" data-phone-battery-bar></i><span data-phone-battery>100%</span></span>
+    `;
+    screen.prepend(bar);
+  }
+  updatePhoneSystemBars();
+  if (!window.phoneSystemClockTimer) {
+    window.phoneSystemClockTimer = setInterval(updatePhoneSystemBars, 30000);
+  }
   updateWidget();
 }
 
