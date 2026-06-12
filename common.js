@@ -1,5 +1,6 @@
 const STORE_KEY = "last-checkin-webarg-v2";
 const NOTE_KEY = "last-checkin-investigation-notes-v1";
+const NOTE_BOX_KEY = "last-checkin-investigation-note-box-v1";
 const MAX_STAGE = 40;
 
 const defaultState = {
@@ -57,6 +58,18 @@ function saveNotebook(value) {
   const state = loadGame();
   state.notes = value;
   saveGame(state);
+}
+
+function loadNotebookBox() {
+  try {
+    return JSON.parse(localStorage.getItem(NOTE_BOX_KEY) || "{}");
+  } catch (error) {
+    return {};
+  }
+}
+
+function saveNotebookBox(box) {
+  localStorage.setItem(NOTE_BOX_KEY, JSON.stringify(box));
 }
 
 function restartExploration(options = {}) {
@@ -188,6 +201,7 @@ function initNotebook() {
       <div class="notebook-restart">
         <button class="small-btn danger" id="notebookRestart" type="button">重新开始探索</button>
       </div>
+      <span class="notebook-resize-handle" aria-hidden="true"></span>
     `;
     document.body.appendChild(panel);
   }
@@ -196,6 +210,14 @@ function initNotebook() {
   const panel = document.querySelector("#notebookPanel");
   const text = document.querySelector("#notebookText");
   const status = document.querySelector("#notebookStatus");
+  const applyNotebookBox = () => {
+    const saved = loadNotebookBox();
+    const maxWidth = Math.max(280, window.innerWidth - 24);
+    const maxHeight = Math.max(320, window.innerHeight - 112);
+    if (saved.width) panel.style.width = `${Math.min(Math.max(saved.width, 280), maxWidth)}px`;
+    if (saved.height) panel.style.height = `${Math.min(Math.max(saved.height, 320), maxHeight)}px`;
+  };
+  applyNotebookBox();
   const setOpen = (open) => {
     panel.hidden = !open;
     toggle.setAttribute("aria-expanded", String(open));
@@ -233,6 +255,47 @@ function initNotebook() {
     if (!confirm("确定重新开始探索？调查进度会清空，调查笔记会保留。")) return;
     restartExploration({ keepNotebook: true });
   });
+  const resizeHandle = panel.querySelector(".notebook-resize-handle");
+  if (resizeHandle) {
+    resizeHandle.addEventListener("pointerdown", (event) => {
+      event.preventDefault();
+      resizeHandle.setPointerCapture(event.pointerId);
+      const startX = event.clientX;
+      const startY = event.clientY;
+      const startRect = panel.getBoundingClientRect();
+      const maxWidth = Math.max(280, window.innerWidth - 24);
+      const maxHeight = Math.max(320, window.innerHeight - 112);
+      const onMove = (moveEvent) => {
+        const nextWidth = Math.min(Math.max(startRect.width + moveEvent.clientX - startX, 280), maxWidth);
+        const nextHeight = Math.min(Math.max(startRect.height + moveEvent.clientY - startY, 320), maxHeight);
+        panel.style.width = `${Math.round(nextWidth)}px`;
+        panel.style.height = `${Math.round(nextHeight)}px`;
+      };
+      const onEnd = () => {
+        resizeHandle.removeEventListener("pointermove", onMove);
+        resizeHandle.removeEventListener("pointerup", onEnd);
+        resizeHandle.removeEventListener("pointercancel", onEnd);
+        const rect = panel.getBoundingClientRect();
+        saveNotebookBox({ width: Math.round(rect.width), height: Math.round(rect.height) });
+      };
+      resizeHandle.addEventListener("pointermove", onMove);
+      resizeHandle.addEventListener("pointerup", onEnd);
+      resizeHandle.addEventListener("pointercancel", onEnd);
+    });
+  }
+  if (window.ResizeObserver) {
+    let resizeTimer = 0;
+    const observer = new ResizeObserver(() => {
+      if (panel.hidden) return;
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        const rect = panel.getBoundingClientRect();
+        saveNotebookBox({ width: Math.round(rect.width), height: Math.round(rect.height) });
+      }, 120);
+    });
+    observer.observe(panel);
+  }
+  window.addEventListener("resize", applyNotebookBox);
 }
 
 function updateWidget() {

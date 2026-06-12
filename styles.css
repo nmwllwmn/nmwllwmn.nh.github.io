@@ -750,6 +750,33 @@ th {
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18);
 }
 
+.notebook-panel {
+  display: flex;
+  flex-direction: column;
+  height: 440px;
+  min-width: 280px;
+  min-height: 320px;
+  max-width: calc(100vw - 28px);
+  max-height: calc(100vh - 92px);
+  padding-bottom: 18px;
+  overflow: auto;
+  resize: both;
+}
+
+.notebook-resize-handle {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  width: 18px;
+  height: 18px;
+  border-radius: 2px;
+  background:
+    linear-gradient(135deg, transparent 0 48%, rgba(36, 33, 29, 0.32) 49% 54%, transparent 55%),
+    linear-gradient(135deg, transparent 0 65%, rgba(36, 33, 29, 0.24) 66% 71%, transparent 72%);
+  cursor: nwse-resize;
+  touch-action: none;
+}
+
 .note-panel[hidden],
 .notebook-panel[hidden] {
   display: none;
@@ -819,13 +846,13 @@ body[data-page^="phone"] .notebook-toggle span {
 }
 
 body[data-page^="phone"] .notebook-panel {
-  left: 12px;
   right: 12px;
   top: auto;
   bottom: 86px;
-  width: auto;
-  max-height: min(70vh, 560px);
-  overflow-y: auto;
+  width: min(420px, calc(100vw - 24px));
+  height: min(520px, calc(100vh - 120px));
+  max-width: calc(100vw - 24px);
+  max-height: calc(100vh - 120px);
 }
 
 body[data-page^="phone"] #notebookText {
@@ -861,7 +888,9 @@ body[data-page^="phone"] #notebookText {
 }
 
 #notebookText {
-  min-height: 260px;
+  flex: 1 1 auto;
+  min-height: 180px;
+  resize: none;
 }
 
 .small-btn.danger {
@@ -3631,13 +3660,13 @@ body[data-page^="phone"] .btn.primary,
   }
 
   body[data-page^="phone"] .notebook-panel {
-    left: 12px;
     right: 12px;
     top: auto;
     bottom: 86px;
-    width: auto;
-    max-height: min(70vh, 560px);
-    overflow-y: auto;
+    width: min(420px, calc(100vw - 24px));
+    height: min(520px, calc(100vh - 120px));
+    max-width: calc(100vw - 24px);
+    max-height: calc(100vh - 120px);
   }
 
   body[data-page^="phone"] #notebookText {
