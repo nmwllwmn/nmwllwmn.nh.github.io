@@ -43,7 +43,7 @@
       const pages = {
         university: {
           title: "南洄大学官网",
-          html: "<h2>站内搜索：北桥</h2><p>官网只保留新版夜行定向赛页面，路线从 S01 到 S07，北桥体育馆相关附件已被移除。</p><p class='mono'>notice: old route moved to citytrace/2023/cache</p>",
+          html: "<h2>站内搜索：北桥</h2><p>官网只保留新版夜行定向赛页面，路线从 S01 到 S07。北桥体育馆相关附件显示已迁移。</p><p class='mono'>archive_ref: citytrace/2023/cache</p>",
           action: () => setFlag("foundOldSiteHint")
         },
         event: {
@@ -53,7 +53,7 @@
         },
         oldsite: {
           title: "城迹社旧站缓存",
-          html: "<h2>route_20230606_old.pdf</h2><p>旧站缓存仍保留 2023 试跑路线索引。S01-S07 之外还有 S08：北桥体育馆。</p><p>新版公告删除了 S08，也删除了 2023 试跑说明。</p>",
+          html: "<h2>route_20230606_old.pdf</h2><p>2023 试跑路线索引残留：S01-S04 后出现 S08，标注为北桥体育馆。</p><p class='mono'>cache_status: unsynced / newer page removed attachment</p>",
           action: () => addEvidence("B")
         },
         wall: {
@@ -72,7 +72,7 @@
             <section class="phone-nvr" id="phoneNvr">
               <div class="nvr-login-panel" id="nvrLoginPanel">
                 <h2>SECURICORP NVR</h2>
-                <p>SEC_NORTH 临时回放权限。归档通道仅保留低清副本。</p>
+                <p>SEC_NORTH 临时回放权限。归档通道仅保留低清副本，部分通道存在帧覆盖。</p>
                 <form class="nvr-login-form" id="browserNvrLogin">
                   <label>账号<input name="account" autocomplete="off" placeholder="user"></label>
                   <label>密码<input name="password" type="password" placeholder="password"></label>
@@ -104,9 +104,9 @@
                   <button type="button" data-pan="center">居中</button>
                   <button type="button" data-pan="right">右</button>
                   <button type="button" data-pan="down">下</button>
-                  <button type="button" id="nvrZoom">定位右下角</button>
+                  <button type="button" id="nvrZoom">增强边缘</button>
                 </div>
-                <p class="nvr-status" id="nvrStatus">已连接 CAM 04。邮件提到的时间是 21:38。</p>
+                <p class="nvr-status" id="nvrStatus">已连接 CAM 04。最近异常段：21:38-21:44。</p>
                 <div class="nvr-monitor-grid">
                   <div class="nvr-monitor active" data-monitor="04">
                     <div class="nvr-viewer" data-adjustable="true">
@@ -138,8 +138,8 @@
                   </div>
                 </div>
                 <form class="inline-unlock" id="browserNvrForm">
-                  <input name="answer" placeholder="输入放大后看到的编号">
-                  <button class="btn primary" type="submit">记录监控证据</button>
+                  <input name="answer" placeholder="overlay id">
+                  <button class="btn primary" type="submit">写入回放记录</button>
                 </form>
               </div>
             </section>
@@ -174,12 +174,12 @@
         const data = pages[key];
         if (!data) return;
         document.querySelector("#browserTitle").textContent = data.title;
-        const recordButton = data.action ? `<button class="btn primary" id="recordBrowser" type="button">记录网页线索</button>` : "";
+        const recordButton = data.action ? `<button class="btn primary" id="recordBrowser" type="button">保存本页记录</button>` : "";
         document.querySelector("#browserContent").innerHTML = `${data.html}${recordButton}`;
         if (data.action) {
           document.querySelector("#recordBrowser").addEventListener("click", () => {
             data.action();
-            toast("已记录浏览器线索。");
+            toast("本页记录已保存。");
           });
         }
         const nvrForm = document.querySelector("#browserNvrForm");
@@ -209,7 +209,7 @@
             clue.hidden = !lookingAtClue;
             nvrZoomReady = lookingAtClue;
             if (lookingAtClue) {
-              status.textContent = "右下角放大后可见残留编号：S08 / IMP-2202。";
+              status.textContent = "画面右下角出现覆盖残留：S08 / IMP-2202。";
             }
           }
 
@@ -235,7 +235,7 @@
               button.classList.add("active");
               document.querySelector(`.nvr-monitor[data-monitor="${button.dataset.cam}"]`)?.classList.add("active");
               if (button.dataset.cam === "04") {
-                status.textContent = nvrTimeReady ? "CAM 04 的 21:38 画面有覆盖残留。" : "已连接 CAM 04。邮件提到的时间是 21:38。";
+                status.textContent = nvrTimeReady ? "CAM 04 的 21:38 画面有覆盖残留。" : "已连接 CAM 04。最近异常段：21:38-21:44。";
               } else {
                 status.textContent = button.dataset.cam === "02" ? "CAM 02 在关键时间黑屏，没有可用画面。" : "CAM 08 能看到体育馆外侧，但残留编号不在这里。";
               }
@@ -250,7 +250,7 @@
             nvrTimeReady = timeInput.value === "21:38";
             nvrZoomReady = false;
             clue.hidden = true;
-            status.textContent = nvrTimeReady ? "21:38 画面右下角有覆盖残留，需要放大。" : "这个时间点没有明显异常。";
+            status.textContent = nvrTimeReady ? "21:38 回放段出现压缩残影。" : "这个时间点没有明显异常。";
             applyNvrView();
           });
 
@@ -271,7 +271,7 @@
               if (direction === "right") nvrPanX = Math.max(-22, nvrPanX - 8);
               if (direction === "up") nvrPanY = Math.min(18, nvrPanY + 8);
               if (direction === "down") nvrPanY = Math.max(-18, nvrPanY - 8);
-              status.textContent = nvrTimeReady ? "画面位置已调整。残留在 CAM 04 的右下角。" : "画面位置已调整。先确认关键时间。";
+              status.textContent = nvrTimeReady ? "画面位置已调整。边缘残留增强。" : "画面位置已调整。";
               applyNvrView();
             });
           });

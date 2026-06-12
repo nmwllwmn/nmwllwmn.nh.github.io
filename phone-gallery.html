@@ -83,12 +83,14 @@
       }
 
       document.querySelector("#recordPhoto")?.addEventListener("click", () => {
-        addEvidence("C");
         setFlag("foundB17");
         setFlag("foundPumpStation");
         setFlag("reportedMysteryMan");
         setFlag("albumPhotoReported");
-        location.href = "ending.html?type=album-report";
+        toast("原图已保留。正在拨打 110。");
+        setTimeout(() => {
+          location.href = "ending.html?type=album-report";
+        }, 680);
       });
 
       const dots = Array.from(document.querySelectorAll("#galleryLockDots span"));
