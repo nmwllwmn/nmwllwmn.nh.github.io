@@ -19,7 +19,6 @@
             <div class="browser-home-hero">
               <span>本机浏览器</span>
               <strong>2 条最近访问</strong>
-              <p>清理记录后只剩下学校官网和校园墙。真正的入口要从页面文字里抄。</p>
             </div>
             <div class="browser-quick-grid" aria-label="快捷入口">
               <button data-page="university" type="button"><span>NHU</span><strong>官网</strong></button>
@@ -389,7 +388,7 @@
         const q = normalize(raw);
         const match = aliases.find((item) => item.keys.some((key) => q.includes(normalize(key))));
         if (match) goPage(match.page);
-        else toast("没有找到匹配页面。试试从页面文字里抄下完整网址。");
+        else toast("没有找到匹配页面。");
       });
 
       document.querySelector("#browserBack").addEventListener("click", () => {
