@@ -251,6 +251,10 @@ function initNotebook() {
         </div>
         <button class="small-btn" id="notebookClose" type="button">收起</button>
       </div>
+      <section class="notebook-clues" aria-label="已记录线索">
+        <h3>已记录线索</h3>
+        <ul id="notebookEvidenceList"></ul>
+      </section>
       <textarea id="notebookText" spellcheck="false" placeholder="记录关键词、编号、时间、人名、密码。
 例如：0606 / S04 / B17 / 21:38 / IMP-2202"></textarea>
       <div class="notebook-actions">
@@ -481,10 +485,15 @@ function updateWidget() {
     el.classList.toggle("low", battery <= 18);
   });
   const list = document.querySelector("#evidenceList");
+  const notebookList = document.querySelector("#notebookEvidenceList");
+  const evidenceHtml = Object.entries(evidenceLabels)
+    .map(([key, label]) => `<li class="${state.evidence[key] ? "done" : ""}">${state.evidence[key] ? "已获得" : "未获得"} · ${key} ${label}</li>`)
+    .join("");
   if (list) {
-    list.innerHTML = Object.entries(evidenceLabels)
-      .map(([key, label]) => `<li class="${state.evidence[key] ? "done" : ""}">${state.evidence[key] ? "已获得" : "未获得"} · ${key} ${label}</li>`)
-      .join("");
+    list.innerHTML = evidenceHtml;
+  }
+  if (notebookList) {
+    notebookList.innerHTML = evidenceHtml;
   }
 }
 

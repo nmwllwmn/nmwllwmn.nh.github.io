@@ -78,18 +78,39 @@
               </div>
               <div class="nvr-console" id="nvrConsole" hidden>
                 <div class="nvr-cam-list" aria-label="监控通道">
-                  <button type="button" data-cam="01">CAM 01<span>主馆正门 / offline</span></button>
-                  <button type="button" data-cam="02">CAM 02<span>器材室 / maintenance</span></button>
                   <button type="button" data-cam="04" class="active">CAM 04<span>北桥北侧 / archive</span></button>
+                  <button type="button" data-cam="02">CAM 02<span>回放丢失 / black</span></button>
+                  <button type="button" data-cam="08">CAM 08<span>体育馆外侧 / archive</span></button>
                 </div>
-                <div class="nvr-viewer">
-                  <div class="nvr-osd">
-                    <span>SECURICORP ARCHIVE</span>
-                    <span id="nvrOsdTime">2026-06-06 21:12:00</span>
+                <div class="nvr-monitor-grid">
+                  <div class="nvr-monitor active" data-monitor="04">
+                    <div class="nvr-viewer">
+                      <div class="nvr-osd">
+                        <span>CAM 04 北桥北侧</span>
+                        <span id="nvrOsdTime">2026-06-06 21:12:00</span>
+                      </div>
+                      <img src="assets/normal-ending-nvr.png" alt="北桥监控回放画面">
+                      <div class="nvr-static"></div>
+                      <div class="nvr-clue" id="nvrClue" hidden>S08 / IMP-2202</div>
+                    </div>
                   </div>
-                  <img src="assets/normal-ending-nvr.png" alt="北桥监控回放画面">
-                  <div class="nvr-static"></div>
-                  <div class="nvr-clue" id="nvrClue" hidden>S08 / IMP-2202</div>
+                  <div class="nvr-monitor black" data-monitor="02">
+                    <div class="nvr-black-screen">
+                      <span>CAM 02</span>
+                      <strong>NO SIGNAL</strong>
+                      <small>21:38:12 LOST</small>
+                    </div>
+                  </div>
+                  <div class="nvr-monitor" data-monitor="08">
+                    <div class="nvr-viewer">
+                      <div class="nvr-osd">
+                        <span>CAM 08 体育馆外侧</span>
+                        <span>2026-06-06 21:38:00</span>
+                      </div>
+                      <img src="assets/normal-ending-gym.png" alt="北桥体育馆夜景监控画面">
+                      <div class="nvr-static"></div>
+                    </div>
+                  </div>
                 </div>
                 <div class="nvr-controls">
                   <label>回放时间
@@ -174,11 +195,13 @@
           document.querySelectorAll(".nvr-cam-list button").forEach((button) => {
             button.addEventListener("click", () => {
               document.querySelectorAll(".nvr-cam-list button").forEach((item) => item.classList.remove("active"));
+              document.querySelectorAll(".nvr-monitor").forEach((item) => item.classList.remove("active"));
               button.classList.add("active");
+              document.querySelector(`.nvr-monitor[data-monitor="${button.dataset.cam}"]`)?.classList.add("active");
               if (button.dataset.cam === "04") {
                 status.textContent = nvrTimeReady ? "CAM 04 的 21:38 画面有覆盖残留。" : "已连接 CAM 04。邮件提到的时间是 21:38。";
               } else {
-                status.textContent = "这个通道没有北桥回放。邮件指向 CAM 04。";
+                status.textContent = button.dataset.cam === "02" ? "CAM 02 在关键时间黑屏，没有可用画面。" : "CAM 08 能看到体育馆外侧，但残留编号不在这里。";
               }
               clue.hidden = true;
               nvrZoomReady = false;

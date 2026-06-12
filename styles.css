@@ -934,6 +934,47 @@ body[data-page^="phone"] #notebookText {
   border-top: 1px solid rgba(0,0,0,0.08);
 }
 
+.notebook-clues {
+  display: grid;
+  gap: 8px;
+  flex: 0 0 auto;
+  max-height: 148px;
+  overflow: auto;
+  border: 1px solid rgba(15,23,42,0.08);
+  border-radius: 8px;
+  padding: 10px;
+  background: rgba(248,250,252,0.9);
+}
+
+.notebook-clues h3 {
+  margin: 0;
+  color: #111827;
+  font-size: 13px;
+}
+
+.notebook-clues ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.notebook-clues li {
+  border-radius: 6px;
+  padding: 6px 7px;
+  background: rgba(148,163,184,0.14);
+  color: #667085;
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.notebook-clues li.done {
+  background: rgba(34,197,94,0.14);
+  color: #166534;
+  font-weight: 800;
+}
+
 #notebookText {
   flex: 1 1 auto;
   min-height: 180px;
@@ -2620,6 +2661,48 @@ body[data-page^="phone"] #notebookText {
   aspect-ratio: 16 / 10;
 }
 
+.nvr-monitor-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.nvr-monitor {
+  border: 2px solid transparent;
+  border-radius: 10px;
+  padding: 2px;
+  background: rgba(15,23,42,0.04);
+}
+
+.nvr-monitor.active {
+  border-color: rgba(37,99,235,0.72);
+  background: rgba(37,99,235,0.08);
+}
+
+.nvr-black-screen {
+  display: grid;
+  place-items: center;
+  gap: 4px;
+  min-height: 126px;
+  border: 1px solid #111827;
+  border-radius: 8px;
+  background:
+    linear-gradient(rgba(255,255,255,0.04) 50%, rgba(0,0,0,0.2) 50%) 0 0 / 100% 4px,
+    #020205;
+  color: #64748b;
+  font-family: var(--mono);
+  text-align: center;
+}
+
+.nvr-black-screen strong {
+  color: #94a3b8;
+  font-size: 15px;
+}
+
+.nvr-black-screen small {
+  color: #475569;
+}
+
 .nvr-viewer img {
   display: block;
   width: 100%;
@@ -3714,6 +3797,23 @@ body[data-page^="phone"] .btn.primary,
   margin: 0;
   color: #cbd5e1;
   line-height: 1.8;
+}
+
+.black-ending .ending-reveal {
+  opacity: 0;
+  animation: endingTextReveal 1.2s ease var(--delay, 0s) both;
+}
+
+@keyframes endingTextReveal {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .normal-ending {
