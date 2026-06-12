@@ -15,7 +15,7 @@
           <form class="phone-mail-login" id="mailLogin">
             <div class="mail-logo">NHU</div>
             <h2>南洄大学统一身份认证</h2>
-            <p class="mail-login-hint">备忘录里留下了林舟自己的校园邮箱和密码提示。</p>
+            <p class="mail-login-hint">统一身份认证服务 · mail.nhu.edu.cn</p>
             <label>邮箱账号<input id="mailUser" autocomplete="username" placeholder="学号 / 邮箱"></label>
             <label>密码<input id="mailPass" type="password" autocomplete="current-password" placeholder="请输入密码"></label>
             <button class="btn primary" type="submit">登录校园邮箱</button>
@@ -117,7 +117,7 @@
           setFlag("phoneMailLoggedIn");
           location.href = "phone-mail.html?inbox=1";
         } else if ((user === "linzhou" || user === "linzhou@stu.nhu.edu.cn") && pass === "0606") {
-          document.querySelector("#mailError").textContent = "日期不是邮箱密码。备忘录里的“河”和 17 才是提示。";
+          document.querySelector("#mailError").textContent = "认证失败：密码错误。";
         } else {
           document.querySelector("#mailError").textContent = "账号或密码错误。";
         }

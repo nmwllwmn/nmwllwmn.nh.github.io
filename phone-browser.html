@@ -72,7 +72,7 @@
             <section class="phone-nvr" id="phoneNvr">
               <div class="nvr-login-panel" id="nvrLoginPanel">
                 <h2>SECURICORP NVR</h2>
-                <p>邮件只留下了临时账号。必须进入监控回放，才能确认 21:38 画面里到底残留了什么。</p>
+                <p>SEC_NORTH 临时回放权限。归档通道仅保留低清副本。</p>
                 <form class="nvr-login-form" id="browserNvrLogin">
                   <label>账号<input name="account" autocomplete="off" placeholder="user"></label>
                   <label>密码<input name="password" type="password" placeholder="password"></label>
@@ -158,7 +158,7 @@
         },
         archive: {
           title: "密页集本机备份",
-          html: "<h2>MYJ-0606-S08</h2><p>林舟把密页集入口留在浏览器历史里。它不会替你判断答案，只会把已经找到的碎片恢复出来。</p><p><a class='btn primary' href='archive.html'>打开密页集</a></p>",
+          html: "<h2>MYJ-0606-S08</h2><p>本机缓存副本。已恢复条目会自动写入，未恢复部分保持灰色。</p><p><a class='btn primary' href='archive.html'>打开密页集</a></p>",
           action: () => setStage(40)
         }
       };
@@ -256,7 +256,7 @@
 
           scaleInput.addEventListener("change", () => {
             nvrScale = Number(scaleInput.value);
-            status.textContent = nvrTimeReady ? "正在调整回放比例。把画面移到右下角才能看清残留。" : "比例已调整。先把时间切到 21:38。";
+            status.textContent = nvrTimeReady ? "回放比例已调整，画面边缘出现压缩残影。" : "回放比例已调整。";
             applyNvrView();
           });
 
@@ -285,7 +285,7 @@
               scaleInput.value = "2.1";
               applyNvrView();
             } else {
-              toast("先切到 CAM 04，并把回放时间调到 21:38。");
+              toast("当前通道或时间无可用残影。");
             }
           });
 
@@ -299,7 +299,7 @@
             event.preventDefault();
             event.target.dispatchEvent(new Event("nvr-ready-check"));
             if (event.target.dataset.ready !== "true") {
-              toast("还没有真正看清监控残留。先登录、调到 21:38，再放大右下角。");
+              toast("画面残留未达到可记录状态。");
               return;
             }
             if (normalize(new FormData(event.target).get("answer")) === "imp-2202") {
@@ -307,7 +307,7 @@
               setFlag("foundImp2202");
               toast("证据 D 已记录：21:38 北桥监控异常。");
             } else {
-              toast("编号不对。邮件里提到要看 21:38 的 CAM 04。");
+              toast("编号未匹配。");
             }
           });
         }
@@ -331,7 +331,7 @@
         else if (q.includes("b17") || q.includes("0017")) goPage("b17");
         else if (q.includes("归档") || q.includes("myj") || q.includes("archive")) goPage("archive");
         else if (q.includes("林舟") || q.includes("完赛") || q.includes("webimport")) goPage("event");
-        else toast("本机历史没有匹配记录。试试 S08、B17、许听雨。");
+        else toast("本机历史没有匹配记录。");
       });
 
       document.querySelector("#browserBack").addEventListener("click", () => {

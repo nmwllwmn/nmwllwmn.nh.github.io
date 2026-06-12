@@ -13,9 +13,9 @@
         </form>
       </section>
       <section id="files" class="stack" hidden>
-        <article class="file-row"><h2>readme_first.txt</h2><p>如果你看到这里，说明校园墙那条还没被删。不要只看活动官网。看学校官网，看旧站，看林舟自己的邮件。</p></article>
+        <article class="file-row"><h2>readme_first.txt</h2><p>活动官网已替换为公开版本。校内镜像、旧站缓存与个人邮箱的清理状态不一致。</p></article>
         <article class="file-row"><h2>route_20230606_old.pdf</h2><p>S01 正门 -> S02 邮筒 -> S03 旧书摊 -> S04 西桥 -> <strong>S08 北桥体育馆</strong> -> S05 地铁口 -> S06 钟楼 -> S07 公园</p><button id="oldRouteBtn" class="btn primary">记录旧路线证据</button></article>
-        <article class="file-row"><h2>mail_hint_0605.txt</h2><p>林舟：别把 0606 当成所有密码。</p><p>林舟：邮箱提示写在备忘录里，“河”和 17。</p><p>林舟：她是英语专业，所以那个字要写英文。</p><p class="mono">linzhou@stu.nhu.edu.cn / river17</p></article>
+        <article class="file-row"><h2>draft_0605.txt</h2><p>林舟：0606 只用在活动系统和旧目录。</p><p>林舟：她又笑我把“河”写成拼音。</p><p>林舟：17 还是 17，账号别和密码写在同一页。</p></article>
         <article class="file-row"><h2>photo_s05_original.jpg</h2><p class="muted">原始照片水印：18:12。与系统记录 21:46 不一致。</p></article>
       </section>
     </main>
@@ -32,7 +32,7 @@
           setFlag("loggedDrive"); setStage(26);
           document.querySelector("#files").hidden = false;
           toast("B17 备份目录已打开。");
-        } else toast("口令错误。校园墙说：雨停在 0606。");
+        } else toast("口令错误。");
       });
       document.querySelector("#oldRouteBtn").addEventListener("click", () => {
         addEvidence("B"); setFlag("foundOldRoute"); toast("证据 B 已记录：2023 旧路线包含 S08。");

@@ -86,13 +86,13 @@
         const q = normalize(new FormData(event.target).get("q"));
         if (q.includes("imp2202") || q.includes("imp-2202")) {
           if (hasFlag("foundNvrLogin") || hasFlag("foundImp2202") || hasEvidence("D")) location.href = "phone-map.html?place=imp";
-          else toast("没有找到公开任务。需要更具体的导入编号来源。");
+          else toast("没有找到公开任务。");
         }
         else if (q.includes("s08") || q.includes("北桥体育馆")) location.href = "phone-map.html?place=s08";
         else if (q.includes("b17") || q.includes("17号门") || q.includes("地下")) location.href = "phone-map.html?place=b17";
         else if (q.includes("泵站") || q.includes("排水")) location.href = "phone-map.html?place=pump";
         else if (q.includes("s04") || q.includes("西桥")) location.href = "phone-map.html?place=s04";
-        else toast("没有找到地点。试试 S08、B17、泵站。");
+        else toast("没有找到地点。");
       });
 
       const initialPlace = params.get("place");
