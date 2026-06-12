@@ -85,6 +85,103 @@
         }, 900 + lines.length * 1500 + 1200);
       }
 
+      function showTruthEnding() {
+        back.href = "archive.html?stay=1";
+        root.innerHTML = `
+          <section class="normal-ending" id="truthEnding">
+            <figure class="ending-photo-frame">
+              <img src="assets/normal-ending-nvr.png" alt="21:38 北桥监控画面">
+              <figcaption>NVR / CAM 04 / 21:38 / IMP-2202</figcaption>
+            </figure>
+            <div class="normal-ending-feed" id="truthFeed"></div>
+            <div class="black-ending normal-black" id="truthBlack" hidden>
+              <h2>真相结局：旧站未删除</h2>
+              <p>你证明了林舟没有自然完赛，S05-S07 来自 Web Import。</p>
+              <p>旧站的 S08、NVR 的 IMP-2202、地图里的 shenbo_admin 串成了一条人为修改链。</p>
+              <p>可是你没有找到 B17、泵站和 00:17 的完整入口，也没有提交隐藏照片。</p>
+              <p>真相已经浮出水面，林舟仍在信号之外。</p>
+              ${restartButton()}
+            </div>
+          </section>
+        `;
+
+        const feed = document.querySelector("#truthFeed");
+        const lines = [
+          ["证据 A", "成绩后半段不是自然上传，而是 Web Import。"],
+          ["证据 B", "旧站缓存保留了被新版官网删掉的 S08：北桥体育馆。"],
+          ["证据 D", "NVR 21:38 的覆盖残留指向 IMP-2202。"],
+          ["证据 E", "IMP-2202 的执行账号指向 shenbo_admin。"],
+          ["缺口", "救援路线仍缺一环，报警只能证明篡改，无法立刻定位林舟。"]
+        ];
+
+        lines.forEach((line, index) => {
+          setTimeout(() => {
+            const item = document.createElement("article");
+            item.className = "normal-ending-line";
+            item.innerHTML = `<span>${line[0]}</span><p>${line[1]}</p>`;
+            feed.appendChild(item);
+            item.scrollIntoView({ block: "end" });
+          }, 700 + index * 1250);
+        });
+
+        setTimeout(() => {
+          document.querySelector("#truthEnding").querySelectorAll(".ending-photo-frame, .normal-ending-feed").forEach((el) => {
+            el.hidden = true;
+          });
+          document.querySelector("#truthBlack").hidden = false;
+          bindRestart();
+        }, 700 + lines.length * 1250 + 1200);
+      }
+
+      function showRescueEnding() {
+        back.href = "archive.html?stay=1";
+        setFlag("rescuedLinzhou");
+        root.innerHTML = `
+          <section class="normal-ending" id="rescueEnding">
+            <figure class="ending-photo-frame">
+              <img src="assets/normal-ending-gym.png" alt="雨夜的北桥体育馆">
+              <figcaption>北桥体育馆 / B17 / 00:17 维护窗口</figcaption>
+            </figure>
+            <div class="normal-ending-feed" id="rescueFeed"></div>
+            <div class="black-ending normal-black" id="rescueBlack" hidden>
+              <h2>隐藏结局：未完成的签到</h2>
+              <p>你没有走向主馆，也没有把北桥当成终点。</p>
+              <p>B17 是地下通道 17 号门，泵站侧门在 00:17 短暂解除门禁。</p>
+              <p>你在手机剩余 2% 电量时找到了林舟。</p>
+              <p>S08 从来不是完赛点，它是求救点。</p>
+              ${restartButton()}
+            </div>
+          </section>
+        `;
+
+        const feed = document.querySelector("#rescueFeed");
+        const lines = [
+          ["00:12", "你避开主馆，从北桥体育馆外侧绕到雨水泵站。"],
+          ["00:17", "B17 门禁进入维护窗口，地下通道 17 号门短暂打开。"],
+          ["00:19", "手机录音里的排水声和现场泵站噪声重合。"],
+          ["00:23", "林舟被困在检修通道内，意识模糊，但仍有呼吸。"],
+          ["00:26", "校安和急救赶到。手机电量停在 2%。"]
+        ];
+
+        lines.forEach((line, index) => {
+          setTimeout(() => {
+            const item = document.createElement("article");
+            item.className = "normal-ending-line";
+            item.innerHTML = `<span>${line[0]}</span><p>${line[1]}</p>`;
+            feed.appendChild(item);
+            item.scrollIntoView({ block: "end" });
+          }, 700 + index * 1300);
+        });
+
+        setTimeout(() => {
+          document.querySelector("#rescueEnding").querySelectorAll(".ending-photo-frame, .normal-ending-feed").forEach((el) => {
+            el.hidden = true;
+          });
+          document.querySelector("#rescueBlack").hidden = false;
+          bindRestart();
+        }, 700 + lines.length * 1300 + 1200);
+      }
+
       function showAlbumReportEnding() {
         back.href = "phone-gallery.html?view=photo";
         setFlag("reportedMysteryMan");
@@ -140,6 +237,8 @@
       }
 
       if (type === "normal") showNormalEnding();
+      else if (type === "truth") showTruthEnding();
+      else if (type === "rescue") showRescueEnding();
       else showAlbumReportEnding();
     </script>
   </body>

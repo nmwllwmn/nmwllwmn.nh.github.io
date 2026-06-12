@@ -65,7 +65,46 @@
         },
         nvr: {
           title: "SECURICORP NVR",
-          html: "<h2>CAM 04 · 北桥北侧</h2><p>临时账号 guest / cam042138。把时间调到 21:38 后，画面右下角出现 S08 和 IMP-2202。</p><form class='inline-unlock' id='browserNvrForm'><input name='answer' placeholder='输入画面角落编号'><button class='btn primary' type='submit'>记录</button></form>",
+          html: `
+            <section class="phone-nvr" id="phoneNvr">
+              <div class="nvr-login-panel" id="nvrLoginPanel">
+                <h2>SECURICORP NVR</h2>
+                <p>邮件只留下了临时账号。必须进入监控回放，才能确认 21:38 画面里到底残留了什么。</p>
+                <form class="nvr-login-form" id="browserNvrLogin">
+                  <label>账号<input name="account" autocomplete="off" placeholder="user"></label>
+                  <label>密码<input name="password" type="password" placeholder="password"></label>
+                  <button class="btn primary" type="submit">连接回放系统</button>
+                </form>
+              </div>
+              <div class="nvr-console" id="nvrConsole" hidden>
+                <div class="nvr-cam-list" aria-label="监控通道">
+                  <button type="button" data-cam="01">CAM 01<span>主馆正门 / offline</span></button>
+                  <button type="button" data-cam="02">CAM 02<span>器材室 / maintenance</span></button>
+                  <button type="button" data-cam="04" class="active">CAM 04<span>北桥北侧 / archive</span></button>
+                </div>
+                <div class="nvr-viewer">
+                  <div class="nvr-osd">
+                    <span>SECURICORP ARCHIVE</span>
+                    <span id="nvrOsdTime">2026-06-06 21:12:00</span>
+                  </div>
+                  <img src="assets/normal-ending-nvr.png" alt="北桥监控回放画面">
+                  <div class="nvr-static"></div>
+                  <div class="nvr-clue" id="nvrClue" hidden>S08 / IMP-2202</div>
+                </div>
+                <div class="nvr-controls">
+                  <label>回放时间
+                    <input id="nvrTime" type="time" value="21:12">
+                  </label>
+                  <button type="button" id="nvrZoom">放大右下角</button>
+                </div>
+                <p class="nvr-status" id="nvrStatus">已连接 CAM 04。邮件提到的时间是 21:38。</p>
+                <form class="inline-unlock" id="browserNvrForm">
+                  <input name="answer" placeholder="输入放大后看到的编号">
+                  <button class="btn primary" type="submit">记录监控证据</button>
+                </form>
+              </div>
+            </section>
+          `,
           action: null
         },
         xutingyu: {
@@ -105,9 +144,79 @@
           });
         }
         const nvrForm = document.querySelector("#browserNvrForm");
+        const nvrLogin = document.querySelector("#browserNvrLogin");
+        if (nvrLogin) {
+          const panel = document.querySelector("#nvrLoginPanel");
+          const consolePanel = document.querySelector("#nvrConsole");
+          const timeInput = document.querySelector("#nvrTime");
+          const zoomButton = document.querySelector("#nvrZoom");
+          const clue = document.querySelector("#nvrClue");
+          const status = document.querySelector("#nvrStatus");
+          const osdTime = document.querySelector("#nvrOsdTime");
+          let nvrTimeReady = false;
+          let nvrZoomReady = false;
+
+          nvrLogin.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const data = new FormData(event.target);
+            const account = normalize(data.get("account"));
+            const password = normalize(data.get("password"));
+            if (account === "guest" && password === "cam042138") {
+              setFlag("foundNvrLogin");
+              panel.hidden = true;
+              consolePanel.hidden = false;
+              toast("NVR 登录成功。");
+            } else {
+              toast("登录失败。邮件里只有临时查看账号。");
+            }
+          });
+
+          document.querySelectorAll(".nvr-cam-list button").forEach((button) => {
+            button.addEventListener("click", () => {
+              document.querySelectorAll(".nvr-cam-list button").forEach((item) => item.classList.remove("active"));
+              button.classList.add("active");
+              if (button.dataset.cam === "04") {
+                status.textContent = nvrTimeReady ? "CAM 04 的 21:38 画面有覆盖残留。" : "已连接 CAM 04。邮件提到的时间是 21:38。";
+              } else {
+                status.textContent = "这个通道没有北桥回放。邮件指向 CAM 04。";
+              }
+              clue.hidden = true;
+              nvrZoomReady = false;
+            });
+          });
+
+          timeInput.addEventListener("change", () => {
+            osdTime.textContent = `2026-06-06 ${timeInput.value || "21:12"}:00`;
+            nvrTimeReady = timeInput.value === "21:38";
+            nvrZoomReady = false;
+            clue.hidden = true;
+            status.textContent = nvrTimeReady ? "21:38 画面右下角有覆盖残留，需要放大。" : "这个时间点没有明显异常。";
+          });
+
+          zoomButton.addEventListener("click", () => {
+            const activeCam = document.querySelector(".nvr-cam-list button.active")?.dataset.cam;
+            if (activeCam === "04" && nvrTimeReady) {
+              nvrZoomReady = true;
+              clue.hidden = false;
+              status.textContent = "放大后可见残留编号：S08 / IMP-2202。";
+            } else {
+              toast("先切到 CAM 04，并把回放时间调到 21:38。");
+            }
+          });
+
+          nvrForm.dataset.ready = "false";
+          nvrForm.addEventListener("nvr-ready-check", () => {
+            nvrForm.dataset.ready = nvrZoomReady ? "true" : "false";
+          });
+        }
         if (nvrForm) {
           nvrForm.addEventListener("submit", (event) => {
             event.preventDefault();
+            event.target.dispatchEvent(new Event("nvr-ready-check"));
+            if (event.target.dataset.ready !== "true") {
+              toast("还没有真正看清监控残留。先登录、调到 21:38，再放大右下角。");
+              return;
+            }
             if (normalize(new FormData(event.target).get("answer")) === "imp-2202") {
               addEvidence("D");
               setFlag("foundImp2202");

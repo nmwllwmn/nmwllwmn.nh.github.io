@@ -30,8 +30,15 @@
       const hasHiddenEnding = Boolean(hasTruth && hasSudokuCache && hasRescueRoute);
       const hasAlbumEnding = Boolean(hasTruth && hasSudokuCache && hasAlbumReport);
 
-      if (hasTruth && !hasSudokuCache && !hasAlbumEnding && !hasHiddenEnding && new URLSearchParams(location.search).get("stay") !== "1") {
-        location.replace("ending.html?type=normal");
+      const shouldStay = new URLSearchParams(location.search).get("stay") === "1";
+      if (!shouldStay) {
+        if (hasHiddenEnding && !hasAlbumEnding) {
+          location.replace("ending.html?type=rescue");
+        } else if (hasTruth && hasSudokuCache && !hasAlbumEnding && !hasRescueRoute) {
+          location.replace("ending.html?type=truth");
+        } else if (hasTruth && !hasSudokuCache && !hasAlbumEnding && !hasHiddenEnding) {
+          location.replace("ending.html?type=normal");
+        }
       }
 
       function item(title, body, locked = false) {
