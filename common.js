@@ -546,7 +546,7 @@ function getThreatMessages(level = getThreatLevel()) {
     late: [
       "删掉你看到的东西。",
       "北桥没有第八个点。",
-      "不要打开密页集。",
+      "不要打开备份记录。",
       "最后警告。"
     ],
     final: [

@@ -24,17 +24,31 @@
       const back = document.querySelector("#endingBack");
 
       function restartButton() {
-        return `<button class="btn primary" id="endingRestart" type="button">重新开始探索</button>`;
+        return `<button class="btn primary" id="endingRestart" type="button" hidden>重新开始探索</button>`;
       }
 
       function bindRestart() {
-        document.querySelector("#endingRestart")?.addEventListener("click", () => {
+        const button = document.querySelector("#endingRestart");
+        if (!button) return;
+        button.hidden = false;
+        button.addEventListener("click", () => {
           restartExploration({ keepNotebook: true });
         });
       }
 
+      function revealEndingLines(rootSelector, step = 3800) {
+        const lines = Array.from(document.querySelectorAll(`${rootSelector} .ending-reveal`));
+        lines.forEach((line, index) => {
+          setTimeout(() => {
+            line.style.setProperty("--delay", "0s");
+            line.hidden = false;
+          }, 700 + index * step);
+        });
+        return 700 + lines.length * step;
+      }
+
       function showNormalEnding() {
-        back.href = "archive.html?stay=1";
+        back.href = "chat.html";
         root.innerHTML = `
           <section class="normal-ending" id="normalEnding">
             <figure class="ending-photo-frame">
@@ -44,11 +58,11 @@
             <div class="normal-ending-feed" id="normalFeed"></div>
             <div class="black-ending normal-black" id="normalBlack" hidden>
               <h2>普通结局：最后一次签到</h2>
-              <p class="ending-reveal" style="--delay: 0.6s">你发出最后一条消息后，手机屏幕忽然黑了下去。</p>
-              <p class="ending-reveal" style="--delay: 2.4s">身后有脚步声靠近。你还没来得及回头，后脑一沉。</p>
-              <p class="ending-reveal" style="--delay: 4.2s">你被打晕在北桥体育馆外侧，林舟没有被救出来。</p>
-              <p class="ending-reveal" style="--delay: 6s">第二天早上，南洄本地新闻推送快讯：</p>
-              <p class="ending-reveal" style="--delay: 7.8s">南洄大学失踪两名学生。</p>
+              <p class="ending-reveal" hidden>你发出最后一条消息后，手机屏幕忽然黑了下去。</p>
+              <p class="ending-reveal" hidden>身后有脚步声靠近。你还没来得及回头，后脑一沉。</p>
+              <p class="ending-reveal" hidden>你被打晕在北桥体育馆外侧，林舟没有被救出来。</p>
+              <p class="ending-reveal" hidden>第二天早上，南洄本地新闻推送快讯：</p>
+              <p class="ending-reveal" hidden>南洄大学失踪两名学生。</p>
               ${restartButton()}
             </div>
           </section>
@@ -68,7 +82,7 @@
             item.innerHTML = `<span>${line[0]}</span><p>${line[1]}</p>`;
             feed.appendChild(item);
             item.scrollIntoView({ block: "end" });
-          }, 1200 + index * 2600);
+          }, 1400 + index * 4200);
         });
 
         setTimeout(() => {
@@ -76,12 +90,12 @@
             el.hidden = true;
           });
           document.querySelector("#normalBlack").hidden = false;
-          setTimeout(bindRestart, 8200);
-        }, 1200 + lines.length * 2600 + 2200);
+          setTimeout(bindRestart, revealEndingLines("#normalBlack", 3800) + 1200);
+        }, 1400 + lines.length * 4200 + 3200);
       }
 
       function showTruthEnding() {
-        back.href = "archive.html?stay=1";
+        back.href = "chat.html";
         root.innerHTML = `
           <section class="normal-ending" id="truthEnding">
             <figure class="ending-photo-frame">
@@ -91,10 +105,10 @@
             <div class="normal-ending-feed" id="truthFeed"></div>
             <div class="black-ending normal-black" id="truthBlack" hidden>
               <h2>真相结局：旧站未删除</h2>
-              <p>你证明了林舟没有自然完赛，S05-S07 来自 Web Import。</p>
-              <p>旧站的 S08、NVR 的 IMP-2202、地图里的 shenbo_admin 串成了一条人为修改链。</p>
-              <p>可是你没有找到 B17、泵站和 00:17 的完整入口，也没有提交隐藏照片。</p>
-              <p>真相已经浮出水面，林舟仍在信号之外。</p>
+              <p class="ending-reveal" hidden>你证明了林舟没有自然完赛，S05-S07 来自 Web Import。</p>
+              <p class="ending-reveal" hidden>旧站的 S08、NVR 的 IMP-2202、地图里的 shenbo_admin 串成了一条人为修改链。</p>
+              <p class="ending-reveal" hidden>可是你没有找到 B17、泵站和 00:17 的完整入口，也没有提交隐藏照片。</p>
+              <p class="ending-reveal" hidden>真相已经浮出水面，林舟仍在信号之外。</p>
               ${restartButton()}
             </div>
           </section>
@@ -116,7 +130,7 @@
             item.innerHTML = `<span>${line[0]}</span><p>${line[1]}</p>`;
             feed.appendChild(item);
             item.scrollIntoView({ block: "end" });
-          }, 700 + index * 1250);
+          }, 900 + index * 3200);
         });
 
         setTimeout(() => {
@@ -124,12 +138,12 @@
             el.hidden = true;
           });
           document.querySelector("#truthBlack").hidden = false;
-          bindRestart();
-        }, 700 + lines.length * 1250 + 1200);
+          setTimeout(bindRestart, revealEndingLines("#truthBlack", 4000) + 1200);
+        }, 900 + lines.length * 3200 + 2400);
       }
 
       function showRescueEnding() {
-        back.href = "archive.html?stay=1";
+        back.href = "chat.html";
         setFlag("rescuedLinzhou");
         root.innerHTML = `
           <section class="normal-ending" id="rescueEnding">
@@ -140,10 +154,10 @@
             <div class="normal-ending-feed" id="rescueFeed"></div>
             <div class="black-ending normal-black" id="rescueBlack" hidden>
               <h2>隐藏结局：未完成的签到</h2>
-              <p>你没有走向主馆，也没有把北桥当成终点。</p>
-              <p>B17 是地下通道 17 号门，泵站侧门在 00:17 短暂解除门禁。</p>
-              <p>你在手机剩余 2% 电量时找到了林舟。</p>
-              <p>S08 从来不是完赛点，它是求救点。</p>
+              <p class="ending-reveal" hidden>你没有走向主馆，也没有把北桥当成终点。</p>
+              <p class="ending-reveal" hidden>B17 是地下通道 17 号门，泵站侧门在 00:17 短暂解除门禁。</p>
+              <p class="ending-reveal" hidden>你在手机剩余 2% 电量时找到了林舟。</p>
+              <p class="ending-reveal" hidden>S08 从来不是完赛点，它是求救点。</p>
               ${restartButton()}
             </div>
           </section>
@@ -165,7 +179,7 @@
             item.innerHTML = `<span>${line[0]}</span><p>${line[1]}</p>`;
             feed.appendChild(item);
             item.scrollIntoView({ block: "end" });
-          }, 700 + index * 1300);
+          }, 900 + index * 3200);
         });
 
         setTimeout(() => {
@@ -173,8 +187,8 @@
             el.hidden = true;
           });
           document.querySelector("#rescueBlack").hidden = false;
-          bindRestart();
-        }, 700 + lines.length * 1300 + 1200);
+          setTimeout(bindRestart, revealEndingLines("#rescueBlack", 4000) + 1200);
+        }, 900 + lines.length * 3200 + 2400);
       }
 
       function showAlbumReportEnding() {
@@ -189,9 +203,9 @@
           <div class="police-dialog" id="policeDialog" hidden></div>
           <div class="black-ending" id="blackEnding" hidden>
             <h2>彩蛋结局：雨夜来电</h2>
-            <p>你从林舟的手机里找到了那张被隐藏的照片。</p>
-            <p>照片里的人被警方带走了。</p>
-            <p>但林舟仍然失踪。</p>
+            <p class="ending-reveal" hidden>你从林舟的手机里找到了那张被隐藏的照片。</p>
+            <p class="ending-reveal" hidden>照片里的人被警方带走了。</p>
+            <p class="ending-reveal" hidden>但林舟仍然失踪。</p>
             ${restartButton()}
           </div>
         `;
@@ -220,15 +234,15 @@
         }, 1300);
 
         lines.forEach((line, index) => {
-          setTimeout(() => appendLine(line), 2300 + index * 2200);
+          setTimeout(() => appendLine(line), 2400 + index * 4300);
         });
 
         setTimeout(() => {
           document.querySelector("#emergencyCall").hidden = true;
           dialog.hidden = true;
           document.querySelector("#blackEnding").hidden = false;
-          bindRestart();
-        }, 2300 + lines.length * 2200 + 1800);
+          setTimeout(bindRestart, revealEndingLines("#blackEnding", 4000) + 1200);
+        }, 2400 + lines.length * 4300 + 2800);
       }
 
       if (type === "normal") showNormalEnding();
