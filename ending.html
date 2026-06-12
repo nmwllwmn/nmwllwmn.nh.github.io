@@ -41,7 +41,7 @@
       }
 
       function restartButton() {
-        return `<button class="btn primary" id="endingRestart" type="button" hidden>重新开始探索</button>`;
+        return `<button class="btn primary" id="endingRestart" type="button" hidden>重新开始游戏</button>`;
       }
 
       function bindRestart() {
@@ -74,12 +74,13 @@
             </figure>
             <div class="normal-ending-feed" id="normalFeed"></div>
             <div class="black-ending normal-black" id="normalBlack" hidden>
-              <h2>普通结局：最后一次签到</h2>
+              <h2>普通结局</h2>
               <p class="ending-reveal" hidden>你发出最后一条消息后，手机屏幕忽然黑了下去。</p>
-              <p class="ending-reveal" hidden>身后有脚步声靠近。你还没来得及回头，后脑一沉。</p>
-              <p class="ending-reveal" hidden>你被打晕在北桥体育馆外侧，林舟没有被救出来。</p>
-              <p class="ending-reveal" hidden>第二天早上，南洄本地新闻推送快讯：</p>
-              <p class="ending-reveal" hidden>南洄大学失踪两名学生。</p>
+              <p class="ending-reveal" hidden>身后有脚步声靠近。你还没来得及回头，后脑被重重敲了一下。</p>
+              <p class="ending-reveal" hidden>你没有看清那个人是谁，只记得雨声和北桥体育馆外侧的白光。</p>
+              <p class="ending-reveal" hidden>屏幕彻底黑下去。</p>
+              <p class="ending-reveal" hidden>片刻后，它又亮了一次。</p>
+              <p class="ending-reveal news-line" hidden>直至今日，我市一所大学已经失踪两名学生不知去向。</p>
               ${restartButton()}
             </div>
           </section>
@@ -107,7 +108,7 @@
             el.hidden = true;
           });
           document.querySelector("#normalBlack").hidden = false;
-          setTimeout(bindRestart, revealEndingLines("#normalBlack", 3800) + 1200);
+          setTimeout(bindRestart, revealEndingLines("#normalBlack", 3000) + 2200);
         }, 1400 + lines.length * 4200 + 3200);
       }
 

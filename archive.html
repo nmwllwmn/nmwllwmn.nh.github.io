@@ -31,14 +31,13 @@
       const hasAlbumEnding = Boolean(hasTruth && hasSudokuCache && hasAlbumReport);
 
       const shouldStay = new URLSearchParams(location.search).get("stay") === "1";
-      if (!shouldStay) {
-        if (hasHiddenEnding && !hasAlbumEnding) {
-          location.replace("ending.html?type=rescue");
-        } else if (hasTruth && hasSudokuCache && !hasAlbumEnding && !hasRescueRoute) {
-          location.replace("ending.html?type=truth");
-        } else if (hasTruth && !hasSudokuCache && !hasAlbumEnding && !hasHiddenEnding) {
-          location.replace("ending.html?type=normal");
-        }
+      let pendingEndingUrl = "";
+      if (!shouldStay && hasHiddenEnding && !hasAlbumEnding) {
+        pendingEndingUrl = "ending.html?type=rescue";
+      } else if (!shouldStay && hasTruth && hasSudokuCache && !hasAlbumEnding && !hasRescueRoute) {
+        pendingEndingUrl = "ending.html?type=truth";
+      } else if (!shouldStay && hasTruth && !hasSudokuCache && !hasAlbumEnding && !hasHiddenEnding) {
+        pendingEndingUrl = "ending.html?type=normal";
       }
 
       function item(title, body, locked = false) {
@@ -117,6 +116,11 @@
       }
 
       feed.innerHTML = cards.join("") + ending;
+      if (pendingEndingUrl) {
+        setTimeout(() => {
+          location.replace(pendingEndingUrl);
+        }, 2200);
+      }
     </script>
   </body>
 </html>

@@ -3983,6 +3983,14 @@ body[data-page^="phone"] .btn.primary,
   animation: endingTextReveal 1.2s ease var(--delay, 0s) both;
 }
 
+.black-ending .news-line {
+  margin-top: 24px;
+  color: #f4f1e8;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.8;
+}
+
 @keyframes endingTextReveal {
   from {
     opacity: 0;
