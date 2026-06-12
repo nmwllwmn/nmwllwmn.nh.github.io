@@ -2,3 +2,5 @@ qa-chrome*/
 qa-review/
 qa-shots/
 test-results/
+output/
+qa-screenshot.js
