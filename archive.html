@@ -30,6 +30,10 @@
       const hasHiddenEnding = Boolean(hasTruth && hasSudokuCache && hasRescueRoute);
       const hasAlbumEnding = Boolean(hasTruth && hasSudokuCache && hasAlbumReport);
 
+      if (hasTruth && !hasSudokuCache && !hasAlbumEnding && !hasHiddenEnding && new URLSearchParams(location.search).get("stay") !== "1") {
+        location.replace("ending.html?type=normal");
+      }
+
       function item(title, body, locked = false) {
         return `<article class="archive-phone-card ${locked ? "locked" : ""}">
           <span>${locked ? "未恢复" : "已恢复"}</span>

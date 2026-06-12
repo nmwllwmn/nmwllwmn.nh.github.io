@@ -10,90 +10,137 @@
     <main class="phone-stage">
       <section class="mi-phone">
         <section class="mi-screen app-screen ending-app screen-enter">
-          <div class="app-head"><a class="mini-back" href="phone-gallery.html?view=photo">‹</a><strong>结局</strong></div>
-          <section class="emergency-ending" id="emergencyEnding">
-            <div class="emergency-call" id="emergencyCall">
-              <div class="emergency-number">110</div>
-              <p id="callStatus">正在自动拨号...</p>
-            </div>
-            <div class="police-dialog" id="policeDialog" hidden></div>
-            <div class="black-ending" id="blackEnding" hidden>
-              <h2>隐藏结局：雨夜来电</h2>
-              <p>你从林舟的手机里找到了那张被隐藏的照片。</p>
-              <p>照片里的人被警方带走了。</p>
-              <p>但林舟仍然失踪。</p>
-              <button class="btn primary" id="endingRestart" type="button">重新开始探索</button>
-            </div>
-          </section>
+          <div class="app-head"><a class="mini-back" id="endingBack" href="archive.html?stay=1">‹</a><strong>结局</strong></div>
+          <section class="emergency-ending" id="emergencyEnding"></section>
         </section>
       </section>
     </main>
     <script src="common.js"></script>
     <script>
       initGameShell({ stage: 40, page: "phone-ending" });
-      setFlag("reportedMysteryMan");
-      setFlag("albumPhotoReported");
 
-      const dialog = document.querySelector("#policeDialog");
-      const lines = [
-        {
-          who: "110 接警中心",
-          side: "operator",
-          text: "您好，110。请问您遇到了什么情况？"
-        },
-        {
-          who: "你",
-          side: "player",
-          text: "我朋友林舟失踪了。我从他的手机相册里发现了一张隐藏照片。"
-        },
-        {
-          who: "你",
-          side: "player",
-          text: "照片是在北桥雨水泵站附近拍的。画面里有一个黑衣人，他拿着手机站在入口旁边。"
-        },
-        {
-          who: "你",
-          side: "player",
-          text: "这张照片被单独锁在应用锁后面，文件名和拍摄时间都像是林舟故意留下来的。"
-        },
-        {
-          who: "110 接警中心",
-          side: "operator",
-          text: "请不要靠近现场。请保留这部手机和照片原件，我们会通知辖区警力前往核查。"
-        },
-        {
-          who: "110 接警中心",
-          side: "operator",
-          text: "我们已经记录报警信息。请保持电话畅通，等待警方联系。"
-        }
-      ];
+      const type = new URLSearchParams(location.search).get("type") || "album-report";
+      const root = document.querySelector("#emergencyEnding");
+      const back = document.querySelector("#endingBack");
 
-      function appendLine(line) {
-        const item = document.createElement("article");
-        item.className = `police-line ${line.side}`;
-        item.innerHTML = `<strong>${line.who}</strong><p>${line.text}</p>`;
-        dialog.appendChild(item);
-        item.scrollIntoView({ block: "end" });
+      function restartButton() {
+        return `<button class="btn primary" id="endingRestart" type="button">重新开始探索</button>`;
       }
 
-      setTimeout(() => {
-        document.querySelector("#callStatus").textContent = "已接通";
-        dialog.hidden = false;
-      }, 1300);
+      function bindRestart() {
+        document.querySelector("#endingRestart")?.addEventListener("click", () => {
+          restartExploration({ keepNotebook: true });
+        });
+      }
 
-      lines.forEach((line, index) => {
-        setTimeout(() => appendLine(line), 2300 + index * 2200);
-      });
+      function showNormalEnding() {
+        back.href = "archive.html?stay=1";
+        root.innerHTML = `
+          <section class="normal-ending" id="normalEnding">
+            <figure class="ending-photo-frame">
+              <img src="assets/normal-ending-nvr.png" alt="21:38 北桥监控画面">
+              <figcaption>CAM 04 / 2026-06-06 21:38 / IMP-2202</figcaption>
+            </figure>
+            <figure class="ending-photo-frame">
+              <img src="assets/normal-ending-gym.png" alt="雨夜的北桥体育馆">
+              <figcaption>北桥体育馆 / 官方终点外侧</figcaption>
+            </figure>
+            <div class="normal-ending-feed" id="normalFeed"></div>
+            <div class="black-ending normal-black" id="normalBlack" hidden>
+              <h2>普通结局：最后一次签到</h2>
+              <p>你把五条证据拼在了一起，去了北桥体育馆。</p>
+              <p>走廊尽头有人从背后靠近。后脑一沉，你被打晕在侧门外。</p>
+              <p>手机掉进雨水里，屏幕停在最后一次签到。</p>
+              <p>第二天早上，南洄本地新闻推送了一条快讯：</p>
+              <p>南洄大学失踪两名学生。</p>
+              ${restartButton()}
+            </div>
+          </section>
+        `;
 
-      setTimeout(() => {
-        document.querySelector("#emergencyCall").hidden = true;
-        dialog.hidden = true;
-        document.querySelector("#blackEnding").hidden = false;
-      }, 2300 + lines.length * 2200 + 1800);
+        const feed = document.querySelector("#normalFeed");
+        const lines = [
+          ["23:41", "你到达北桥体育馆外侧。监控截图里的路灯、侧门和积水都对得上。"],
+          ["23:46", "手机收到未知号码来电。对方没有说话，只剩下很近的雨声。"],
+          ["23:49", "你看见侧门后面有一道光。那不是出口。"],
+          ["23:50", "林舟没有被救出来。"]
+        ];
 
-      document.querySelector("#endingRestart").addEventListener("click", () => {
-        restartExploration({ keepNotebook: true });
-      });
+        lines.forEach((line, index) => {
+          setTimeout(() => {
+            const item = document.createElement("article");
+            item.className = "normal-ending-line";
+            item.innerHTML = `<span>${line[0]}</span><p>${line[1]}</p>`;
+            feed.appendChild(item);
+            item.scrollIntoView({ block: "end" });
+          }, 900 + index * 1500);
+        });
+
+        setTimeout(() => {
+          document.querySelector("#normalEnding").querySelectorAll(".ending-photo-frame, .normal-ending-feed").forEach((el) => {
+            el.hidden = true;
+          });
+          document.querySelector("#normalBlack").hidden = false;
+          bindRestart();
+        }, 900 + lines.length * 1500 + 1200);
+      }
+
+      function showAlbumReportEnding() {
+        back.href = "phone-gallery.html?view=photo";
+        setFlag("reportedMysteryMan");
+        setFlag("albumPhotoReported");
+        root.innerHTML = `
+          <div class="emergency-call" id="emergencyCall">
+            <div class="emergency-number">110</div>
+            <p id="callStatus">正在自动拨号...</p>
+          </div>
+          <div class="police-dialog" id="policeDialog" hidden></div>
+          <div class="black-ending" id="blackEnding" hidden>
+            <h2>彩蛋结局：雨夜来电</h2>
+            <p>你从林舟的手机里找到了那张被隐藏的照片。</p>
+            <p>照片里的人被警方带走了。</p>
+            <p>但林舟仍然失踪。</p>
+            ${restartButton()}
+          </div>
+        `;
+
+        const dialog = document.querySelector("#policeDialog");
+        const lines = [
+          ["110 接警中心", "operator", "您好，110。请问您遇到了什么情况？"],
+          ["你", "player", "我朋友林舟失踪了。我从他的手机相册里发现了一张隐藏照片。"],
+          ["你", "player", "照片是在北桥雨水泵站附近拍的。画面里有一个黑衣人，他拿着手机站在入口旁边。"],
+          ["你", "player", "这张照片被单独锁在应用锁后面，文件名和拍摄时间都像是林舟故意留下来的。"],
+          ["110 接警中心", "operator", "请不要靠近现场。请保留这部手机和照片原件，我们会通知辖区警力前往核查。"],
+          ["110 接警中心", "operator", "我们已经记录报警信息。请保持电话畅通，等待警方联系。"]
+        ];
+
+        function appendLine(line) {
+          const item = document.createElement("article");
+          item.className = `police-line ${line[1]}`;
+          item.innerHTML = `<strong>${line[0]}</strong><p>${line[2]}</p>`;
+          dialog.appendChild(item);
+          item.scrollIntoView({ block: "end" });
+        }
+
+        setTimeout(() => {
+          document.querySelector("#callStatus").textContent = "已接通";
+          dialog.hidden = false;
+        }, 1300);
+
+        lines.forEach((line, index) => {
+          setTimeout(() => appendLine(line), 2300 + index * 2200);
+        });
+
+        setTimeout(() => {
+          document.querySelector("#emergencyCall").hidden = true;
+          dialog.hidden = true;
+          document.querySelector("#blackEnding").hidden = false;
+          bindRestart();
+        }, 2300 + lines.length * 2200 + 1800);
+      }
+
+      if (type === "normal") showNormalEnding();
+      else showAlbumReportEnding();
     </script>
   </body>
 </html>
