@@ -12,7 +12,7 @@
         <section class="mi-screen app-screen map-app screen-enter">
           <div class="app-head"><a class="mini-back" href="chat.html">‹</a><strong>地图</strong></div>
           <form class="browser-search" id="mapSearch">
-            <input name="q" placeholder="搜索地点 / 编号">
+            <input name="q" placeholder="搜索地点 / 地图编号">
             <button type="submit">搜索</button>
           </form>
           <section class="phone-map-canvas">
@@ -25,7 +25,7 @@
           <article class="map-result" id="mapResult">
             <h2>最近搜索</h2>
             <p class="mono">西桥观景台 / 北桥体育馆 / B17 / 雨水泵站</p>
-            <p>6 月 6 日 21:32 后，定位点一直在北桥片区小范围漂移。</p>
+            <p>6 月 6 日 21:32 后，定位点一直在北桥片区小范围漂移。地图编号需要从其他系统获得。</p>
           </article>
         </section>
       </section>
@@ -36,43 +36,41 @@
       const params = new URLSearchParams(location.search);
 
       const places = {
-        s04: ["S04 西桥观景台", "19:58 定位停留。之后轨迹向东北偏移，下一段没有官方签到点。", () => {}],
-        s08: ["S08 北桥体育馆", "旧版路径缓存保留坐标。新版路线图不显示该点，周边道路仍有历史标注。", () => addEvidence("B")],
-        b17: ["B17 地下通道 17 号门", "北桥体育馆地下连通道门牌。门禁状态记录曾在 00:17 出现短暂变化。", () => setFlag("foundB17")],
-        pump: ["北桥雨水泵站", "相册定位在这里向西偏移 34 米。环境记录里有持续低频排水声。", () => setFlag("foundPumpStation")],
-        imp: ["IMP-2202 导入任务", "2026-06-06 22:02 执行。任务内容折叠，来源字段只显示 Web Import。", () => {}]
+        s04: {
+          title: "S04 西桥观景台",
+          body: "19:58 定位停留。之后轨迹向东北偏移，下一段没有官方签到点。"
+        },
+        s08: {
+          title: "S08 北桥体育馆",
+          body: "旧版路线缓存保留坐标。新版路线图不显示该点，但周边道路仍有历史标注。",
+          action: () => addEvidence("B")
+        },
+        b17: {
+          title: "B17 地下通道 17 号门",
+          body: "北桥体育馆地下连通道门牌。门禁状态记录曾在 00:17 出现短暂维护窗口。",
+          action: () => { setFlag("foundB17"); setFlag("foundRescueWindow"); }
+        },
+        pump: {
+          title: "北桥雨水泵站",
+          body: "相册定位和监控残影都指向这里。B17 向西偏 34 米，环境记录里有持续低频排水声。",
+          action: () => setFlag("foundPumpStation")
+        },
+        imp: {
+          title: "IMP-2202 导入任务",
+          body: "地图编号 IMP-2202 对应夜行赛 6 月 6 日的批量导入任务。执行账号为 shenbo_admin，执行时间 22:02，内容字段为 linzhou / S05-S07 / append。任务附带的北桥片区设备摘要写着：B17 地下通道 17 号门在 00:17-00:22 进入维护窗口，门后检修道通向北桥雨水泵站。这个编号解释了为什么 S05-S07 没有移动端定位签名，却在成绩页里出现为有效记录，也把救援路线指向了 B17、泵站和 00:17。",
+          action: () => { addEvidence("E"); setFlag("foundShenbo"); }
+        }
       };
 
       function showPlace(key) {
         const place = places[key];
-        const actionButton = key === "imp"
-          ? "<button class=\"btn primary\" id=\"revealImpAccount\" type=\"button\">展开任务详情</button>"
-          : "<button class=\"btn primary\" id=\"recordMap\" type=\"button\">保存地点记录</button>";
+        if (!place) return;
+        place.action?.();
         document.querySelector("#mapResult").innerHTML = `
-          <h2>${place[0]}</h2>
-          <p>${place[1]}</p>
-          ${actionButton}
+          <h2>${place.title}</h2>
+          <p>${place.body}</p>
+          ${key === "imp" ? "<p class='mono'>source=Web Import · operator=shenbo_admin · batch=IMP-2202</p>" : ""}
         `;
-        const reveal = document.querySelector("#revealImpAccount");
-        if (reveal) {
-          reveal.addEventListener("click", () => {
-            document.querySelector("#mapResult").innerHTML = `
-              <h2>IMP-2202 导入任务</h2>
-              <p>执行账号：<strong>shenbo_admin</strong>。执行时间：2026-06-06 22:02。内容字段：linzhou / S05-S07 / append。</p>
-              <button class="btn primary" id="recordMap" type="button">保存任务回执</button>
-            `;
-            document.querySelector("#recordMap").addEventListener("click", () => {
-              addEvidence("E");
-              setFlag("foundShenbo");
-              toast("证据 E 已记录：IMP-2202 由 shenbo_admin 执行。");
-            });
-          });
-          return;
-        }
-        document.querySelector("#recordMap").addEventListener("click", () => {
-          place[2]();
-          toast("地点记录已保存。");
-        });
       }
 
       document.querySelectorAll(".map-pin").forEach((pin) => {
@@ -85,8 +83,8 @@
         event.preventDefault();
         const q = normalize(new FormData(event.target).get("q"));
         if (q.includes("imp2202") || q.includes("imp-2202")) {
-          if (hasFlag("foundNvrLogin") || hasFlag("foundImp2202") || hasEvidence("D")) location.href = "phone-map.html?place=imp";
-          else toast("没有找到公开任务。");
+          if (hasFlag("foundImp2202") || hasEvidence("D")) location.href = "phone-map.html?place=imp";
+          else toast("没有找到公开任务。先确认监控画面里的地图编号。");
         }
         else if (q.includes("s08") || q.includes("北桥体育馆")) location.href = "phone-map.html?place=s08";
         else if (q.includes("b17") || q.includes("17号门") || q.includes("地下")) location.href = "phone-map.html?place=b17";

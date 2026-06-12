@@ -41,26 +41,29 @@
         {
           from: "夜行赛系统",
           title: "成绩同步异常提醒",
-          time: "6 月 6 日 21:22",
-          preview: "队伍 夜航03 的后半程记录存在导入异常。",
-          body: "队伍 夜航03 的 S05-S07 签到记录来自 Web Import。导入人和批次号在系统邮件里被打码，只剩下导出时间 22:02。",
+          time: "6 月 6 日 21:38",
+          preview: "S08 超时无效打卡，后半程同步记录存在异常。",
+          body: `
+            <p>队伍 夜航03 的路线复核结果已经生成。系统判定 S08 北桥体育馆签到点在 21:38 后进入超时无效打卡状态，正常情况下该点之后不应再继续追加有效成绩。</p>
+            <p>但复核日志显示，林舟账号在 S05、S06、S07 三个签到点存在后补记录，来源字段均为 <strong>Web Import</strong>。这三条记录没有移动端定位签名，也没有设备电量回执，和前四个签到点的自然上传格式不一致。</p>
+            <p>导入人和批次号在学生端邮件里被打码，只剩下导出时间 <strong>22:38</strong>。如需复核原始批次，请联系校园安全中心调取保卫系统留存的导入任务镜像。</p>
+            <p>请注意：本邮件仅说明成绩同步异常，不代表队伍实际完赛。若参赛者失联，请以校安系统和现场监控为准。</p>
+          `,
           action: () => { addEvidence("A"); setFlag("foundImportAnomaly"); }
         },
         {
           from: "校园安全中心",
-          title: "北桥片区设备维护通知",
-          time: "6 月 6 日 21:38",
-          preview: "CAM 04 北桥北侧存在画面覆盖。",
-          body: "CAM 04 北桥北侧 21:38-21:44 存在画面覆盖。临时查看账号 guest，密码 cam042138。请勿外传。",
+          title: "校园安全管理账号到期提醒",
+          time: "6 月 6 日 22:04",
+          preview: "林舟同学，你的校园安全管理临时账号即将到期。",
+          body: `
+            <p>林舟同学，你好。你申请用于课程实践和社团活动复核的校园安全管理临时账号即将在今日 23:59 到期。到期后，账号将无法继续访问北桥片区设备状态、门禁摘要和低清回放索引。</p>
+            <p>当前账号：<strong>guest</strong>。当前密码：<strong>cam042138</strong>。该账号仅允许查看归档通道，不具备删除、导出、覆盖或修改回放的权限。</p>
+            <p>如果需要确认北桥片区异常，请从旧官网信息站进入校园保卫中心，再通过保卫中心页面跳转到 SECURICORP NVR。直接访问公开页面不会显示 CAM 04 的回放入口。</p>
+            <p>近期北桥体育馆、B17 地下通道、雨水泵站附近设备有维护记录。若你在活动路线复核中看到地图编号或导入任务编号，请先记录编号，再到地图系统中查询对应位置。</p>
+            <p>本账号请勿外传。若你本人未申请该权限，请立刻联系校园安全中心值班室。</p>
+          `,
           action: () => setFlag("foundNvrLogin")
-        },
-        {
-          from: "信息化办公室",
-          title: "旧站缓存清理失败",
-          time: "6 月 5 日 09:16",
-          preview: "citytrace/2023/cache 下仍存在旧路线索引。",
-          body: "citytrace/2023/cache 下仍存在 route_20230606_old.pdf 索引。旧路线包含 S08 北桥体育馆，请城迹社自行确认是否继续清理。",
-          action: () => addEvidence("B")
         }
       ];
 
@@ -92,14 +95,9 @@
         document.querySelector("#mailDetail").innerHTML = `
           <h2>${mail.title}</h2>
           <p class="mono">${mail.from} · ${mail.time}</p>
-          <p>${mail.body}</p>
-          <button class="btn primary" id="recordMail" type="button">记录邮件线索</button>
+          <div class="mail-body">${mail.body}</div>
         `;
-        document.querySelector("#recordMail").addEventListener("click", () => {
-          mail.action();
-          toast("已记录邮件线索。");
-          renderMailList();
-        });
+        mail.action();
         renderMailList();
       }
 

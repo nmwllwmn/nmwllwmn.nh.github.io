@@ -12,23 +12,20 @@
         <section class="mi-screen browser-screen screen-enter">
           <div class="wechat-head"><a class="mini-back" href="chat.html">‹</a><strong>浏览器</strong><span></span></div>
           <form class="browser-search" id="browserSearch">
-            <input name="q" placeholder="搜索本机历史 / 输入关键词">
-            <button type="submit">搜索</button>
+            <input name="q" placeholder="搜索或输入网址">
+            <button type="submit">前往</button>
           </form>
           <section class="browser-history" id="browserHistory">
-            <h2>历史记录</h2>
-            <p class="browser-section-label">最近访问</p>
-            <button data-page="university" type="button"><strong>南洄大学官网</strong><span>www.nhu.edu.cn/search</span></button>
-            <button data-page="event" type="button"><strong>南洄城市夜行定向赛 · 成绩查询</strong><span>night.nhu.edu.cn/result?team=night-03</span></button>
-            <button data-page="oldsite" type="button"><strong>城迹社旧站缓存</strong><span>www.nhu.edu.cn/club/citytrace/2023/cache</span></button>
-            <p class="browser-section-label">林舟反复打开</p>
-            <button data-page="wall" type="button"><strong>南洄校园墙</strong><span>wall.nhu.edu.cn/search?北桥</span></button>
-            <button data-page="drive" type="button"><strong>B17 备份目录</strong><span>share.nhu-cloud.invalid/B17</span></button>
-            <button data-page="nvr" type="button"><strong>SECURICORP NVR</strong><span>sec.nhu.local/nvr/cam04</span></button>
-            <p class="browser-section-label">本机搜索快照</p>
-            <button data-page="xutingyu" type="button"><strong>许听雨 北桥 2023</strong><span>search.local?q=许听雨+北桥</span></button>
-            <button data-page="b17" type="button"><strong>B17 门禁掉线</strong><span>sec.nhu.local/logs/b17</span></button>
-            <button data-page="archive" type="button"><strong>本机备份记录</strong><span>myj.local/cache/0606</span></button>
+            <h2>最近访问</h2>
+            <p class="browser-section-label">浏览器历史只剩下两条明面记录</p>
+            <button data-page="university" type="button">
+              <strong>南洄大学官网</strong>
+              <span>https://www.nhu.edu.cn</span>
+            </button>
+            <button data-page="wall" type="button">
+              <strong>校园墙</strong>
+              <span>https://wall.nhu.edu.cn</span>
+            </button>
           </section>
           <section class="browser-page" id="browserPage" hidden>
             <div class="browser-page-head"><button class="mini-back" id="browserBack" type="button">‹</button><strong id="browserTitle">网页</strong></div>
@@ -40,50 +37,107 @@
     <script src="common.js"></script>
     <script>
       initGameShell({ stage: 10, page: "phone-browser" });
+
       const pages = {
         university: {
           title: "南洄大学官网",
-          html: "<h2>站内搜索：北桥</h2><p>官网只保留新版夜行定向赛页面，路线从 S01 到 S07。北桥体育馆相关附件显示已迁移。</p><p class='mono'>archive_ref: citytrace/2023/cache</p>",
-          action: () => setFlag("foundOldSiteHint")
-        },
-        event: {
-          title: "夜行赛成绩查询",
-          html: "<h2>夜航03</h2><p>林舟显示 23:17 已完赛，但 S05、S06、S07 的上传方式均为 Web Import。</p><p class='mono'>linzhou / 0606 / Web Import</p>",
-          action: () => addEvidence("A")
-        },
-        oldsite: {
-          title: "城迹社旧站缓存",
-          html: "<h2>route_20230606_old.pdf</h2><p>2023 试跑路线索引残留：S01-S04 后出现 S08，标注为北桥体育馆。</p><p class='mono'>cache_status: unsynced / newer page removed attachment</p>",
-          action: () => addEvidence("B")
+          html: `
+            <section class="browser-error-page">
+              <span class="error-code">404</span>
+              <h2>页面不存在或已迁移</h2>
+              <p>你访问的南洄大学新版官网无法找到该页面。系统只保留了招生、教务和新闻入口，社团活动、旧版路线图、保卫处公开检索等栏目已迁移。</p>
+              <p>迁移日志里反复出现同一句话：旧信息站的内容“仅从首页下线，缓存和墙内链接不保证同步清理”。</p>
+              <p class="mono">nginx/1.18 · request_id=nhu-404-0606 · hint=wall.nhu.edu.cn</p>
+            </section>
+          `,
+          action: () => setFlag("openedUniversity404")
         },
         wall: {
           title: "南洄校园墙",
-          html: "<h2>别再问 B17 了</h2><p>匿名帖只剩缓存摘要：三年前有人在北桥留下过一句话。</p><p><strong>评论 17：</strong>B17 不是楼层。门响过一次，后来监控就黑了。</p>",
-          action: () => setFlag("foundB17")
+          html: `
+            <section class="campus-wall">
+              <div class="wall-hero">
+                <strong>南洄校园墙</strong>
+                <span>匿名投稿 · 校内论坛 · 夜间模式缓存</span>
+              </div>
+              ${[
+                ["树洞34712", "6 月 7 日 00:14", "有没有人知道昨晚夜行赛为什么北桥那边突然拉了警戒线？我室友回宿舍时看见体育馆后门有保卫处的人。", "评论 18 · 夜行赛 · 北桥"],
+                ["后勤不想上班", "6 月 7 日 00:23", "北桥体育馆地下通道又在抽水，B17 那个门每次下雨都响。别问我为什么知道，去年社团巡检也绕过那边。", "评论 9 · B17 · 泵站"],
+                ["南门烤肠", "6 月 6 日 23:58", "夜航03不是完赛了吗，成绩页一会有一会没，刷新后 S05-S07 像是后来补进去的。", "评论 31 · 成绩系统"],
+                ["旧网页收藏家", "6 月 5 日 18:40", "新版官网太干净了，旧活动页全没了。要找城迹社 2023 试跑的路线，别搜官网首页，旧信息站还挂在 oldinfo.nhu.edu.cn/citytrace/2023，只是入口被撤了。", "评论 6 · 旧站 · 城迹社"],
+                ["听雨别跑", "6 月 4 日 21:11", "许听雨当年是不是参加过城迹社试跑？我记得合照里她站在 S08 牌子旁边。", "评论 12 · 许听雨"],
+                ["图书馆四楼", "6 月 4 日 09:20", "求问校园邮箱统一认证一直失败怎么办，找回密码流程好麻烦。", "评论 3 · 邮箱"],
+                ["桥边看水", "6 月 3 日 22:08", "北桥下面那个雨水泵站晚上真的很吵，录音里全是低频嗡嗡声。", "评论 5 · 北桥"],
+                ["不具名队员", "6 月 2 日 20:26", "夜行赛地图上为什么没有 S08？老路线明明有，后来海报删掉了。", "评论 27 · S08"],
+                ["墙墙管理员", "6 月 2 日 12:00", "提醒：请勿公开保卫系统账号、监控回放截图、门禁日志。涉及失联传言请走学校官方渠道。", "评论关闭 · 公告"],
+                ["A区打印店", "6 月 1 日 16:45", "有人要印 2023 年城迹社 PDF 吗？旧站下载慢，建议只复制文字别下附件。", "评论 2 · 打印"],
+                ["灰色雨衣", "5 月 31 日 23:17", "B17 不是楼号，是门号。知道的人别乱讲。", "评论 1 · 已折叠"],
+                ["校车末班", "5 月 30 日 22:38", "今晚北桥末班车改道，体育馆北侧施工，大家别从地下通道走。", "评论 4 · 交通"],
+                ["猫在实验楼", "5 月 29 日 19:12", "旧官网的保卫处页面好复古，页面底部还有 secure.nhu.edu.cn/guard 这种地址。", "评论 8 · 旧官网"],
+                ["匿名", "5 月 28 日 00:17", "每晚 00:17 以后，B17 会有几分钟维护窗口。别问。", "评论 0 · 已删除"]
+              ].map(([user, time, text, meta]) => `
+                <article class="wall-post">
+                  <header><strong>${user}</strong><span>${time}</span></header>
+                  <p>${text}</p>
+                  <footer>${meta}</footer>
+                </article>
+              `).join("")}
+            </section>
+          `,
+          action: () => { setFlag("foundOldInfoFromWall"); setFlag("foundB17"); }
         },
-        drive: {
-          title: "B17 备份目录",
-          html: "<h2>share.nhu-cloud.invalid / B17</h2><p>目录里有一张抖动照片和一段残缺录音。照片边缘能看到地下通道 17 号门，录音底噪里有连续排水声。</p><p class='mono'>audio_tag: pump_station / offset 00:17</p>",
-          action: () => { setFlag("foundB17"); setFlag("foundPumpStation"); }
+        oldinfo: {
+          title: "南洄大学旧信息站",
+          html: `
+            <section class="old-info-site">
+              <div class="old-info-banner">
+                <strong>南洄大学旧信息站</strong>
+                <span>oldinfo.nhu.edu.cn / 只读缓存</span>
+              </div>
+              <h2>城迹社 2023 试跑资料存档</h2>
+              <p>本页为旧信息站缓存。新版官网已移除附件入口，但活动路线摘要、志愿者名单和保卫处备案说明仍可读取。</p>
+              <table class="old-info-table">
+                <tbody>
+                  <tr><th>活动</th><td>城迹社夜行定向 2023 试跑</td></tr>
+                  <tr><th>路线</th><td>S01 西门、S02 图书馆、S03 实验楼、S04 西桥观景台、<strong>S08 北桥体育馆</strong></td></tr>
+                  <tr><th>试跑人员</th><td>志愿者名单含许听雨，备注为“北桥段摄影与安全回收”。</td></tr>
+                  <tr><th>备案</th><td>北桥片区夜间通行需通过 <strong>secure.nhu.edu.cn/guard</strong> 查询保卫中心临时页面。</td></tr>
+                </tbody>
+              </table>
+              <p>页面底部备注写着：旧站迁移后，保卫中心链接不在新版官网导航中显示；需要从浏览器地址栏直接输入。</p>
+              <p class="mono">cache: citytrace/2023/route_old.html · last_export=2026-06-06 22:38</p>
+            </section>
+          `,
+          action: () => { addEvidence("B"); addEvidence("C"); setFlag("foundSecurityUrl"); }
+        },
+        guard: {
+          title: "校园保卫中心",
+          html: `
+            <section class="guard-center">
+              <div class="guard-headline">
+                <strong>南洄大学校园保卫中心</strong>
+                <span>secure.nhu.edu.cn/guard</span>
+              </div>
+              <p>访客权限只开放北桥片区低清回放、设备状态、门禁摘要和地图编号检索。账号密码请以校园邮箱通知为准。</p>
+              <form class="nvr-login-form" id="guardLogin">
+                <label>账号<input name="account" autocomplete="off" placeholder="user"></label>
+                <label>密码<input name="password" type="password" placeholder="password"></label>
+                <button class="btn primary" type="submit">进入保卫中心</button>
+              </form>
+              <p class="mono">SEC_NORTH · CAM04 · Door/B17 · Map Import Mirror</p>
+            </section>
+          `,
+          action: () => setFlag("openedGuardCenter")
         },
         nvr: {
-          title: "SECURICORP NVR",
+          title: "保卫中心 · 监控回放",
           html: `
             <section class="phone-nvr" id="phoneNvr">
-              <div class="nvr-login-panel" id="nvrLoginPanel">
-                <h2>SECURICORP NVR</h2>
-                <p>SEC_NORTH 临时回放权限。归档通道仅保留低清副本，部分通道存在帧覆盖。</p>
-                <form class="nvr-login-form" id="browserNvrLogin">
-                  <label>账号<input name="account" autocomplete="off" placeholder="user"></label>
-                  <label>密码<input name="password" type="password" placeholder="password"></label>
-                  <button class="btn primary" type="submit">连接回放系统</button>
-                </form>
-              </div>
-              <div class="nvr-console" id="nvrConsole" hidden>
+              <div class="nvr-console">
                 <div class="nvr-cam-list" aria-label="监控通道">
-                  <button type="button" data-cam="04" class="active">CAM 04<span>北桥北侧 / archive</span></button>
-                  <button type="button" data-cam="02">CAM 02<span>回放丢失 / black</span></button>
-                  <button type="button" data-cam="08">CAM 08<span>体育馆外侧 / archive</span></button>
+                  <button type="button" data-cam="04" class="active">CAM 04<span>北桥北侧 / 可回放</span></button>
+                  <button type="button" data-cam="02">CAM 02<span>地下通道 / 黑屏</span></button>
+                  <button type="button" data-cam="08">CAM 08<span>体育馆外侧 / 可回放</span></button>
                 </div>
                 <div class="nvr-controls">
                   <label>回放时间
@@ -99,14 +153,14 @@
                   </label>
                 </div>
                 <div class="nvr-pan-panel" aria-label="画面位置调整">
-                  <button type="button" data-pan="up">上</button>
-                  <button type="button" data-pan="left">左</button>
+                  <button type="button" data-pan="up">上移</button>
+                  <button type="button" data-pan="left">左移</button>
                   <button type="button" data-pan="center">居中</button>
-                  <button type="button" data-pan="right">右</button>
-                  <button type="button" data-pan="down">下</button>
-                  <button type="button" id="nvrZoom">增强边缘</button>
+                  <button type="button" data-pan="right">右移</button>
+                  <button type="button" data-pan="down">下移</button>
+                  <button type="button" id="nvrZoom">自动增强边缘</button>
                 </div>
-                <p class="nvr-status" id="nvrStatus">已连接 CAM 04。最近异常段：21:38-21:44。</p>
+                <p class="nvr-status" id="nvrStatus">已连接 CAM 04。异常段提示：21:38-21:44，右下角有压缩残影。</p>
                 <div class="nvr-monitor-grid">
                   <div class="nvr-monitor active" data-monitor="04">
                     <div class="nvr-viewer" data-adjustable="true">
@@ -116,14 +170,14 @@
                       </div>
                       <img class="nvr-feed" src="assets/normal-ending-nvr.png" alt="北桥监控回放画面">
                       <div class="nvr-static"></div>
-                      <div class="nvr-clue" id="nvrClue" hidden>S08 / IMP-2202</div>
+                      <div class="nvr-clue" id="nvrClue" hidden>S08 / 地图编号 IMP-2202</div>
                     </div>
                   </div>
                   <div class="nvr-monitor black" data-monitor="02">
                     <div class="nvr-black-screen">
-                      <span>CAM 02</span>
+                      <span>CAM 02 地下通道</span>
                       <strong>NO SIGNAL</strong>
-                      <small>21:38:12 LOST</small>
+                      <small>21:38:12 LOST · Door B17 queued</small>
                     </div>
                   </div>
                   <div class="nvr-monitor" data-monitor="08">
@@ -138,30 +192,33 @@
                   </div>
                 </div>
                 <form class="inline-unlock" id="browserNvrForm">
-                  <input name="answer" placeholder="overlay id">
-                  <button class="btn primary" type="submit">写入回放记录</button>
+                  <input name="answer" placeholder="输入画面里看到的地图编号">
+                  <button class="btn primary" type="submit">检索地图编号</button>
                 </form>
               </div>
             </section>
           `,
-          action: null
-        },
-        xutingyu: {
-          title: "许听雨 北桥 2023",
-          html: "<h2>搜索快照</h2><p>校内旧帖提到：许听雨曾参加 2023 年 6 月 6 日城迹社试跑，最后出现地点为北桥体育馆。</p><p>原帖已不可访问，缓存标题含 B17。</p>",
-          action: () => addEvidence("C")
-        },
-        b17: {
-          title: "B17 门禁掉线",
-          html: "<h2>sec.nhu.local/logs/b17</h2><p>备份日志：B17 门禁每晚 00:17-00:22 进入维护窗口。NVR 同步延迟 300 秒。</p><p class='mono'>rescue window: 00:17</p>",
-          action: () => setFlag("foundRescueWindow")
+          action: () => setFlag("openedNvrConsole")
         },
         archive: {
           title: "本机备份记录",
-          html: "<h2>MYJ-0606-S08</h2><p>本机缓存副本。已恢复条目会自动写入，未恢复部分保持灰色。</p><p><a class='btn primary' href='archive.html'>打开备份记录</a></p>",
+          html: `
+            <h2>MYJ-0606-S08</h2>
+            <p>核心证据恢复后，备份记录会自动汇总当前调查状态。</p>
+            <p><a class="btn primary" href="archive.html">打开备份记录</a></p>
+          `,
           action: () => setStage(40)
         }
       };
+
+      const aliases = [
+        { keys: ["oldinfo.nhu.edu.cn/citytrace/2023", "oldinfo.nhu.edu.cn", "旧信息站", "城迹社2023", "citytrace"], page: "oldinfo" },
+        { keys: ["secure.nhu.edu.cn/guard", "保卫中心", "校园保卫中心", "guard"], page: "guard" },
+        { keys: ["校园墙", "wall.nhu.edu.cn", "wall"], page: "wall" },
+        { keys: ["nvr", "cam04", "监控回放", "sec_north"], page: "nvr" },
+        { keys: ["archive", "备份记录", "myj"], page: "archive" },
+        { keys: ["南洄大学官网", "www.nhu.edu.cn", "nhu.edu.cn"], page: "university" }
+      ];
 
       const history = document.querySelector("#browserHistory");
       const page = document.querySelector("#browserPage");
@@ -171,148 +228,145 @@
       }
 
       function openPage(key) {
+        if (key === "nvr" && !hasFlag("foundNvrLogin")) {
+          toast("需要先用校园安全管理账号进入保卫中心。");
+          key = "guard";
+        }
         const data = pages[key];
         if (!data) return;
         document.querySelector("#browserTitle").textContent = data.title;
-        const recordButton = data.action ? `<button class="btn primary" id="recordBrowser" type="button">保存本页记录</button>` : "";
-        document.querySelector("#browserContent").innerHTML = `${data.html}${recordButton}`;
-        if (data.action) {
-          document.querySelector("#recordBrowser").addEventListener("click", () => {
-            data.action();
-            toast("本页记录已保存。");
-          });
-        }
-        const nvrForm = document.querySelector("#browserNvrForm");
-        const nvrLogin = document.querySelector("#browserNvrLogin");
-        if (nvrLogin) {
-          const panel = document.querySelector("#nvrLoginPanel");
-          const consolePanel = document.querySelector("#nvrConsole");
-          const timeInput = document.querySelector("#nvrTime");
-          const scaleInput = document.querySelector("#nvrScale");
-          const zoomButton = document.querySelector("#nvrZoom");
-          const clue = document.querySelector("#nvrClue");
-          const status = document.querySelector("#nvrStatus");
-          const osdTime = document.querySelector("#nvrOsdTime");
-          const adjustableViewer = document.querySelector(".nvr-viewer[data-adjustable='true']");
-          let nvrScale = 1;
-          let nvrPanX = 0;
-          let nvrPanY = 0;
-          let nvrTimeReady = false;
-          let nvrZoomReady = false;
+        document.querySelector("#browserContent").innerHTML = data.html;
+        data.action?.();
+        wirePageInteractions(key);
+        history.hidden = true;
+        page.hidden = false;
+      }
 
-          function applyNvrView() {
-            adjustableViewer?.style.setProperty("--nvr-scale", String(nvrScale));
-            adjustableViewer?.style.setProperty("--nvr-x", `${nvrPanX}%`);
-            adjustableViewer?.style.setProperty("--nvr-y", `${nvrPanY}%`);
-            const activeCam = document.querySelector(".nvr-cam-list button.active")?.dataset.cam;
-            const lookingAtClue = activeCam === "04" && nvrTimeReady && nvrScale >= 1.7 && nvrPanX <= -14 && nvrPanY <= -10;
-            clue.hidden = !lookingAtClue;
-            nvrZoomReady = lookingAtClue;
-            if (lookingAtClue) {
-              status.textContent = "画面右下角出现覆盖残留：S08 / IMP-2202。";
-            }
-          }
-
-          nvrLogin.addEventListener("submit", (event) => {
+      function wirePageInteractions(key) {
+        const guardLogin = document.querySelector("#guardLogin");
+        if (guardLogin) {
+          guardLogin.addEventListener("submit", (event) => {
             event.preventDefault();
             const data = new FormData(event.target);
             const account = normalize(data.get("account"));
             const password = normalize(data.get("password"));
             if (account === "guest" && password === "cam042138") {
               setFlag("foundNvrLogin");
-              panel.hidden = true;
-              consolePanel.hidden = false;
-              toast("NVR 登录成功。");
+              toast("保卫中心登录成功，正在打开北桥回放。");
+              setTimeout(() => goPage("nvr"), 650);
             } else {
-              toast("登录失败。");
+              toast("访客认证失败。邮箱通知里有临时账号和密码。");
             }
           });
+        }
 
-          document.querySelectorAll(".nvr-cam-list button").forEach((button) => {
-            button.addEventListener("click", () => {
-              document.querySelectorAll(".nvr-cam-list button").forEach((item) => item.classList.remove("active"));
-              document.querySelectorAll(".nvr-monitor").forEach((item) => item.classList.remove("active"));
-              button.classList.add("active");
-              document.querySelector(`.nvr-monitor[data-monitor="${button.dataset.cam}"]`)?.classList.add("active");
-              if (button.dataset.cam === "04") {
-                status.textContent = nvrTimeReady ? "CAM 04 的 21:38 画面有覆盖残留。" : "已连接 CAM 04。最近异常段：21:38-21:44。";
-              } else {
-                status.textContent = button.dataset.cam === "02" ? "CAM 02 在关键时间黑屏，没有可用画面。" : "CAM 08 能看到体育馆外侧，但残留编号不在这里。";
-              }
-              clue.hidden = true;
-              nvrZoomReady = false;
-              applyNvrView();
-            });
-          });
+        if (key !== "nvr") return;
+        const timeInput = document.querySelector("#nvrTime");
+        const scaleInput = document.querySelector("#nvrScale");
+        const zoomButton = document.querySelector("#nvrZoom");
+        const clue = document.querySelector("#nvrClue");
+        const status = document.querySelector("#nvrStatus");
+        const osdTime = document.querySelector("#nvrOsdTime");
+        const adjustableViewer = document.querySelector(".nvr-viewer[data-adjustable='true']");
+        const nvrForm = document.querySelector("#browserNvrForm");
+        let nvrScale = 1;
+        let nvrPanX = 0;
+        let nvrPanY = 0;
+        let nvrTimeReady = false;
+        let nvrReady = false;
 
-          timeInput.addEventListener("change", () => {
-            osdTime.textContent = `2026-06-06 ${timeInput.value || "21:12"}:00`;
-            nvrTimeReady = timeInput.value === "21:38";
-            nvrZoomReady = false;
+        function applyNvrView() {
+          adjustableViewer?.style.setProperty("--nvr-scale", String(nvrScale));
+          adjustableViewer?.style.setProperty("--nvr-x", `${nvrPanX}%`);
+          adjustableViewer?.style.setProperty("--nvr-y", `${nvrPanY}%`);
+          const activeCam = document.querySelector(".nvr-cam-list button.active")?.dataset.cam;
+          const lookingAtClue = activeCam === "04" && nvrTimeReady && nvrScale >= 1.7 && nvrPanX <= -14 && nvrPanY <= -10;
+          clue.hidden = !lookingAtClue;
+          nvrReady = lookingAtClue;
+          if (lookingAtClue) {
+            status.textContent = "右下角残影可读：S08 / 地图编号 IMP-2202。去地图应用检索这个编号。";
+            addEvidence("D");
+            setFlag("foundImp2202");
+          }
+        }
+
+        document.querySelectorAll(".nvr-cam-list button").forEach((button) => {
+          button.addEventListener("click", () => {
+            document.querySelectorAll(".nvr-cam-list button").forEach((item) => item.classList.remove("active"));
+            document.querySelectorAll(".nvr-monitor").forEach((item) => item.classList.remove("active"));
+            button.classList.add("active");
+            document.querySelector(`.nvr-monitor[data-monitor="${button.dataset.cam}"]`)?.classList.add("active");
+            if (button.dataset.cam === "04") {
+              status.textContent = nvrTimeReady ? "CAM 04 的 21:38 画面有覆盖残留。" : "CAM 04 异常段提示：21:38-21:44。";
+            } else if (button.dataset.cam === "02") {
+              status.textContent = "CAM 02 在关键时间黑屏，门禁队列里只剩 B17 标记。";
+              setFlag("foundB17");
+            } else {
+              status.textContent = "CAM 08 能看到体育馆外侧，但地图编号不在这里。";
+            }
             clue.hidden = true;
-            status.textContent = nvrTimeReady ? "21:38 回放段出现压缩残影。" : "这个时间点没有明显异常。";
+            nvrReady = false;
             applyNvrView();
           });
+        });
 
-          scaleInput.addEventListener("change", () => {
-            nvrScale = Number(scaleInput.value);
-            status.textContent = nvrTimeReady ? "回放比例已调整，画面边缘出现压缩残影。" : "回放比例已调整。";
+        timeInput.addEventListener("change", () => {
+          osdTime.textContent = `2026-06-06 ${timeInput.value || "21:12"}:00`;
+          nvrTimeReady = timeInput.value === "21:38";
+          clue.hidden = true;
+          nvrReady = false;
+          status.textContent = nvrTimeReady ? "21:38 回放段出现压缩残影，需要放大并移动画面。" : "这个时间点没有明显异常。";
+          applyNvrView();
+        });
+
+        scaleInput.addEventListener("change", () => {
+          nvrScale = Number(scaleInput.value);
+          status.textContent = nvrTimeReady ? "比例已调整，边缘残影增强。" : "比例已调整。先回到异常时间。";
+          applyNvrView();
+        });
+
+        document.querySelectorAll(".nvr-pan-panel button[data-pan]").forEach((button) => {
+          button.addEventListener("click", () => {
+            const direction = button.dataset.pan;
+            if (direction === "center") {
+              nvrPanX = 0;
+              nvrPanY = 0;
+            }
+            if (direction === "left") nvrPanX = Math.min(22, nvrPanX + 8);
+            if (direction === "right") nvrPanX = Math.max(-22, nvrPanX - 8);
+            if (direction === "up") nvrPanY = Math.min(18, nvrPanY + 8);
+            if (direction === "down") nvrPanY = Math.max(-18, nvrPanY - 8);
+            status.textContent = nvrTimeReady ? "画面位置已调整，继续检查右下角。" : "画面位置已调整。";
             applyNvrView();
           });
+        });
 
-          document.querySelectorAll(".nvr-pan-panel button[data-pan]").forEach((button) => {
-            button.addEventListener("click", () => {
-              const direction = button.dataset.pan;
-              if (direction === "center") {
-                nvrPanX = 0;
-                nvrPanY = 0;
-              }
-              if (direction === "left") nvrPanX = Math.min(22, nvrPanX + 8);
-              if (direction === "right") nvrPanX = Math.max(-22, nvrPanX - 8);
-              if (direction === "up") nvrPanY = Math.min(18, nvrPanY + 8);
-              if (direction === "down") nvrPanY = Math.max(-18, nvrPanY - 8);
-              status.textContent = nvrTimeReady ? "画面位置已调整。边缘残留增强。" : "画面位置已调整。";
-              applyNvrView();
-            });
-          });
+        zoomButton.addEventListener("click", () => {
+          if (nvrTimeReady) {
+            nvrScale = 2.1;
+            nvrPanX = -18;
+            nvrPanY = -14;
+            scaleInput.value = "2.1";
+            applyNvrView();
+          } else {
+            toast("先把回放时间调到异常段。");
+          }
+        });
 
-          zoomButton.addEventListener("click", () => {
-            const activeCam = document.querySelector(".nvr-cam-list button.active")?.dataset.cam;
-            if (activeCam === "04" && nvrTimeReady) {
-              nvrScale = 2.1;
-              nvrPanX = -18;
-              nvrPanY = -14;
-              scaleInput.value = "2.1";
-              applyNvrView();
-            } else {
-              toast("当前通道或时间无可用残影。");
-            }
-          });
-
-          nvrForm.dataset.ready = "false";
-          nvrForm.addEventListener("nvr-ready-check", () => {
-            nvrForm.dataset.ready = nvrZoomReady ? "true" : "false";
-          });
-        }
-        if (nvrForm) {
-          nvrForm.addEventListener("submit", (event) => {
-            event.preventDefault();
-            event.target.dispatchEvent(new Event("nvr-ready-check"));
-            if (event.target.dataset.ready !== "true") {
-              toast("画面残留未达到可记录状态。");
-              return;
-            }
-            if (normalize(new FormData(event.target).get("answer")) === "imp-2202") {
-              addEvidence("D");
-              setFlag("foundImp2202");
-              toast("证据 D 已记录：21:38 北桥监控异常。");
-            } else {
-              toast("编号未匹配。");
-            }
-          });
-        }
-        history.hidden = true;
-        page.hidden = false;
+        nvrForm.addEventListener("submit", (event) => {
+          event.preventDefault();
+          if (!nvrReady) {
+            toast("先在 21:38 的 CAM 04 画面里看清地图编号。");
+            return;
+          }
+          if (normalize(new FormData(event.target).get("answer")) === "imp-2202" || normalize(new FormData(event.target).get("answer")) === "imp2202") {
+            addEvidence("D");
+            setFlag("foundImp2202");
+            toast("已确认地图编号 IMP-2202。去地图应用搜索这个编号。");
+          } else {
+            toast("编号不匹配。画面残影里是 IMP-2202。");
+          }
+        });
       }
 
       document.querySelectorAll("#browserHistory button[data-page]").forEach((button) => {
@@ -321,17 +375,11 @@
 
       document.querySelector("#browserSearch").addEventListener("submit", (event) => {
         event.preventDefault();
-        const q = normalize(new FormData(event.target).get("q"));
-        if (q.includes("官网") || q.includes("南洄大学")) goPage("university");
-        else if (q.includes("校园墙") || q.includes("wall")) goPage("wall");
-        else if (q.includes("网盘") || q.includes("备份") || q.includes("drive")) goPage("drive");
-        else if (q.includes("nvr") || q.includes("监控") || q.includes("cam04")) goPage("nvr");
-        else if (q.includes("s08") || q.includes("旧站") || q.includes("2023")) goPage("oldsite");
-        else if (q.includes("许听雨") || q.includes("xutingyu")) goPage("xutingyu");
-        else if (q.includes("b17") || q.includes("0017")) goPage("b17");
-        else if (q.includes("归档") || q.includes("myj") || q.includes("archive")) goPage("archive");
-        else if (q.includes("林舟") || q.includes("完赛") || q.includes("webimport")) goPage("event");
-        else toast("本机历史没有匹配记录。");
+        const raw = String(new FormData(event.target).get("q") || "").trim();
+        const q = normalize(raw);
+        const match = aliases.find((item) => item.keys.some((key) => q.includes(normalize(key))));
+        if (match) goPage(match.page);
+        else toast("没有找到匹配页面。试试从页面文字里抄下完整网址。");
       });
 
       document.querySelector("#browserBack").addEventListener("click", () => {

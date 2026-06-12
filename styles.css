@@ -2947,6 +2947,104 @@ body[data-notes-box="trash"] .notes-live {
   color: white;
 }
 
+.browser-error-page {
+  min-height: 360px;
+  align-content: center;
+  text-align: center;
+}
+
+.browser-error-page .error-code {
+  color: #b91c1c;
+  font-family: var(--mono);
+  font-size: 58px;
+  font-weight: 900;
+}
+
+.campus-wall {
+  display: grid;
+  gap: 10px;
+}
+
+.wall-hero,
+.guard-headline,
+.old-info-banner {
+  display: grid;
+  gap: 3px;
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.wall-hero {
+  background: linear-gradient(135deg, #2563eb, #0f172a);
+  color: white;
+}
+
+.wall-hero span,
+.guard-headline span,
+.old-info-banner span {
+  font-size: 12px;
+  opacity: 0.78;
+}
+
+.wall-post {
+  display: grid;
+  gap: 8px;
+  border: 1px solid rgba(15,23,42,0.08);
+  border-radius: 12px;
+  padding: 12px;
+  background: #fff;
+}
+
+.wall-post header {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: #111827;
+  font-size: 13px;
+}
+
+.wall-post header span,
+.wall-post footer {
+  color: #64748b;
+  font-size: 11px;
+}
+
+.wall-post p {
+  margin: 0;
+  color: #1f2937;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.old-info-site {
+  font-family: "SimSun", var(--serif);
+}
+
+.old-info-banner {
+  border: 1px solid #c7b27a;
+  background: #ffffe8;
+  color: #5b421f;
+}
+
+.old-info-table {
+  margin: 10px 0;
+  font-size: 12px;
+}
+
+.old-info-table th {
+  width: 74px;
+}
+
+.guard-center {
+  display: grid;
+  gap: 12px;
+}
+
+.guard-headline {
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
 .camera-app {
   display: flex;
   flex-direction: column;

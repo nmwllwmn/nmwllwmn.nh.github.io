@@ -14,7 +14,7 @@
           <section class="sms-list" id="smsList">
             <a class="sms-row" data-thread="school" href="phone-sms.html?thread=school">
               <span class="sms-avatar school">南</span>
-              <span><strong>南洄大学</strong><em>统一身份认证验证码已过期。</em></span>
+              <span><strong>南洄大学</strong><em>统一身份认证验证码已过期。草稿未发送。</em></span>
               <time>18:03</time>
             </a>
             <a class="sms-row" data-thread="carrier" href="phone-sms.html?thread=carrier">
@@ -85,6 +85,9 @@
             `;
             list.hidden = true;
             thread.hidden = false;
+          }
+          if (currentThread === "school") {
+            document.querySelector(".sms-composer input").value = "River17";
           }
         }
       }
