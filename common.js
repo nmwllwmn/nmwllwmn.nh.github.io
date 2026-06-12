@@ -91,6 +91,47 @@ function clampNotebookToggle(pos) {
   return { left: Math.round(left), top: Math.round(top) };
 }
 
+function snapNotebookToggle(pos) {
+  const size = 52;
+  const clamped = clampNotebookToggle(pos);
+  const distances = [
+    { edge: "left", value: clamped.left - 8 },
+    { edge: "right", value: window.innerWidth - (clamped.left + size) - 8 },
+    { edge: "top", value: clamped.top - 8 },
+    { edge: "bottom", value: window.innerHeight - (clamped.top + size) - 8 }
+  ];
+  const nearest = distances.reduce((best, item) => item.value < best.value ? item : best, distances[0]);
+  if (nearest.edge === "left") return { left: 8, top: clamped.top };
+  if (nearest.edge === "right") return { left: window.innerWidth - size - 8, top: clamped.top };
+  if (nearest.edge === "top") return { left: clamped.left, top: 8 };
+  return { left: clamped.left, top: window.innerHeight - size - 8 };
+}
+
+function getNotebookPanelNearToggle(toggle, panel) {
+  const saved = loadNotebookBox();
+  const current = saved.panel || saved;
+  const width = Math.min(Math.max(current.width || 420, 280), Math.max(280, window.innerWidth - 24));
+  const height = Math.min(Math.max(current.height || 440, 320), Math.max(320, window.innerHeight - 24));
+  const toggleRect = toggle.getBoundingClientRect();
+  const gap = 12;
+  const candidates = [
+    { left: toggleRect.right + gap, top: toggleRect.top + toggleRect.height / 2 - height / 2 },
+    { left: toggleRect.left - width - gap, top: toggleRect.top + toggleRect.height / 2 - height / 2 },
+    { left: toggleRect.left + toggleRect.width / 2 - width / 2, top: toggleRect.bottom + gap },
+    { left: toggleRect.left + toggleRect.width / 2 - width / 2, top: toggleRect.top - height - gap }
+  ].map((rect) => clampNotebookRect({ ...rect, width, height }));
+  const toggleCenter = { x: toggleRect.left + toggleRect.width / 2, y: toggleRect.top + toggleRect.height / 2 };
+  const score = (rect) => {
+    const center = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+    return Math.abs(center.x - toggleCenter.x) + Math.abs(center.y - toggleCenter.y);
+  };
+  const viewportCenter = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+  const edgePreference = Math.abs(toggleCenter.x - viewportCenter.x) > Math.abs(toggleCenter.y - viewportCenter.y)
+    ? (toggleCenter.x < viewportCenter.x ? 0 : 1)
+    : (toggleCenter.y < viewportCenter.y ? 2 : 3);
+  return candidates[edgePreference] || candidates.sort((a, b) => score(a) - score(b))[0];
+}
+
 function restartExploration(options = {}) {
   const { keepNotebook = true } = options;
   localStorage.removeItem(STORE_KEY);
@@ -264,9 +305,21 @@ function initNotebook() {
     panel.style.width = `${rect.width}px`;
     panel.style.height = `${rect.height}px`;
   };
+  const placePanelNearToggle = () => {
+    const rect = getNotebookPanelNearToggle(toggle, panel);
+    panel.style.left = `${rect.left}px`;
+    panel.style.top = `${rect.top}px`;
+    panel.style.right = "auto";
+    panel.style.bottom = "auto";
+    panel.style.width = `${rect.width}px`;
+    panel.style.height = `${rect.height}px`;
+    const saved = loadNotebookBox();
+    saveNotebookBox({ ...saved, panel: rect });
+  };
   applyToggleBox();
   applyNotebookBox();
   const setOpen = (open) => {
+    if (open) placePanelNearToggle();
     panel.hidden = !open;
     toggle.setAttribute("aria-expanded", String(open));
     toggle.classList.toggle("active", open);
@@ -305,8 +358,13 @@ function initNotebook() {
       toggle.removeEventListener("pointercancel", onEnd);
       if (toggleDragged) {
         const rect = toggle.getBoundingClientRect();
+        const snapped = snapNotebookToggle({ left: rect.left, top: rect.top });
+        toggle.style.left = `${snapped.left}px`;
+        toggle.style.top = `${snapped.top}px`;
+        toggle.style.right = "auto";
+        toggle.style.bottom = "auto";
         const saved = loadNotebookBox();
-        saveNotebookBox({ ...saved, toggle: clampNotebookToggle({ left: rect.left, top: rect.top }) });
+        saveNotebookBox({ ...saved, toggle: snapped });
         suppressToggleClick = true;
         setTimeout(() => {
           suppressToggleClick = false;

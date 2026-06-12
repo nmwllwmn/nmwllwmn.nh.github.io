@@ -138,16 +138,11 @@
       });
 
       function launchApp(button, callback) {
-        const phone = document.querySelector(".mi-phone");
         button.classList.add("opening");
-        phone.classList.remove("launching");
-        void phone.offsetWidth;
-        phone.classList.add("launching");
-        setTimeout(callback, 80);
+        setTimeout(callback, 40);
         setTimeout(() => {
           button.classList.remove("opening");
-          phone.classList.remove("launching");
-        }, 180);
+        }, 90);
       }
 
       document.querySelectorAll("[data-url]").forEach((button) => {

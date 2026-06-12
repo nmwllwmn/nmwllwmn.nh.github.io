@@ -1075,33 +1075,6 @@ body[data-page^="phone"] #notebookText {
   display: none !important;
 }
 
-.mi-phone::after {
-  content: "";
-  position: absolute;
-  z-index: 60;
-  inset: 14px;
-  border-radius: 34px;
-  background: rgba(255,255,255,0.08);
-  opacity: 0;
-  pointer-events: none;
-}
-
-.mi-phone.launching::after {
-  animation: appLaunchDim 0.18s ease-out;
-}
-
-@keyframes appLaunchDim {
-  0% {
-    opacity: 0;
-  }
-  35% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
 .mi-screen {
   position: absolute;
   inset: 0;
