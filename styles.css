@@ -2011,6 +2011,12 @@ body[data-notes-box="trash"] .notes-live {
   line-height: 1.65;
 }
 
+.photo-choice {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+}
+
 .sudoku-app {
   display: grid;
   gap: 12px;

@@ -48,7 +48,11 @@
               <h2>IMG_062141</h2>
               <p class="mono">2026-06-06 21:41 / 北桥雨水泵站 / B17 外侧</p>
               <p>照片里的人站在地下通道入口外，手里拿着手机。位置、时间和 NVR 覆盖窗口吻合。</p>
-              <button class="btn primary" id="recordPhoto" type="button">记录这条线索</button>
+              <button class="btn primary" id="recordPhoto" type="button">处理这张照片</button>
+              <div class="photo-choice" id="photoChoice" hidden>
+                <button class="btn primary" id="reportPhoto" type="button">报警并提交照片</button>
+                <button class="btn" id="keepPhoto" type="button">暂不报警，继续找人</button>
+              </div>
             </article>
           </section>
 
@@ -85,6 +89,23 @@
       document.querySelector("#recordPhoto")?.addEventListener("click", () => {
         setFlag("foundB17");
         setFlag("foundPumpStation");
+        setFlag("keptAlbumPhoto");
+        document.querySelector("#photoChoice").hidden = false;
+        document.querySelector("#recordPhoto").hidden = true;
+        toast("照片位置已记录。选择是否立刻报警。");
+      });
+
+      document.querySelector("#keepPhoto")?.addEventListener("click", () => {
+        setFlag("foundB17");
+        setFlag("foundPumpStation");
+        setFlag("keptAlbumPhoto");
+        toast("已保留照片。继续寻找 00:17 维护窗口。");
+      });
+
+      document.querySelector("#reportPhoto")?.addEventListener("click", () => {
+        setFlag("foundB17");
+        setFlag("foundPumpStation");
+        setFlag("keptAlbumPhoto");
         setFlag("reportedMysteryMan");
         setFlag("albumPhotoReported");
         toast("原图已保留。正在拨打 110。");
