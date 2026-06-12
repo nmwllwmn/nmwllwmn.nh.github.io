@@ -524,7 +524,7 @@ function ensurePhoneBattery(page) {
 }
 
 function isSafeFromThreats(state = loadGame()) {
-  return Boolean(state.flags.rescuedLinzhou || state.flags.sudokuSecretSolved || state.flags.reportedMysteryMan);
+  return Boolean(state.flags.rescuedLinzhou || state.flags.albumPhotoReported || state.flags.reportedMysteryMan);
 }
 
 function getThreatLevel(state = loadGame()) {

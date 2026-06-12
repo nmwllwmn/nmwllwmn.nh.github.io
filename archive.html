@@ -26,7 +26,7 @@
       const hasTruth = Boolean(evidence.A && evidence.B && evidence.C && evidence.D && evidence.E);
       const hasSudokuCache = Boolean(flags.sudokuSecretSolved);
       const hasRescueRoute = Boolean(flags.foundB17 && flags.foundPumpStation && flags.foundRescueWindow);
-      const hasAlbumReport = Boolean(flags.albumPhotoReported || flags.reportedMysteryMan);
+      const hasAlbumReport = Boolean(hasSudokuCache && (flags.albumPhotoReported || flags.reportedMysteryMan));
       const hasHiddenEnding = Boolean(hasTruth && hasSudokuCache && hasRescueRoute);
       const hasAlbumEnding = Boolean(hasTruth && hasSudokuCache && hasAlbumReport);
 
@@ -60,7 +60,7 @@
       ];
 
       let ending = "";
-      if (hasHiddenEnding) {
+      if (hasHiddenEnding && !hasAlbumEnding) {
         setFlag("rescuedLinzhou");
         ending = `<article class="archive-phone-ending rescue">
           <h2>隐藏结局：未完成的签到</h2>

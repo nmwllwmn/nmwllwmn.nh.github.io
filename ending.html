@@ -19,9 +19,26 @@
     <script>
       initGameShell({ stage: 40, page: "phone-ending" });
 
-      const type = new URLSearchParams(location.search).get("type") || "album-report";
+      const state = loadGame();
+      const evidence = state.evidence || {};
+      const flags = state.flags || {};
+      const hasTruth = Boolean(evidence.A && evidence.B && evidence.C && evidence.D && evidence.E);
+      const hasSudokuCache = Boolean(flags.sudokuSecretSolved);
+      const hasRescueRoute = Boolean(flags.foundB17 && flags.foundPumpStation && flags.foundRescueWindow);
+      const hasAlbumReport = Boolean(hasSudokuCache && (flags.albumPhotoReported || flags.reportedMysteryMan));
+      const type = new URLSearchParams(location.search).get("type");
+      const canShowEnding = {
+        normal: hasTruth && !hasSudokuCache,
+        truth: hasTruth && hasSudokuCache && !hasAlbumReport && !hasRescueRoute,
+        rescue: hasTruth && hasSudokuCache && hasRescueRoute && !hasAlbumReport,
+        "album-report": hasAlbumReport
+      };
       const root = document.querySelector("#emergencyEnding");
       const back = document.querySelector("#endingBack");
+
+      if (!type || !canShowEnding[type]) {
+        location.replace("archive.html?stay=1");
+      }
 
       function restartButton() {
         return `<button class="btn primary" id="endingRestart" type="button" hidden>重新开始探索</button>`;
@@ -245,10 +262,12 @@
         }, 2400 + lines.length * 4300 + 2800);
       }
 
-      if (type === "normal") showNormalEnding();
-      else if (type === "truth") showTruthEnding();
-      else if (type === "rescue") showRescueEnding();
-      else showAlbumReportEnding();
+      if (canShowEnding[type]) {
+        if (type === "normal") showNormalEnding();
+        else if (type === "truth") showTruthEnding();
+        else if (type === "rescue") showRescueEnding();
+        else if (type === "album-report") showAlbumReportEnding();
+      }
     </script>
   </body>
 </html>

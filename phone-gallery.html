@@ -76,7 +76,7 @@
         full.hidden = name !== "full";
       }
 
-      if ((view === "grid" || view === "photo" || view === "full") && hasFlag("albumLockOpened")) {
+      if ((view === "grid" || view === "photo" || view === "full") && hasFlag("albumLockOpened") && hasFlag("sudokuSecretSolved")) {
         showGalleryView(view);
       } else {
         showGalleryView("lock");
@@ -128,6 +128,10 @@
           renderPin();
           if (pin.length === 6) {
             if (pin === "062141") {
+              if (!hasFlag("sudokuSecretSolved")) {
+                setTimeout(() => resetPin("索引未恢复。"), 180);
+                return;
+              }
               setFlag("albumLockOpened");
               setTimeout(() => { location.href = "phone-gallery.html?view=grid"; }, 160);
             } else {
