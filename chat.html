@@ -16,7 +16,7 @@
         <section class="mi-screen lock-screen" id="lockScreen">
           <div class="statusbar">
             <span>中国移动</span>
-            <span>5G <span data-phone-battery>100%</span></span>
+            <span>5G <i class="status-battery" data-phone-battery-bar></i><span data-phone-battery>100%</span></span>
           </div>
           <div class="lock-time">
             <div class="lock-clock" data-live-time>--:--</div>
@@ -24,6 +24,7 @@
           </div>
           <div class="lock-hint">
             <div class="unlock-track" id="unlockTrack">
+              <div class="swipe-cue" aria-hidden="true"><span></span><span></span><span></span></div>
               <button class="unlock-button" id="unlockBtn" type="button">上滑解锁</button>
             </div>
           </div>
@@ -52,7 +53,7 @@
 
           <div class="statusbar">
             <span data-live-time>--:--</span>
-            <span>5G <span data-phone-battery>100%</span></span>
+            <span>5G <i class="status-battery" data-phone-battery-bar></i><span data-phone-battery>100%</span></span>
           </div>
           <div class="home-date" data-live-full-date>--</div>
           <div class="pull-zone left" data-panel="notifications"></div>
