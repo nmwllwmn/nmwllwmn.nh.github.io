@@ -3566,8 +3566,8 @@ body[data-page^="phone"] .btn.primary,
 
 @media (max-width: 420px) {
   :root {
-    --phone-border: 8px;
-    --phone-radius: 42px;
+    --phone-border: 10px;
+    --phone-radius: 44px;
     --screen-radius: 34px;
   }
 
@@ -3577,43 +3577,12 @@ body[data-page^="phone"] .btn.primary,
 
   .phone-stage {
     height: 100vh;
-    min-height: 100vh;
-    padding-top: 0;
+    height: 100dvh;
+    padding: 0;
   }
 
   .mi-phone {
     margin: 0 auto;
-  }
-
-  .lock-time {
-    padding-top: 104px;
-  }
-
-  .lock-clock {
-    font-size: 58px;
-  }
-
-  .home-date {
-    padding-top: 54px;
-    font-size: 18px;
-  }
-
-  .home-apps {
-    gap: 16px 10px;
-    padding: 24px 18px 0;
-  }
-
-  .app-icon span {
-    width: 52px;
-    height: 52px;
-    border-radius: 15px;
-  }
-
-  .dock {
-    left: 16px;
-    right: 16px;
-    bottom: 20px;
-    padding: 10px;
   }
 
   .photo-detail,
