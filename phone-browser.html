@@ -16,15 +16,25 @@
             <button type="submit">前往</button>
           </form>
           <section class="browser-history" id="browserHistory">
+            <div class="browser-home-hero">
+              <span>本机浏览器</span>
+              <strong>2 条最近访问</strong>
+              <p>清理记录后只剩下学校官网和校园墙。真正的入口要从页面文字里抄。</p>
+            </div>
+            <div class="browser-quick-grid" aria-label="快捷入口">
+              <button data-page="university" type="button"><span>NHU</span><strong>官网</strong></button>
+              <button data-page="wall" type="button"><span>墙</span><strong>校园墙</strong></button>
+            </div>
             <h2>最近访问</h2>
-            <p class="browser-section-label">浏览器历史只剩下两条明面记录</p>
             <button data-page="university" type="button">
+              <small>18:06 · 访问失败</small>
               <strong>南洄大学官网</strong>
-              <span>https://www.nhu.edu.cn</span>
+              <span>www.nhu.edu.cn · 页面不存在或已迁移</span>
             </button>
             <button data-page="wall" type="button">
+              <small>18:11 · 校内论坛</small>
               <strong>校园墙</strong>
-              <span>https://wall.nhu.edu.cn</span>
+              <span>wall.nhu.edu.cn · 匿名投稿与旧站缓存线索</span>
             </button>
           </section>
           <section class="browser-page" id="browserPage" hidden>
