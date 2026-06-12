@@ -82,14 +82,36 @@
                   <button type="button" data-cam="02">CAM 02<span>回放丢失 / black</span></button>
                   <button type="button" data-cam="08">CAM 08<span>体育馆外侧 / archive</span></button>
                 </div>
+                <div class="nvr-controls">
+                  <label>回放时间
+                    <input id="nvrTime" type="time" value="21:12">
+                  </label>
+                  <label>画面比例
+                    <select id="nvrScale">
+                      <option value="1">100%</option>
+                      <option value="1.35">135%</option>
+                      <option value="1.7">170%</option>
+                      <option value="2.1">210%</option>
+                    </select>
+                  </label>
+                </div>
+                <div class="nvr-pan-panel" aria-label="画面位置调整">
+                  <button type="button" data-pan="up">上</button>
+                  <button type="button" data-pan="left">左</button>
+                  <button type="button" data-pan="center">居中</button>
+                  <button type="button" data-pan="right">右</button>
+                  <button type="button" data-pan="down">下</button>
+                  <button type="button" id="nvrZoom">定位右下角</button>
+                </div>
+                <p class="nvr-status" id="nvrStatus">已连接 CAM 04。邮件提到的时间是 21:38。</p>
                 <div class="nvr-monitor-grid">
                   <div class="nvr-monitor active" data-monitor="04">
-                    <div class="nvr-viewer">
+                    <div class="nvr-viewer" data-adjustable="true">
                       <div class="nvr-osd">
                         <span>CAM 04 北桥北侧</span>
                         <span id="nvrOsdTime">2026-06-06 21:12:00</span>
                       </div>
-                      <img src="assets/normal-ending-nvr.png" alt="北桥监控回放画面">
+                      <img class="nvr-feed" src="assets/normal-ending-nvr.png" alt="北桥监控回放画面">
                       <div class="nvr-static"></div>
                       <div class="nvr-clue" id="nvrClue" hidden>S08 / IMP-2202</div>
                     </div>
@@ -107,18 +129,11 @@
                         <span>CAM 08 体育馆外侧</span>
                         <span>2026-06-06 21:38:00</span>
                       </div>
-                      <img src="assets/normal-ending-gym.png" alt="北桥体育馆夜景监控画面">
+                      <img class="nvr-feed" src="assets/normal-ending-gym.png" alt="北桥体育馆夜景监控画面">
                       <div class="nvr-static"></div>
                     </div>
                   </div>
                 </div>
-                <div class="nvr-controls">
-                  <label>回放时间
-                    <input id="nvrTime" type="time" value="21:12">
-                  </label>
-                  <button type="button" id="nvrZoom">放大右下角</button>
-                </div>
-                <p class="nvr-status" id="nvrStatus">已连接 CAM 04。邮件提到的时间是 21:38。</p>
                 <form class="inline-unlock" id="browserNvrForm">
                   <input name="answer" placeholder="输入放大后看到的编号">
                   <button class="btn primary" type="submit">记录监控证据</button>
@@ -170,12 +185,30 @@
           const panel = document.querySelector("#nvrLoginPanel");
           const consolePanel = document.querySelector("#nvrConsole");
           const timeInput = document.querySelector("#nvrTime");
+          const scaleInput = document.querySelector("#nvrScale");
           const zoomButton = document.querySelector("#nvrZoom");
           const clue = document.querySelector("#nvrClue");
           const status = document.querySelector("#nvrStatus");
           const osdTime = document.querySelector("#nvrOsdTime");
+          const adjustableViewer = document.querySelector(".nvr-viewer[data-adjustable='true']");
+          let nvrScale = 1;
+          let nvrPanX = 0;
+          let nvrPanY = 0;
           let nvrTimeReady = false;
           let nvrZoomReady = false;
+
+          function applyNvrView() {
+            adjustableViewer?.style.setProperty("--nvr-scale", String(nvrScale));
+            adjustableViewer?.style.setProperty("--nvr-x", `${nvrPanX}%`);
+            adjustableViewer?.style.setProperty("--nvr-y", `${nvrPanY}%`);
+            const activeCam = document.querySelector(".nvr-cam-list button.active")?.dataset.cam;
+            const lookingAtClue = activeCam === "04" && nvrTimeReady && nvrScale >= 1.7 && nvrPanX <= -14 && nvrPanY <= -10;
+            clue.hidden = !lookingAtClue;
+            nvrZoomReady = lookingAtClue;
+            if (lookingAtClue) {
+              status.textContent = "右下角放大后可见残留编号：S08 / IMP-2202。";
+            }
+          }
 
           nvrLogin.addEventListener("submit", (event) => {
             event.preventDefault();
@@ -205,6 +238,7 @@
               }
               clue.hidden = true;
               nvrZoomReady = false;
+              applyNvrView();
             });
           });
 
@@ -214,14 +248,39 @@
             nvrZoomReady = false;
             clue.hidden = true;
             status.textContent = nvrTimeReady ? "21:38 画面右下角有覆盖残留，需要放大。" : "这个时间点没有明显异常。";
+            applyNvrView();
+          });
+
+          scaleInput.addEventListener("change", () => {
+            nvrScale = Number(scaleInput.value);
+            status.textContent = nvrTimeReady ? "正在调整回放比例。把画面移到右下角才能看清残留。" : "比例已调整。先把时间切到 21:38。";
+            applyNvrView();
+          });
+
+          document.querySelectorAll(".nvr-pan-panel button[data-pan]").forEach((button) => {
+            button.addEventListener("click", () => {
+              const direction = button.dataset.pan;
+              if (direction === "center") {
+                nvrPanX = 0;
+                nvrPanY = 0;
+              }
+              if (direction === "left") nvrPanX = Math.min(22, nvrPanX + 8);
+              if (direction === "right") nvrPanX = Math.max(-22, nvrPanX - 8);
+              if (direction === "up") nvrPanY = Math.min(18, nvrPanY + 8);
+              if (direction === "down") nvrPanY = Math.max(-18, nvrPanY - 8);
+              status.textContent = nvrTimeReady ? "画面位置已调整。残留在 CAM 04 的右下角。" : "画面位置已调整。先确认关键时间。";
+              applyNvrView();
+            });
           });
 
           zoomButton.addEventListener("click", () => {
             const activeCam = document.querySelector(".nvr-cam-list button.active")?.dataset.cam;
             if (activeCam === "04" && nvrTimeReady) {
-              nvrZoomReady = true;
-              clue.hidden = false;
-              status.textContent = "放大后可见残留编号：S08 / IMP-2202。";
+              nvrScale = 2.1;
+              nvrPanX = -18;
+              nvrPanY = -14;
+              scaleInput.value = "2.1";
+              applyNvrView();
             } else {
               toast("先切到 CAM 04，并把回放时间调到 21:38。");
             }

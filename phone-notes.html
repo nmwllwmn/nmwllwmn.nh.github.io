@@ -11,20 +11,29 @@
       <section class="mi-phone">
         <section class="mi-screen app-screen screen-enter">
           <div class="app-head"><a class="mini-back" href="chat.html">‹</a><strong>备忘录</strong></div>
+          <nav class="notes-tabs" aria-label="备忘录分类">
+            <a href="phone-notes.html" id="notesAllTab">备忘录</a>
+            <a href="phone-notes.html?box=trash" id="notesTrashTab">最近删除</a>
+          </nav>
           <div class="notes-list">
-            <article class="note-item">
+            <article class="note-item notes-live">
               <time>6 月 6 日 16:10</time>
               <h2>雨停前</h2>
               <p>南洄的雨总是停得很突然。路面亮得像刚擦过，桥下却还是黑的。今晚只确认路线，不逞强。</p>
             </article>
-            <article class="note-item important">
+            <article class="note-item notes-live">
+              <time>6 月 6 日 18:04</time>
+              <h2>删掉的别忘</h2>
+              <p>有些东西不适合放在明面上。真的要找，就去最近删除。</p>
+            </article>
+            <article class="note-item important notes-trash">
               <time>6 月 6 日 17:58</time>
               <h2>账号</h2>
               <p>校园邮箱：linzhou@stu.nhu.edu.cn</p>
               <p>她是英语专业，总笑我把“河”写成 river。</p>
               <p>如果我忘了密码，就记“河”和 17。</p>
             </article>
-            <article class="note-item">
+            <article class="note-item notes-trash">
               <time>6 月 6 日 21:47</time>
               <h2>别回</h2>
               <p>最近一直有陌生号码发短信，让我删照片。号码查不到归属地。先别回，截图留着。</p>
@@ -34,6 +43,12 @@
       </section>
     </main>
     <script src="common.js"></script>
-    <script>initGameShell({ stage: 4, page: "phone-notes" });</script>
+    <script>
+      initGameShell({ stage: 4, page: "phone-notes" });
+      const box = new URLSearchParams(location.search).get("box") === "trash" ? "trash" : "all";
+      document.body.dataset.notesBox = box;
+      document.querySelector("#notesAllTab").classList.toggle("active", box === "all");
+      document.querySelector("#notesTrashTab").classList.toggle("active", box === "trash");
+    </script>
   </body>
 </html>
