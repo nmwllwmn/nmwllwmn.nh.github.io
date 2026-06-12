@@ -76,8 +76,7 @@
         full.hidden = name !== "full";
       }
 
-      if (view === "grid" || view === "photo" || view === "full") {
-        setFlag("albumLockOpened");
+      if ((view === "grid" || view === "photo" || view === "full") && hasFlag("albumLockOpened")) {
         showGalleryView(view);
       } else {
         showGalleryView("lock");
