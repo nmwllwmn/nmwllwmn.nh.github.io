@@ -1536,6 +1536,7 @@ body[data-notes-box="trash"] .notes-live {
   border: 0;
   background: transparent;
   color: white;
+  text-decoration: none;
   text-shadow: 0 1px 8px rgba(0,0,0,0.72);
   transform: translateY(0) scale(1);
   transition: transform 0.16s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.12s ease;
@@ -1567,23 +1568,17 @@ body[data-notes-box="trash"] .notes-live {
 }
 
 .app-icon[data-badge]::after {
-  content: attr(data-badge);
+  content: "";
   position: absolute;
-  right: 7px;
-  top: -6px;
+  right: 12px;
+  top: 2px;
   z-index: 2;
-  min-width: 20px;
-  height: 20px;
+  width: 10px;
+  height: 10px;
   border: 2px solid rgba(255,255,255,0.95);
   border-radius: 999px;
-  padding: 0 5px;
   background: #ff3045;
-  color: white;
-  font-size: 10px;
-  font-weight: 800;
-  line-height: 16px;
-  text-shadow: none;
-  box-shadow: 0 6px 12px rgba(255,48,69,0.28);
+  box-shadow: 0 2px 8px rgba(255,48,69,0.38);
 }
 
 .app-icon:hover {
@@ -1703,11 +1698,14 @@ body[data-notes-box="trash"] .notes-live {
 }
 
 .dock-icon {
+  display: grid;
+  place-items: center;
   min-height: 54px;
   border: 0;
   border-radius: 17px;
   background: rgba(255,255,255,0.88);
   color: #1d2630;
+  text-decoration: none;
   font-size: 28px;
   box-shadow: 0 8px 18px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.52);
   transition: transform 0.16s cubic-bezier(0.2, 0.8, 0.2, 1), background 0.16s ease, filter 0.16s ease;
@@ -4357,13 +4355,11 @@ body[data-page^="phone"] .btn.primary,
 }
 
 .app-icon[data-badge]::after {
-  right: 4px;
-  top: -5px;
-  min-width: 18px;
-  height: 18px;
+  right: 8px;
+  top: 0;
+  width: 9px;
+  height: 9px;
   border-width: 2px;
-  line-height: 14px;
-  font-size: 10px;
 }
 
 .dock {

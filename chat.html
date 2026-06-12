@@ -72,22 +72,22 @@
           <div class="pull-zone right" data-panel="controls"></div>
 
           <div class="home-apps">
-            <button class="app-icon wechat-icon" data-url="phone-wechat.html" data-badge="3" type="button"><span><i>☘</i></span><strong>微信</strong></button>
-            <button class="app-icon contacts-icon" data-url="phone-wechat-contacts.html" type="button"><span><i>人</i></span><strong>通讯录</strong></button>
-            <button class="app-icon browser-icon" data-url="phone-browser.html" type="button"><span><i>南</i></span><strong>浏览器</strong></button>
-            <button class="app-icon mail-icon" data-url="phone-mail.html" data-badge="3" type="button"><span><i>✉</i></span><strong>邮件</strong></button>
-            <button class="app-icon sms-icon" data-url="phone-sms.html" type="button"><span><i>✦</i></span><strong>短信</strong></button>
-            <button class="app-icon notes-icon" data-url="phone-notes.html" type="button"><span><i>记</i></span><strong>备忘录</strong></button>
-            <button class="app-icon gallery-icon" data-url="phone-gallery.html" data-badge="!" type="button"><span><i>▧</i></span><strong>相册</strong></button>
-            <button class="app-icon camera-icon" data-url="phone-camera.html" type="button"><span><i>◉</i></span><strong>相机</strong></button>
-            <button class="app-icon map-icon" data-url="phone-map.html" type="button"><span><i>⌖</i></span><strong>地图</strong></button>
-            <button class="app-icon settings-icon" data-url="phone-settings.html" type="button"><span><i>⚙</i></span><strong>设置</strong></button>
-            <button class="app-icon game-icon" data-url="phone-game.html" type="button"><span><i>9</i></span><strong>游戏</strong></button>
+            <a class="app-icon wechat-icon" href="phone-wechat.html" target="_blank" rel="noopener" data-url="phone-wechat.html" data-badge><span><i>☘</i></span><strong>微信</strong></a>
+            <a class="app-icon contacts-icon" href="phone-wechat-contacts.html" target="_blank" rel="noopener" data-url="phone-wechat-contacts.html"><span><i>人</i></span><strong>通讯录</strong></a>
+            <a class="app-icon browser-icon" href="phone-browser.html" target="_blank" rel="noopener" data-url="phone-browser.html"><span><i>南</i></span><strong>浏览器</strong></a>
+            <a class="app-icon mail-icon" href="phone-mail.html" target="_blank" rel="noopener" data-url="phone-mail.html" data-badge><span><i>✉</i></span><strong>邮件</strong></a>
+            <a class="app-icon sms-icon" href="phone-sms.html" target="_blank" rel="noopener" data-url="phone-sms.html"><span><i>✦</i></span><strong>短信</strong></a>
+            <a class="app-icon notes-icon" href="phone-notes.html" target="_blank" rel="noopener" data-url="phone-notes.html"><span><i>记</i></span><strong>备忘录</strong></a>
+            <a class="app-icon gallery-icon" href="phone-gallery.html" target="_blank" rel="noopener" data-url="phone-gallery.html" data-badge><span><i>▧</i></span><strong>相册</strong></a>
+            <a class="app-icon camera-icon" href="phone-camera.html" target="_blank" rel="noopener" data-url="phone-camera.html"><span><i>◉</i></span><strong>相机</strong></a>
+            <a class="app-icon map-icon" href="phone-map.html" target="_blank" rel="noopener" data-url="phone-map.html"><span><i>⌖</i></span><strong>地图</strong></a>
+            <a class="app-icon settings-icon" href="phone-settings.html" target="_blank" rel="noopener" data-url="phone-settings.html"><span><i>⚙</i></span><strong>设置</strong></a>
+            <a class="app-icon game-icon" href="phone-game.html" target="_blank" rel="noopener" data-url="phone-game.html"><span><i>9</i></span><strong>游戏</strong></a>
           </div>
 
           <div class="dock">
-            <button class="dock-icon dock-phone" data-url="phone-call.html" type="button">☎</button>
-            <button class="dock-icon dock-device" data-url="phone-browser.html" type="button">南</button>
+            <a class="dock-icon dock-phone" href="phone-call.html" target="_blank" rel="noopener" data-url="phone-call.html">☎</a>
+            <a class="dock-icon dock-device" href="phone-browser.html" target="_blank" rel="noopener" data-url="phone-browser.html">南</a>
           </div>
           <div class="gesture-bar"></div>
         </section>
@@ -99,8 +99,12 @@
       initGameShell({ stage: 2, page: "phone" });
       const smsIcon = document.querySelector(".sms-icon");
       const threatCount = getThreatMessages().length;
-      if (threatCount > 0) smsIcon.dataset.badge = String(threatCount);
+      if (threatCount > 0 && !hasFlag("openedApp_phone-sms.html")) smsIcon.setAttribute("data-badge", "");
       else smsIcon.removeAttribute("data-badge");
+
+      document.querySelectorAll("[data-url][data-badge]").forEach((button) => {
+        if (hasFlag(`openedApp_${button.dataset.url}`)) button.removeAttribute("data-badge");
+      });
 
       const screens = ["lockScreen", "homeScreen"];
       function showScreen(id) {
@@ -161,7 +165,11 @@
 
       function launchApp(button) {
         button.classList.add("opening");
-        location.href = button.dataset.url;
+        setFlag(`openedApp_${button.dataset.url}`);
+        button.removeAttribute("data-badge");
+        setTimeout(() => {
+          button.classList.remove("opening");
+        }, 120);
       }
 
       document.querySelectorAll("[data-url]").forEach((button) => {
