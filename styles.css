@@ -2651,7 +2651,9 @@ body[data-notes-box="trash"] .notes-live {
 .browser-history,
 .browser-page {
   display: grid;
+  flex: 1 1 auto;
   gap: 10px;
+  min-height: 0;
   overflow-y: auto;
   padding: 14px;
   -webkit-overflow-scrolling: touch;
@@ -4563,6 +4565,9 @@ body[data-page^="phone"] .btn.primary,
 }
 
 .browser-screen {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
   background:
     linear-gradient(180deg, #f7f8fb, #eef1f6 44%, #f8f9fb);
 }
