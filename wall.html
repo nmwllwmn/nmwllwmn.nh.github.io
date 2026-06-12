@@ -1,32 +1,19 @@
 <!doctype html>
 <html lang="zh-CN">
-  <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>南洄校园墙</title><link rel="stylesheet" href="styles.css"></head>
-  <body class="wall">
-    <header class="site-top"><div class="site-id"><span class="site-mark">墙</span><div><h1>南洄校园墙</h1><p>匿名发布，24 小时后可能被刷下去</p></div></div><nav class="top-actions"><a class="plain-link" href="club2023.html">城迹社旧站</a><a class="plain-link" href="drive.html">B17 备份</a></nav></header>
-    <main class="layout stack">
-      <section class="panel"><h2>搜索匿名帖</h2><form id="wallSearch"><div class="search-row"><input name="q" placeholder="北桥不是终点 / 听雨 / B17"><button class="btn" type="submit">搜索</button></div></form></section>
-      <section id="wallResults" class="stack"></section>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>南洄校园墙</title>
+    <meta http-equiv="refresh" content="0; url=phone-browser.html?site=wall">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="layout">
+      <article class="panel">
+        <h1>正在打开校园墙</h1>
+        <p>新版校园墙已移入林舟手机浏览器，包含完整论坛帖和旧站线索。</p>
+        <p><a class="btn primary" href="phone-browser.html?site=wall">进入校园墙</a></p>
+      </article>
     </main>
-    <script src="common.js"></script>
-    <script>
-      initGameShell({ stage: 21, page: "wall" });
-      document.querySelector("#wallSearch").addEventListener("submit", (e) => {
-        e.preventDefault();
-        const q = normalize(new FormData(e.target).get("q"));
-        let html = "";
-        if (q.includes("北桥") || q.includes("b17")) {
-          html += `<article class="post"><h2>别再问 B17 了</h2><p>三年前有人在北桥留下过一句话，后来帖子都没了。</p><p><strong>评论 17：</strong>B17 不是楼层。门响过一次，后来监控就黑了。</p></article>`;
-          if (hasFlag("submittedArchive")) {
-            html += `<article class="post"><h2>第 17 条留言</h2><p>谢谢你把第 8 个点放回去了。</p><p>但路线还没有结束。</p><p class="mono">MYJ-0606-S08 · 关联档案：旧论坛 17 楼</p></article>`;
-            setFlag("easterEggSeen");
-          }
-        }
-        if (q.includes("听雨") || q.includes("许听雨")) {
-          html += `<article class="post"><h2>她叫许听雨，不叫许某</h2><p>她不是夜跑，她是跟城迹社走的。</p><p class="mono">备份口令：雨停在 0606</p><p class="muted">口令可写作 yuting0606。</p></article>`;
-          setFlag("foundXutingyu"); addEvidence("C");
-        }
-        document.querySelector("#wallResults").innerHTML = html || `<article class="post">没有找到，换一个从旧站看到的词。</article>`;
-      });
-    </script>
   </body>
 </html>

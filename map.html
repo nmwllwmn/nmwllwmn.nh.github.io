@@ -1,29 +1,19 @@
 <!doctype html>
 <html lang="zh-CN">
-  <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>南洄城市地图</title><link rel="stylesheet" href="styles.css"></head>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>地图</title>
+    <meta http-equiv="refresh" content="0; url=phone-map.html">
+    <link rel="stylesheet" href="styles.css">
+  </head>
   <body>
-    <header class="site-top"><div class="site-id"><span class="site-mark">MAP</span><div><h1>南洄城市公共地图</h1><p>地点索引 · 历史路线 · 任务编号</p></div></div><nav class="top-actions"><a class="plain-link" href="nvr.html">NVR</a><a class="plain-link" href="archive.html">结局</a></nav></header>
-    <main class="layout stack">
-      <section class="panel"><h2>地图搜索</h2><form id="mapSearch"><div class="search-row"><input name="q" placeholder="北桥体育馆 / S08 / IMP-2202"><button class="btn" type="submit">搜索</button></div></form></section>
-      <section id="mapResults" class="stack"></section>
+    <main class="layout">
+      <article class="panel">
+        <h1>正在打开地图</h1>
+        <p>新版地图编号检索已移入林舟手机地图。</p>
+        <p><a class="btn primary" href="phone-map.html">进入地图</a></p>
+      </article>
     </main>
-    <script src="common.js"></script>
-    <script>
-      initGameShell({ stage: 36, page: "map" });
-      document.querySelector("#mapSearch").addEventListener("submit", (e) => {
-        e.preventDefault();
-        const q = normalize(new FormData(e.target).get("q"));
-        let html = "";
-        if (q.includes("北桥")) {
-          html = `<article class="result"><h2>北桥体育馆</h2><p>状态：封闭。封闭日期：2023-06-08。旧入口：北桥地下通道 B 口。</p></article>`;
-        } else if (q === "s08") {
-          html = hasFlag("foundOldRoute") ? `<article class="result"><h2>S08 北桥体育馆</h2><p>历史路线点已恢复。S04 后接 S08。</p></article>` : `<article class="result">未找到公开结果。</article>`;
-        } else if (q === "imp-2202") {
-          addEvidence("E"); setFlag("foundShenbo"); setStage(38);
-          html = `<article class="result"><h2>导入任务 IMP-2202</h2><p>执行账号：<strong>shenbo_admin</strong></p><p>执行时间：2026-06-06 22:02</p><p>内容：补全 linzhou S05-S07 签到记录</p><p>账号实名：沈泊</p></article>`;
-        } else html = `<article class="result">没有匹配地点或任务。</article>`;
-        document.querySelector("#mapResults").innerHTML = html;
-      });
-    </script>
   </body>
 </html>

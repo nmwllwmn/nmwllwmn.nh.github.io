@@ -1,42 +1,19 @@
 <!doctype html>
 <html lang="zh-CN">
-  <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>B17 备份网盘</title><link rel="stylesheet" href="styles.css"></head>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>B17 线索</title>
+    <meta http-equiv="refresh" content="0; url=phone-map.html?place=b17">
+    <link rel="stylesheet" href="styles.css">
+  </head>
   <body>
-    <header class="site-top"><div class="site-id"><span class="site-mark">B17</span><div><h1>临时文件分享</h1><p>share.nhu-cloud.invalid / 备份目录</p></div></div><nav class="top-actions"><a class="plain-link" href="wall.html">校园墙</a><a class="plain-link" href="mail.html">学校邮箱</a></nav></header>
-    <main class="layout stack">
-      <section class="panel">
-        <h2>访问受限</h2>
-        <form id="driveLogin" class="login-form">
-          <input name="account" placeholder="目录编号">
-          <input name="password" type="password" placeholder="访问口令">
-          <button class="btn primary" type="submit">打开目录</button>
-        </form>
-      </section>
-      <section id="files" class="stack" hidden>
-        <article class="file-row"><h2>readme_first.txt</h2><p>活动官网已替换为公开版本。校内镜像、旧站缓存与个人邮箱的清理状态不一致。</p></article>
-        <article class="file-row"><h2>route_20230606_old.pdf</h2><p>S01 正门 -> S02 邮筒 -> S03 旧书摊 -> S04 西桥 -> <strong>S08 北桥体育馆</strong> -> S05 地铁口 -> S06 钟楼 -> S07 公园</p><button id="oldRouteBtn" class="btn primary">记录旧路线证据</button></article>
-        <article class="file-row"><h2>draft_0605.txt</h2><p>林舟：0606 只用在活动系统和旧目录。</p><p>林舟：她又笑我把“河”写成拼音。</p><p>林舟：17 还是 17，账号别和密码写在同一页。</p></article>
-        <article class="file-row"><h2>photo_s05_original.jpg</h2><p class="muted">原始照片水印：18:12。与系统记录 21:46 不一致。</p></article>
-      </section>
+    <main class="layout">
+      <article class="panel">
+        <h1>正在打开 B17 地图线索</h1>
+        <p>新版 B17、泵站和 00:17 维护窗口线索已移入手机地图。</p>
+        <p><a class="btn primary" href="phone-map.html?place=b17">进入 B17 地图线索</a></p>
+      </article>
     </main>
-    <script src="common.js"></script>
-    <script>
-      initGameShell({ stage: 24, page: "drive" });
-      if (hasFlag("loggedDrive")) document.querySelector("#files").hidden = false;
-      document.querySelector("#driveLogin").addEventListener("submit", (e) => {
-        e.preventDefault();
-        const data = new FormData(e.target);
-        const account = normalize(data.get("account"));
-        const password = normalize(data.get("password"));
-        if (account === "b17" && (password === "yuting0606" || password === "雨停在0606")) {
-          setFlag("loggedDrive"); setStage(26);
-          document.querySelector("#files").hidden = false;
-          toast("B17 备份目录已打开。");
-        } else toast("口令错误。");
-      });
-      document.querySelector("#oldRouteBtn").addEventListener("click", () => {
-        addEvidence("B"); setFlag("foundOldRoute"); toast("证据 B 已记录：2023 旧路线包含 S08。");
-      });
-    </script>
   </body>
 </html>
