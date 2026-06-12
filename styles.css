@@ -760,21 +760,61 @@ th {
   max-height: calc(100vh - 92px);
   padding-bottom: 18px;
   overflow: auto;
-  resize: both;
+  resize: none;
 }
 
 .notebook-resize-handle {
   position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 2px;
+  background: rgba(36, 33, 29, 0.07);
+  border: 1px solid rgba(36, 33, 29, 0.12);
+  touch-action: none;
+}
+
+.notebook-resize-handle::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border: solid rgba(36, 33, 29, 0.3);
+  border-width: 0 2px 2px 0;
+}
+
+.notebook-resize-handle.nw {
+  left: 4px;
+  top: 4px;
+  cursor: nwse-resize;
+}
+
+.notebook-resize-handle.nw::before {
+  transform: rotate(180deg);
+}
+
+.notebook-resize-handle.ne {
+  right: 4px;
+  top: 4px;
+  cursor: nesw-resize;
+}
+
+.notebook-resize-handle.ne::before {
+  transform: rotate(270deg);
+}
+
+.notebook-resize-handle.sw {
+  left: 4px;
+  bottom: 4px;
+  cursor: nesw-resize;
+}
+
+.notebook-resize-handle.sw::before {
+  transform: rotate(90deg);
+}
+
+.notebook-resize-handle.se {
   right: 4px;
   bottom: 4px;
-  width: 18px;
-  height: 18px;
-  border-radius: 2px;
-  background:
-    linear-gradient(135deg, transparent 0 48%, rgba(36, 33, 29, 0.32) 49% 54%, transparent 55%),
-    linear-gradient(135deg, transparent 0 65%, rgba(36, 33, 29, 0.24) 66% 71%, transparent 72%);
   cursor: nwse-resize;
-  touch-action: none;
 }
 
 .note-panel[hidden],
@@ -797,7 +837,13 @@ th {
   background: rgba(251, 248, 241, 0.96);
   color: #1e252b;
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.14);
+  cursor: grab;
   font-weight: 800;
+  touch-action: none;
+}
+
+.notebook-toggle:active {
+  cursor: grabbing;
 }
 
 .notebook-toggle span {
@@ -817,6 +863,7 @@ th {
 
 .notebook-toggle.active {
   background: white;
+  z-index: 139;
 }
 
 body[data-page^="phone"] .notebook-toggle {

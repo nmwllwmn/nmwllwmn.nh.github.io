@@ -72,6 +72,25 @@ function saveNotebookBox(box) {
   localStorage.setItem(NOTE_BOX_KEY, JSON.stringify(box));
 }
 
+function clampNotebookRect(rect) {
+  const minWidth = 280;
+  const minHeight = 320;
+  const maxWidth = Math.max(minWidth, window.innerWidth - 24);
+  const maxHeight = Math.max(minHeight, window.innerHeight - 24);
+  const width = Math.min(Math.max(rect.width || 420, minWidth), maxWidth);
+  const height = Math.min(Math.max(rect.height || 440, minHeight), maxHeight);
+  const left = Math.min(Math.max(rect.left ?? window.innerWidth - width - 14, 12), window.innerWidth - width - 12);
+  const top = Math.min(Math.max(rect.top ?? 72, 12), window.innerHeight - height - 12);
+  return { left: Math.round(left), top: Math.round(top), width: Math.round(width), height: Math.round(height) };
+}
+
+function clampNotebookToggle(pos) {
+  const size = 52;
+  const left = Math.min(Math.max(pos.left ?? window.innerWidth - size - 22, 8), window.innerWidth - size - 8);
+  const top = Math.min(Math.max(pos.top ?? window.innerHeight - size - 22, 8), window.innerHeight - size - 8);
+  return { left: Math.round(left), top: Math.round(top) };
+}
+
 function restartExploration(options = {}) {
   const { keepNotebook = true } = options;
   localStorage.removeItem(STORE_KEY);
@@ -201,7 +220,10 @@ function initNotebook() {
       <div class="notebook-restart">
         <button class="small-btn danger" id="notebookRestart" type="button">重新开始探索</button>
       </div>
-      <span class="notebook-resize-handle" aria-hidden="true"></span>
+      <span class="notebook-resize-handle nw" data-corner="nw" aria-hidden="true"></span>
+      <span class="notebook-resize-handle ne" data-corner="ne" aria-hidden="true"></span>
+      <span class="notebook-resize-handle sw" data-corner="sw" aria-hidden="true"></span>
+      <span class="notebook-resize-handle se" data-corner="se" aria-hidden="true"></span>
     `;
     document.body.appendChild(panel);
   }
@@ -210,13 +232,39 @@ function initNotebook() {
   const panel = document.querySelector("#notebookPanel");
   const text = document.querySelector("#notebookText");
   const status = document.querySelector("#notebookStatus");
+  const saveCurrentPanelBox = () => {
+    const rect = panel.getBoundingClientRect();
+    const saved = loadNotebookBox();
+    saveNotebookBox({
+      ...saved,
+      panel: {
+        left: Math.round(rect.left),
+        top: Math.round(rect.top),
+        width: Math.round(rect.width),
+        height: Math.round(rect.height)
+      }
+    });
+  };
+  const applyToggleBox = () => {
+    const saved = loadNotebookBox();
+    const pos = clampNotebookToggle(saved.toggle || {});
+    toggle.style.left = `${pos.left}px`;
+    toggle.style.top = `${pos.top}px`;
+    toggle.style.right = "auto";
+    toggle.style.bottom = "auto";
+  };
   const applyNotebookBox = () => {
     const saved = loadNotebookBox();
-    const maxWidth = Math.max(280, window.innerWidth - 24);
-    const maxHeight = Math.max(320, window.innerHeight - 112);
-    if (saved.width) panel.style.width = `${Math.min(Math.max(saved.width, 280), maxWidth)}px`;
-    if (saved.height) panel.style.height = `${Math.min(Math.max(saved.height, 320), maxHeight)}px`;
+    const legacy = saved.panel || saved;
+    const rect = clampNotebookRect(legacy);
+    panel.style.left = `${rect.left}px`;
+    panel.style.top = `${rect.top}px`;
+    panel.style.right = "auto";
+    panel.style.bottom = "auto";
+    panel.style.width = `${rect.width}px`;
+    panel.style.height = `${rect.height}px`;
   };
+  applyToggleBox();
   applyNotebookBox();
   const setOpen = (open) => {
     panel.hidden = !open;
@@ -231,7 +279,50 @@ function initNotebook() {
     status.textContent = "已自动保存";
   });
 
-  toggle.addEventListener("click", () => setOpen(panel.hidden));
+  let toggleDragged = false;
+  let suppressToggleClick = false;
+  toggle.addEventListener("pointerdown", (event) => {
+    if (event.button !== 0) return;
+    toggleDragged = false;
+    toggle.setPointerCapture(event.pointerId);
+    const startX = event.clientX;
+    const startY = event.clientY;
+    const startRect = toggle.getBoundingClientRect();
+    const onMove = (moveEvent) => {
+      const dx = moveEvent.clientX - startX;
+      const dy = moveEvent.clientY - startY;
+      if (Math.abs(dx) + Math.abs(dy) > 4) toggleDragged = true;
+      if (!toggleDragged) return;
+      const pos = clampNotebookToggle({ left: startRect.left + dx, top: startRect.top + dy });
+      toggle.style.left = `${pos.left}px`;
+      toggle.style.top = `${pos.top}px`;
+      toggle.style.right = "auto";
+      toggle.style.bottom = "auto";
+    };
+    const onEnd = () => {
+      toggle.removeEventListener("pointermove", onMove);
+      toggle.removeEventListener("pointerup", onEnd);
+      toggle.removeEventListener("pointercancel", onEnd);
+      if (toggleDragged) {
+        const rect = toggle.getBoundingClientRect();
+        const saved = loadNotebookBox();
+        saveNotebookBox({ ...saved, toggle: clampNotebookToggle({ left: rect.left, top: rect.top }) });
+        suppressToggleClick = true;
+        setTimeout(() => {
+          suppressToggleClick = false;
+        }, 250);
+      }
+    };
+    toggle.addEventListener("pointermove", onMove);
+    toggle.addEventListener("pointerup", onEnd);
+    toggle.addEventListener("pointercancel", onEnd);
+  });
+  toggle.addEventListener("click", () => {
+    if (suppressToggleClick) {
+      return;
+    }
+    setOpen(panel.hidden);
+  });
   document.querySelector("#notebookClose").addEventListener("click", () => setOpen(false));
   document.querySelector("#notebookCopy").addEventListener("click", async () => {
     const value = text.value;
@@ -255,47 +346,68 @@ function initNotebook() {
     if (!confirm("确定重新开始探索？调查进度会清空，调查笔记会保留。")) return;
     restartExploration({ keepNotebook: true });
   });
-  const resizeHandle = panel.querySelector(".notebook-resize-handle");
-  if (resizeHandle) {
+  panel.querySelectorAll(".notebook-resize-handle").forEach((resizeHandle) => {
     resizeHandle.addEventListener("pointerdown", (event) => {
       event.preventDefault();
+      event.stopPropagation();
       resizeHandle.setPointerCapture(event.pointerId);
+      const corner = resizeHandle.dataset.corner || "se";
       const startX = event.clientX;
       const startY = event.clientY;
       const startRect = panel.getBoundingClientRect();
-      const maxWidth = Math.max(280, window.innerWidth - 24);
-      const maxHeight = Math.max(320, window.innerHeight - 112);
       const onMove = (moveEvent) => {
-        const nextWidth = Math.min(Math.max(startRect.width + moveEvent.clientX - startX, 280), maxWidth);
-        const nextHeight = Math.min(Math.max(startRect.height + moveEvent.clientY - startY, 320), maxHeight);
-        panel.style.width = `${Math.round(nextWidth)}px`;
-        panel.style.height = `${Math.round(nextHeight)}px`;
+        const dx = moveEvent.clientX - startX;
+        const dy = moveEvent.clientY - startY;
+        const next = {
+          left: startRect.left,
+          top: startRect.top,
+          width: startRect.width,
+          height: startRect.height
+        };
+        if (corner.includes("e")) next.width = startRect.width + dx;
+        if (corner.includes("s")) next.height = startRect.height + dy;
+        if (corner.includes("w")) {
+          next.left = startRect.left + dx;
+          next.width = startRect.width - dx;
+        }
+        if (corner.includes("n")) {
+          next.top = startRect.top + dy;
+          next.height = startRect.height - dy;
+        }
+        const rect = clampNotebookRect(next);
+        panel.style.left = `${rect.left}px`;
+        panel.style.top = `${rect.top}px`;
+        panel.style.right = "auto";
+        panel.style.bottom = "auto";
+        panel.style.width = `${rect.width}px`;
+        panel.style.height = `${rect.height}px`;
       };
       const onEnd = () => {
         resizeHandle.removeEventListener("pointermove", onMove);
         resizeHandle.removeEventListener("pointerup", onEnd);
         resizeHandle.removeEventListener("pointercancel", onEnd);
-        const rect = panel.getBoundingClientRect();
-        saveNotebookBox({ width: Math.round(rect.width), height: Math.round(rect.height) });
+        saveCurrentPanelBox();
       };
       resizeHandle.addEventListener("pointermove", onMove);
       resizeHandle.addEventListener("pointerup", onEnd);
       resizeHandle.addEventListener("pointercancel", onEnd);
     });
-  }
+  });
   if (window.ResizeObserver) {
     let resizeTimer = 0;
     const observer = new ResizeObserver(() => {
       if (panel.hidden) return;
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
-        const rect = panel.getBoundingClientRect();
-        saveNotebookBox({ width: Math.round(rect.width), height: Math.round(rect.height) });
+        saveCurrentPanelBox();
       }, 120);
     });
     observer.observe(panel);
   }
-  window.addEventListener("resize", applyNotebookBox);
+  window.addEventListener("resize", () => {
+    applyToggleBox();
+    applyNotebookBox();
+  });
 }
 
 function updateWidget() {
