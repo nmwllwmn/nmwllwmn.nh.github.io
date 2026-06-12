@@ -257,15 +257,6 @@ function updateWidget() {
 
 function ensurePhoneBattery(page) {
   if (!page || !page.startsWith("phone")) return;
-  const phone = document.querySelector(".mi-phone");
-  if (!phone || phone.querySelector(".phone-progress-battery")) return;
-  const battery = document.createElement("div");
-  battery.className = "phone-progress-battery";
-  battery.innerHTML = `
-    <span data-phone-battery>100%</span>
-    <i data-phone-battery-bar></i>
-  `;
-  phone.appendChild(battery);
   updateWidget();
 }
 
