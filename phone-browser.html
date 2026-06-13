@@ -194,7 +194,7 @@
                         <span>CAM 04 北桥北侧</span>
                         <span id="nvrOsdTime">2026-06-06 21:12:00</span>
                       </div>
-                      <img class="nvr-feed" src="assets/normal-ending-nvr.png" alt="北桥监控回放画面">
+                      <img class="nvr-feed" src="assets/normal-ending-nvr.png" alt="北桥监控回放画面" decoding="async" fetchpriority="high">
                       <div class="nvr-static"></div>
                       <div class="nvr-clue" id="nvrClue" hidden>S08 / 地图编号 IMP-2202</div>
                     </div>
@@ -212,7 +212,7 @@
                         <span>CAM 08 体育馆外侧</span>
                         <span>2026-06-06 21:38:00</span>
                       </div>
-                      <img class="nvr-feed" src="assets/normal-ending-gym.png" alt="北桥体育馆夜景监控画面">
+                      <img class="nvr-feed" data-src="assets/normal-ending-gym.png" alt="北桥体育馆夜景监控画面" loading="lazy" decoding="async">
                       <div class="nvr-static"></div>
                     </div>
                   </div>
@@ -321,7 +321,12 @@
             document.querySelectorAll(".nvr-cam-list button").forEach((item) => item.classList.remove("active"));
             document.querySelectorAll(".nvr-monitor").forEach((item) => item.classList.remove("active"));
             button.classList.add("active");
-            document.querySelector(`.nvr-monitor[data-monitor="${button.dataset.cam}"]`)?.classList.add("active");
+            const activeMonitor = document.querySelector(`.nvr-monitor[data-monitor="${button.dataset.cam}"]`);
+            activeMonitor?.classList.add("active");
+            activeMonitor?.querySelectorAll("img[data-src]").forEach((image) => {
+              image.src = image.dataset.src;
+              image.removeAttribute("data-src");
+            });
             if (button.dataset.cam === "04") {
               status.textContent = nvrTimeReady ? "CAM 04 的 21:38 画面有覆盖残留。" : "CAM 04 异常段提示：21:38-21:44。";
             } else if (button.dataset.cam === "02") {

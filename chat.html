@@ -5,18 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>林舟的手机</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="prefetch" href="phone-wechat.html">
-    <link rel="prefetch" href="phone-wechat-contacts.html">
-    <link rel="prefetch" href="phone-browser.html">
-    <link rel="prefetch" href="phone-mail.html">
-    <link rel="prefetch" href="phone-sms.html">
-    <link rel="prefetch" href="phone-notes.html">
-    <link rel="prefetch" href="phone-gallery.html">
-    <link rel="prefetch" href="phone-camera.html">
-    <link rel="prefetch" href="phone-map.html">
-    <link rel="prefetch" href="phone-settings.html">
-    <link rel="prefetch" href="phone-game.html">
-    <link rel="prefetch" href="phone-call.html">
   </head>
   <body class="chat-shell">
     <main class="phone-stage">
@@ -154,15 +142,6 @@
         unlockBtn.style.opacity = "";
       });
 
-      function prefetchApp(url) {
-        if (!url || document.querySelector(`link[data-app-prefetch="${url}"]`)) return;
-        const link = document.createElement("link");
-        link.rel = "prefetch";
-        link.href = url;
-        link.dataset.appPrefetch = url;
-        document.head.appendChild(link);
-      }
-
       function launchApp(button) {
         button.classList.add("opening");
         setFlag(`openedApp_${button.dataset.url}`);
@@ -171,10 +150,6 @@
           button.classList.remove("opening");
         }, 120);
       }
-
-      document.querySelectorAll("[data-url]").forEach((button) => {
-        prefetchApp(button.dataset.url);
-      });
 
       document.querySelectorAll("[data-url]").forEach((button) => {
         button.addEventListener("click", () => {

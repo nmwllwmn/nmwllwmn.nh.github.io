@@ -2951,6 +2951,7 @@ body[data-notes-box="trash"] .notes-live {
 }
 
 .nvr-monitor {
+  display: none;
   border: 2px solid transparent;
   border-radius: 10px;
   padding: 2px;
@@ -2958,6 +2959,7 @@ body[data-notes-box="trash"] .notes-live {
 }
 
 .nvr-monitor.active {
+  display: block;
   border-color: rgba(37,99,235,0.72);
   background: rgba(37,99,235,0.08);
 }
@@ -3621,7 +3623,9 @@ body[data-page^="phone"] * {
 body[data-page^="phone"] .screen-enter,
 body.chat-shell .mi-screen.screen-enter,
 body[data-page^="phone"] .shade-open,
-body[data-page^="phone"] .phone-app-toast {
+body[data-page^="phone"] .phone-app-toast,
+body[data-page^="phone"] .app-icon,
+body[data-page^="phone"] .camera-viewfinder::after {
   animation: none !important;
 }
 

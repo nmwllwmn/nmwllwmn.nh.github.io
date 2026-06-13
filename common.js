@@ -168,7 +168,7 @@ function setStage(stage) {
     saveGame(state);
   }
   updateWidget();
-  scheduleThreatEvents();
+  if (document.body.dataset.page === "phone") scheduleThreatEvents();
 }
 
 function getRemainingBattery(state = loadGame()) {
@@ -186,7 +186,7 @@ function setFlag(key, value = true) {
   state.flags[key] = value;
   saveGame(state);
   updateWidget();
-  scheduleThreatEvents();
+  if (document.body.dataset.page === "phone") scheduleThreatEvents();
 }
 
 function hasFlag(key) {
@@ -223,9 +223,10 @@ function initGameShell(options = {}) {
   document.body.dataset.page = page;
   setStage(stage);
   ensurePhoneBattery(page);
-  initNotebook();
+  if (options.notebook === true) initNotebook();
   initBgm(page);
-  if (!document.querySelector(".game-widget")) {
+  const shouldShowWidget = page && !page.startsWith("phone") && page !== "archive";
+  if (shouldShowWidget && !document.querySelector(".game-widget")) {
     const widget = document.createElement("aside");
     widget.className = "game-widget";
     widget.innerHTML = `
@@ -240,13 +241,17 @@ function initGameShell(options = {}) {
     `;
     document.body.appendChild(widget);
   }
-  document.querySelector("#resetGame").addEventListener("click", () => {
-    localStorage.removeItem(STORE_KEY);
-    toast("进度已重置，调查笔记已保留。");
-    setTimeout(() => location.href = "index.html", 500);
-  });
+  const resetButton = document.querySelector("#resetGame");
+  if (resetButton && !resetButton.dataset.bound) {
+    resetButton.dataset.bound = "true";
+    resetButton.addEventListener("click", () => {
+      localStorage.removeItem(STORE_KEY);
+      toast("进度已重置。");
+      setTimeout(() => location.href = "index.html", 500);
+    });
+  }
   updateWidget();
-  scheduleThreatEvents();
+  if (page === "phone") scheduleThreatEvents();
 }
 
 function loadBgmState() {
@@ -290,7 +295,7 @@ function initBgm(page) {
   const audio = document.createElement("audio");
   audio.id = "bgmAudio";
   audio.loop = true;
-  audio.preload = "auto";
+  audio.preload = "none";
   audio.volume = state.volume;
   audio.src = track.audio;
   audio.dataset.mood = mood;
@@ -353,7 +358,6 @@ function initBgm(page) {
 
   setVisual(state.enabled);
   if (state.enabled) {
-    tryPlay();
     document.addEventListener("pointerdown", enableOnGesture, { once: true });
     document.addEventListener("keydown", enableOnGesture, { once: true });
     document.addEventListener("touchstart", enableOnGesture, { once: true });
