@@ -2697,9 +2697,9 @@ body[data-notes-box="trash"] .notes-live {
 
 .browser-home-hero {
   display: grid;
-  gap: 5px;
-  border-radius: 18px;
-  padding: 16px;
+  gap: 4px;
+  border-radius: 16px;
+  padding: 14px 16px;
   background:
     radial-gradient(circle at 86% 18%, rgba(59,130,246,0.18), transparent 30%),
     linear-gradient(135deg, #111827, #26364a);
@@ -2725,13 +2725,6 @@ body[data-notes-box="trash"] .notes-live {
   line-height: 1.55;
 }
 
-.browser-quick-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.browser-quick-grid button,
 .browser-history > button {
   border: 1px solid rgba(18,27,38,0.06);
   border-radius: 16px;
@@ -2739,31 +2732,6 @@ body[data-notes-box="trash"] .notes-live {
   color: #111827;
   text-align: left;
   box-shadow: 0 8px 22px rgba(18,27,38,0.06);
-}
-
-.browser-quick-grid button {
-  display: grid;
-  place-items: center;
-  gap: 6px;
-  min-height: 82px;
-  padding: 12px;
-  text-align: center;
-}
-
-.browser-quick-grid button span {
-  display: grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
-  background: #e8eef8;
-  color: #24486d;
-  font-size: 13px;
-  font-weight: 900;
-}
-
-.browser-quick-grid button strong {
-  font-size: 13px;
 }
 
 .browser-history > button {
