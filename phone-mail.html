@@ -72,6 +72,7 @@
       function openMailApp() {
         document.querySelector("#mailLogin").hidden = true;
         document.querySelector("#mailApp").hidden = false;
+        document.querySelector("#mailApp").classList.remove("reading-mail");
         renderMailList();
       }
 
@@ -94,13 +95,18 @@
       function openMail(index) {
         const mail = mails[index];
         setFlag(`readMail${index}`);
+        document.querySelector("#mailApp").classList.add("reading-mail");
         document.querySelector("#mailDetail").innerHTML = `
+          <button class="mail-detail-back" id="mailInboxBack" type="button">‹ 返回收件箱</button>
           <h2>${mail.title}</h2>
           <p class="mono">${mail.from} · ${mail.time}</p>
           <div class="mail-body">${mail.body}</div>
         `;
         mail.action();
         renderMailList();
+        document.querySelector("#mailInboxBack").addEventListener("click", () => {
+          location.href = "phone-mail.html?inbox=1";
+        });
       }
 
       if (hasFlag("phoneMailLoggedIn")) {

@@ -95,21 +95,43 @@
           html: `
             <section class="old-info-site">
               <div class="old-info-banner">
-                <strong>南洄大学旧信息站</strong>
-                <span>oldinfo.nhu.edu.cn / 只读缓存</span>
+                <span class="old-info-kicker">南洄大学信息公开旧版镜像</span>
+                <strong>oldinfo.nhu.edu.cn</strong>
+                <span>只读缓存 / 页面样式最后更新于 2023-06-06</span>
               </div>
-              <h2>城迹社 2023 试跑资料存档</h2>
-              <p>本页为旧信息站缓存。新版官网已移除附件入口，但活动路线摘要、志愿者名单和保卫处备案说明仍可读取。</p>
-              <table class="old-info-table">
-                <tbody>
-                  <tr><th>活动</th><td>城迹社夜行定向 2023 试跑</td></tr>
-                  <tr><th>路线</th><td>S01 西门、S02 图书馆、S03 实验楼、S04 西桥观景台、<strong>S08 北桥体育馆</strong></td></tr>
-                  <tr><th>试跑人员</th><td>志愿者名单含许听雨，备注为“北桥段摄影与安全回收”。</td></tr>
-                  <tr><th>备案</th><td>北桥片区夜间通行需通过 <strong>secure.nhu.edu.cn/guard</strong> 查询保卫中心临时页面。</td></tr>
-                </tbody>
-              </table>
-              <p>页面底部备注写着：旧站迁移后，保卫中心链接不在新版官网导航中显示；需要从浏览器地址栏直接输入。</p>
-              <p class="mono">cache: citytrace/2023/route_old.html · last_export=2026-06-06 22:38</p>
+              <nav class="old-info-tabs" aria-label="旧站栏目">
+                <span>通知公告</span>
+                <span>学生组织</span>
+                <span class="active">活动备案</span>
+                <span>站点迁移</span>
+              </nav>
+              <article class="old-info-paper">
+                <p class="old-info-path">当前位置：首页 &gt; 学生组织 &gt; 城迹社 &gt; 活动备案 &gt; 2023</p>
+                <h2>城迹社 2023 夜行定向试跑备案材料</h2>
+                <p>本页为旧信息站缓存。新版官网迁移时只同步了新闻标题，活动附件、路线摘要、现场分工和保卫处回执未进入新站检索。页面仍按旧版备案格式保留，仅供校内复核。</p>
+                <section class="old-info-notice">
+                  <strong>迁移提示</strong>
+                  <p>若从新版官网返回 404，请不要重复提交检索请求。旧站仅保留镜像，不再接受评论、下载计数或附件重签名。</p>
+                </section>
+                <table class="old-info-table">
+                  <tbody>
+                    <tr><th>备案编号</th><td>CT-2023-0606-NW / 城迹社夜行定向试跑</td></tr>
+                    <tr><th>路线摘要</th><td>S01 西门、S02 图书馆、S03 实验楼、S04 西桥观景台；北桥段另有一处安全回收点，旧版图层标为 <strong>S08 北桥体育馆</strong>。</td></tr>
+                    <tr><th>人员记录</th><td>试跑志愿者名单含 <strong>许听雨</strong>，分工备注为“北桥段摄影、终点回收、雨天备线确认”。</td></tr>
+                    <tr><th>附件状态</th><td>route_old.pdf 已迁移；northbridge_guard.txt 未公开；video_index.csv 需保卫处临时权限。</td></tr>
+                  </tbody>
+                </table>
+                <section class="old-info-memo">
+                  <h3>站点迁移工单 #NHU-MIG-2217</h3>
+                  <p>2023 年活动备案页迁入新站时，保卫处公开检索入口被标记为“校内镜像，不进入导航”。维护人员只在旧页脚保留了目标域名，避免学生从首页误入监控系统。</p>
+                  <p>页脚字段写法很旧：<code>sec-mirror</code> 后接校内域名，路径单独放在 <code>guard</code>。如果需要复核北桥片区夜间通行，请把两段按网页地址格式拼起来。</p>
+                </section>
+                <div class="old-info-footer">
+                  <span>cache: citytrace/2023/route_old.html</span>
+                  <span>last_export=2026-06-06 22:38</span>
+                  <span>sec-mirror=secure.nhu.edu.cn / guard</span>
+                </div>
+              </article>
             </section>
           `,
           action: () => { addEvidence("B"); addEvidence("C"); setFlag("foundSecurityUrl"); }

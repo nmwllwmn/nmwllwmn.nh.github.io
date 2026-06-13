@@ -2048,6 +2048,9 @@ body[data-notes-box="trash"] .notes-live {
   border-radius: 12px;
   padding: 14px;
   background: white;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   box-shadow: 0 10px 24px rgba(30, 36, 42, 0.07);
 }
 
@@ -2679,6 +2682,9 @@ body[data-notes-box="trash"] .notes-live {
   border-radius: 12px;
   padding: 14px;
   background: white;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .browser-search {
@@ -3142,22 +3148,144 @@ body[data-notes-box="trash"] .notes-live {
 }
 
 .old-info-site {
+  display: grid;
+  gap: 12px;
   font-family: "SimSun", var(--serif);
+  background:
+    linear-gradient(90deg, rgba(128, 102, 51, 0.08) 0 1px, transparent 1px 16px),
+    #f6f0d8;
+  border-radius: 12px;
+  padding: 10px;
 }
 
 .old-info-banner {
-  border: 1px solid #c7b27a;
-  background: #ffffe8;
-  color: #5b421f;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #bda56a;
+  background:
+    radial-gradient(circle at 86% 20%, rgba(194, 57, 43, 0.16), transparent 28%),
+    linear-gradient(135deg, #ffffe8, #e9dca7);
+  color: #4a3719;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.5);
+}
+
+.old-info-banner::after {
+  content: "ARCHIVE";
+  position: absolute;
+  right: -18px;
+  bottom: 4px;
+  color: rgba(91, 66, 31, 0.12);
+  font-family: var(--mono);
+  font-size: 34px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  transform: rotate(-10deg);
+}
+
+.old-info-kicker,
+.old-info-path {
+  color: #8a6d2e;
+  font-size: 11px;
+}
+
+.old-info-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border: 1px solid #c9b983;
+  background: #e8dca9;
+}
+
+.old-info-tabs span {
+  padding: 7px 4px;
+  border-right: 1px solid #c9b983;
+  color: #6d5724;
+  font-size: 11px;
+  text-align: center;
+}
+
+.old-info-tabs span:last-child {
+  border-right: 0;
+}
+
+.old-info-tabs .active {
+  background: #5f4a1d;
+  color: #fff6d2;
+  font-weight: 800;
+}
+
+.old-info-paper {
+  border: 1px solid #d3c28b;
+  border-radius: 6px;
+  padding: 13px;
+  background:
+    linear-gradient(rgba(255,255,255,0.62), rgba(255,255,255,0.62)),
+    #fffbe8;
+  color: #3f3218;
+  box-shadow: 0 10px 22px rgba(78, 59, 22, 0.12);
+}
+
+.old-info-paper h2 {
+  margin: 8px 0 10px;
+  color: #2f260f;
+  font-size: 18px;
+  line-height: 1.35;
+}
+
+.old-info-paper p {
+  color: #514326;
+  font-size: 12px;
+  line-height: 1.75;
+}
+
+.old-info-notice,
+.old-info-memo {
+  border: 1px dashed #b8a66e;
+  border-radius: 6px;
+  padding: 10px;
+  background: rgba(255, 248, 210, 0.86);
+}
+
+.old-info-notice strong,
+.old-info-memo h3 {
+  color: #5d4214;
+}
+
+.old-info-memo h3 {
+  margin: 0 0 7px;
+  font-size: 14px;
+}
+
+.old-info-memo code,
+.old-info-footer {
+  font-family: var(--mono);
 }
 
 .old-info-table {
   margin: 10px 0;
   font-size: 12px;
+  border-color: #c8b77f;
+  background: #fffdf0;
 }
 
 .old-info-table th {
   width: 74px;
+  background: #eee0aa;
+  color: #4d3c18;
+}
+
+.old-info-table td {
+  color: #40351c;
+  line-height: 1.7;
+}
+
+.old-info-footer {
+  display: grid;
+  gap: 4px;
+  margin-top: 10px;
+  border-top: 1px solid #d8c995;
+  padding-top: 9px;
+  color: #7a632a;
+  font-size: 10px;
 }
 
 .guard-center {
@@ -3701,8 +3829,9 @@ body[data-page^="phone"] .phone-app-toast {
 
 .mail-app {
   display: grid;
-  grid-template-rows: minmax(0, 1fr) auto;
+  grid-template-rows: auto minmax(0, 1fr);
   gap: 10px;
+  height: 100%;
   min-height: 0;
   overflow: hidden;
 }
@@ -3714,6 +3843,7 @@ body[data-page^="phone"] .phone-app-toast {
 .mail-list {
   display: grid;
   gap: 10px;
+  max-height: 184px;
   overflow-y: auto;
   padding: 14px 14px 0;
   -webkit-overflow-scrolling: touch;
@@ -3721,6 +3851,29 @@ body[data-page^="phone"] .phone-app-toast {
 
 .mail-list .mail-preview {
   text-align: left;
+}
+
+.mail-app.reading-mail {
+  grid-template-rows: minmax(0, 1fr);
+}
+
+.mail-app.reading-mail .mail-list {
+  display: none;
+}
+
+.mail-detail-back {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  min-height: 30px;
+  margin: 0 0 10px;
+  border: 0;
+  border-radius: 999px;
+  padding: 6px 10px;
+  background: #eef4ff;
+  color: #1d4ed8;
+  font-size: 12px;
+  font-weight: 800;
 }
 
 .map-app {
