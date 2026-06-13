@@ -252,9 +252,9 @@ function initGameShell(options = {}) {
 
 function loadBgmState() {
   try {
-    return { enabled: false, volume: 0.26, ...JSON.parse(localStorage.getItem(BGM_KEY) || "{}") };
+    return { enabled: true, volume: 0.28, ...JSON.parse(localStorage.getItem(BGM_KEY) || "{}") };
   } catch {
-    return { enabled: false, volume: 0.26 };
+    return { enabled: true, volume: 0.28 };
   }
 }
 
@@ -309,15 +309,20 @@ function initBgm(page) {
   const tryPlay = async () => {
     if (!loadBgmState().enabled) return;
     setVisual(true);
+    startBgmSynth(mood);
     try {
       audio.volume = loadBgmState().volume;
       await audio.play();
+      if (!loadBgmState().enabled) return;
       setVisual(true);
     } catch {
-      setVisual(false);
+      if (!loadBgmState().enabled) return;
+      startBgmSynth(mood);
+      setVisual(true);
     }
   };
-  const enableOnGesture = () => {
+  const enableOnGesture = (event) => {
+    if (event?.target?.closest?.("#bgmToggle")) return;
     if (!loadBgmState().enabled) return;
     tryPlay();
   };
@@ -327,6 +332,7 @@ function initBgm(page) {
     tryPlay();
     document.addEventListener("pointerdown", enableOnGesture, { once: true });
     document.addEventListener("keydown", enableOnGesture, { once: true });
+    document.addEventListener("touchstart", enableOnGesture, { once: true });
   }
 
   toggle.addEventListener("click", async () => {
@@ -339,14 +345,94 @@ function initBgm(page) {
       if (audio.paused) toast("BGM 需要再次点击页面后播放。");
     } else {
       audio.pause();
+      stopBgmSynth();
       setVisual(false);
     }
   });
   audio.addEventListener("error", () => {
     if (!loadBgmState().enabled) return;
-    setVisual(false);
-    toast("BGM 音源暂时无法加载。");
+    startBgmSynth(mood);
+    setVisual(true);
   });
+  audio.addEventListener("playing", () => {
+    stopBgmSynth();
+  });
+}
+
+function startBgmSynth(mood = "ambient") {
+  if (window.__bgmSynth?.mood === mood && window.__bgmSynth?.context?.state === "running") return;
+  stopBgmSynth();
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) return;
+  const context = new AudioContextClass();
+  const master = context.createGain();
+  const lowpass = context.createBiquadFilter();
+  const volume = loadBgmState().volume;
+  const settings = {
+    ambient: { base: 55, fifth: 82.5, drift: 0.012, filter: 680, gain: volume * 0.09 },
+    truth: { base: 41.2, fifth: 61.8, drift: 0.009, filter: 540, gain: volume * 0.08 },
+    hidden: { base: 36.7, fifth: 49, drift: 0.018, filter: 420, gain: volume * 0.1 }
+  }[mood] || { base: 55, fifth: 82.5, drift: 0.012, filter: 620, gain: volume * 0.08 };
+
+  master.gain.value = settings.gain;
+  lowpass.type = "lowpass";
+  lowpass.frequency.value = settings.filter;
+  lowpass.Q.value = 0.8;
+  lowpass.connect(master);
+  master.connect(context.destination);
+
+  const oscillators = [settings.base, settings.fifth].map((frequency, index) => {
+    const osc = context.createOscillator();
+    const gain = context.createGain();
+    osc.type = index === 0 ? "sine" : "triangle";
+    osc.frequency.value = frequency;
+    gain.gain.value = index === 0 ? 0.58 : 0.22;
+    osc.connect(gain);
+    gain.connect(lowpass);
+    osc.start();
+    return { osc, gain };
+  });
+
+  const noiseBuffer = context.createBuffer(1, context.sampleRate * 2, context.sampleRate);
+  const data = noiseBuffer.getChannelData(0);
+  for (let i = 0; i < data.length; i += 1) {
+    data[i] = (Math.random() * 2 - 1) * 0.16;
+  }
+  const noise = context.createBufferSource();
+  const noiseGain = context.createGain();
+  noise.buffer = noiseBuffer;
+  noise.loop = true;
+  noiseGain.gain.value = mood === "hidden" ? 0.16 : 0.1;
+  noise.connect(noiseGain);
+  noiseGain.connect(lowpass);
+  noise.start();
+
+  const lfo = context.createOscillator();
+  const lfoGain = context.createGain();
+  lfo.type = "sine";
+  lfo.frequency.value = settings.drift;
+  lfoGain.gain.value = mood === "hidden" ? 18 : 11;
+  lfo.connect(lfoGain);
+  lfoGain.connect(lowpass.frequency);
+  lfo.start();
+
+  context.resume();
+  window.__bgmSynth = { context, mood, oscillators, noise, lfo };
+}
+
+function stopBgmSynth() {
+  const synth = window.__bgmSynth;
+  if (!synth) return;
+  [...(synth.oscillators || []).map((item) => item.osc), synth.noise, synth.lfo].forEach((node) => {
+    try {
+      node.stop();
+      node.disconnect();
+    } catch {}
+  });
+  try {
+    synth.context.close();
+  } catch {}
+  window.__bgmSynth = null;
 }
 
 function initNotebook() {
