@@ -2,9 +2,9 @@ const STORE_KEY = "last-checkin-webarg-v2";
 const NOTE_KEY = "last-checkin-investigation-notes-v1";
 const NOTE_BOX_KEY = "last-checkin-investigation-note-box-v1";
 const BGM_KEY = "last-checkin-bgm-v2";
+const BGM_OWNER_KEY = "last-checkin-bgm-owner-v1";
 const MAX_STAGE = 40;
 const BGM_TRACKS = {
-  // Pixabay download is Cloudflare-protected in this environment; keep the intended source documented and use Signal to Noise as a playable fallback.
   ambient: {
     title: "Dark Ambient Background Mystery",
     artist: "Lilliben",
@@ -261,6 +261,10 @@ function saveBgmState(state) {
   localStorage.setItem(BGM_KEY, JSON.stringify(state));
 }
 
+function createBgmTabId() {
+  return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
 function getBgmMood(page) {
   const params = new URLSearchParams(location.search);
   const site = params.get("site") || "";
@@ -281,10 +285,12 @@ function initBgm(page) {
   const mood = getBgmMood(page);
   const track = BGM_TRACKS[mood] || BGM_TRACKS.ambient;
   const state = loadBgmState();
+  const tabId = createBgmTabId();
+  let playRequested = false;
   const audio = document.createElement("audio");
   audio.id = "bgmAudio";
   audio.loop = true;
-  audio.preload = "none";
+  audio.preload = "auto";
   audio.volume = state.volume;
   audio.src = track.audio;
   audio.dataset.mood = mood;
@@ -305,17 +311,36 @@ function initBgm(page) {
     toggle.classList.toggle("active", enabled);
     toggle.querySelector("strong").textContent = enabled ? "ON" : "OFF";
   };
+  const ownsBgm = () => {
+    try {
+      return JSON.parse(localStorage.getItem(BGM_OWNER_KEY) || "{}").tabId === tabId;
+    } catch {
+      return false;
+    }
+  };
+  const claimBgm = () => {
+    localStorage.setItem(BGM_OWNER_KEY, JSON.stringify({ tabId, mood, at: Date.now() }));
+  };
+  const pauseHere = () => {
+    audio.pause();
+    stopBgmSynth();
+  };
   const tryPlay = async () => {
     if (!loadBgmState().enabled) return;
+    if (document.visibilityState === "hidden") return;
+    playRequested = true;
+    claimBgm();
     setVisual(true);
-    startBgmSynth(mood);
     try {
       audio.volume = loadBgmState().volume;
       await audio.play();
-      if (!loadBgmState().enabled) return;
+      if (!loadBgmState().enabled || !ownsBgm()) {
+        pauseHere();
+        return;
+      }
       setVisual(true);
     } catch {
-      if (!loadBgmState().enabled) return;
+      if (!loadBgmState().enabled || !ownsBgm()) return;
       startBgmSynth(mood);
       setVisual(true);
     }
@@ -334,6 +359,21 @@ function initBgm(page) {
     document.addEventListener("touchstart", enableOnGesture, { once: true });
   }
 
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") {
+      pauseHere();
+      return;
+    }
+    if (playRequested && loadBgmState().enabled) {
+      tryPlay();
+    }
+  });
+
+  window.addEventListener("storage", (event) => {
+    if (event.key !== BGM_OWNER_KEY) return;
+    if (!ownsBgm()) pauseHere();
+  });
+
   toggle.addEventListener("click", async () => {
     const current = loadBgmState();
     const next = { ...current, enabled: !current.enabled };
@@ -343,18 +383,20 @@ function initBgm(page) {
       await tryPlay();
       if (audio.paused) toast("BGM 需要再次点击页面后播放。");
     } else {
-      audio.pause();
-      stopBgmSynth();
+      pauseHere();
       setVisual(false);
     }
   });
   audio.addEventListener("error", () => {
-    if (!loadBgmState().enabled) return;
+    if (!loadBgmState().enabled || !ownsBgm()) return;
     startBgmSynth(mood);
     setVisual(true);
   });
   audio.addEventListener("playing", () => {
-    if (!loadBgmState().enabled) return;
+    if (!loadBgmState().enabled || !ownsBgm()) {
+      pauseHere();
+      return;
+    }
     stopBgmSynth();
   });
 }
