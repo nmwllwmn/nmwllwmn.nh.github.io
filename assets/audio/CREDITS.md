@@ -2,22 +2,30 @@
 
 ## 常驻调查 BGM
 
-- Intended track: "Dark Ambient Background Mystery" by Lilliben
-- Source: https://pixabay.com/music/ambient-dark-ambient-background-mystery-365195/
+- Track: "Dark Ambient Background Mystery" by Lilliben
+- Local file: `assets/audio/dark-ambient-background-mystery.mp3`
+- Source page: https://pixabay.com/music/ambient-dark-ambient-background-mystery-365195/
+- Download URL captured from the official Pixabay page: https://cdn.pixabay.com/download/audio/2025/06/24/audio_f9748954d2.mp3?filename=lilliben-dark-ambient-background-mystery-365195.mp3
 - License: Pixabay Content License, per the source page.
-- Implementation note: the Pixabay MP3 download endpoint is Cloudflare-protected from this local environment. The BGM system keeps this track documented as the intended ambient layer and uses a local WebAudio dark-ambient fallback, with "Signal to Noise" as the remote audio fallback until the Pixabay MP3 can be downloaded and committed locally.
 
 ## 真相 / 归档
 
 - Track: "Signal to Noise" by Scott Buckley
-- Source: https://www.scottbuckley.com.au/library/signal-to-noise/
+- Local file: `assets/audio/signal-to-noise.oga`
+- Source page: https://www.scottbuckley.com.au/library/signal-to-noise/
+- Local file source mirror: https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_Signal_to_Noise.oga
 - License: Creative Commons Attribution 4.0 International (CC BY 4.0)
 - Attribution: Music by Scott Buckley, released under CC BY 4.0.
-- Implementation note: a local WebAudio fallback remains active until the remote MP3 actually starts playing, so browser autoplay and network failures do not leave the game silent.
 
 ## NVR / 北桥 / 隐藏线
 
 - Track: "The Old Ones" by Scott Buckley
-- Source: https://www.scottbuckley.com.au/library/the-old-ones/
+- Local file: `assets/audio/the-old-ones.oga`
+- Source page: https://www.scottbuckley.com.au/library/the-old-ones/
+- Local file source mirror: https://commons.wikimedia.org/wiki/File:Scott_Buckley_-_The_Old_Ones.oga
 - License: Creative Commons Attribution 4.0 International (CC BY 4.0)
 - Attribution: Music by Scott Buckley, released under CC BY 4.0.
+
+## Playback Fallback
+
+The game keeps a WebAudio dark-ambient fallback active until the local audio element starts playing. This prevents browser autoplay restrictions from leaving the game silent before the first user gesture.

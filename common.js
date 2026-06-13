@@ -9,20 +9,19 @@ const BGM_TRACKS = {
     title: "Dark Ambient Background Mystery",
     artist: "Lilliben",
     source: "https://pixabay.com/music/ambient-dark-ambient-background-mystery-365195/",
-    audio: "https://www.scottbuckley.com.au/library/wp-content/uploads/2020/04/sb_signaltonoise.mp3",
-    note: "Fallback playback uses Signal to Noise until the Pixabay MP3 file is available locally."
+    audio: "assets/audio/dark-ambient-background-mystery.mp3"
   },
   truth: {
     title: "Signal to Noise",
     artist: "Scott Buckley",
     source: "https://www.scottbuckley.com.au/library/signal-to-noise/",
-    audio: "https://www.scottbuckley.com.au/library/wp-content/uploads/2020/04/sb_signaltonoise.mp3"
+    audio: "assets/audio/signal-to-noise.oga"
   },
   hidden: {
     title: "The Old Ones",
     artist: "Scott Buckley",
     source: "https://www.scottbuckley.com.au/library/the-old-ones/",
-    audio: "https://www.scottbuckley.com.au/library/wp-content/uploads/2018/10/sb_theoldones.mp3"
+    audio: "assets/audio/the-old-ones.oga"
   }
 };
 
@@ -356,7 +355,7 @@ function initBgm(page) {
   });
   audio.addEventListener("playing", () => {
     if (!loadBgmState().enabled) return;
-    startBgmSynth(mood);
+    stopBgmSynth();
   });
 }
 
