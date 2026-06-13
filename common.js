@@ -291,7 +291,9 @@ function initNotebook() {
   };
   const applyToggleBox = () => {
     const saved = loadNotebookBox();
-    const pos = clampNotebookToggle(saved.toggle || {});
+    const isPhonePage = (document.body.dataset.page || "").startsWith("phone");
+    const phoneDefault = { left: 8, top: window.innerHeight - 74 };
+    const pos = clampNotebookToggle(isPhonePage ? phoneDefault : (saved.toggle || {}));
     toggle.style.left = `${pos.left}px`;
     toggle.style.top = `${pos.top}px`;
     toggle.style.right = "auto";
