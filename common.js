@@ -295,7 +295,7 @@ function initBgm(page) {
   const audio = document.createElement("audio");
   audio.id = "bgmAudio";
   audio.loop = true;
-  audio.preload = "none";
+  audio.preload = "auto";
   audio.volume = state.volume;
   audio.src = track.audio;
   audio.dataset.mood = mood;
@@ -358,6 +358,7 @@ function initBgm(page) {
 
   setVisual(state.enabled);
   if (state.enabled) {
+    tryPlay();
     document.addEventListener("pointerdown", enableOnGesture, { once: true });
     document.addEventListener("keydown", enableOnGesture, { once: true });
     document.addEventListener("touchstart", enableOnGesture, { once: true });
