@@ -1,7 +1,7 @@
 const STORE_KEY = "last-checkin-webarg-v2";
 const NOTE_KEY = "last-checkin-investigation-notes-v1";
 const NOTE_BOX_KEY = "last-checkin-investigation-note-box-v1";
-const BGM_KEY = "last-checkin-bgm-v1";
+const BGM_KEY = "last-checkin-bgm-v2";
 const MAX_STAGE = 40;
 const BGM_TRACKS = {
   // Pixabay download is Cloudflare-protected in this environment; keep the intended source documented and use Signal to Noise as a playable fallback.
@@ -252,9 +252,9 @@ function initGameShell(options = {}) {
 
 function loadBgmState() {
   try {
-    return { enabled: true, volume: 0.28, ...JSON.parse(localStorage.getItem(BGM_KEY) || "{}") };
+    return { enabled: true, volume: 0.62, ...JSON.parse(localStorage.getItem(BGM_KEY) || "{}") };
   } catch {
-    return { enabled: true, volume: 0.28 };
+    return { enabled: true, volume: 0.62 };
   }
 }
 
@@ -355,7 +355,8 @@ function initBgm(page) {
     setVisual(true);
   });
   audio.addEventListener("playing", () => {
-    stopBgmSynth();
+    if (!loadBgmState().enabled) return;
+    startBgmSynth(mood);
   });
 }
 
@@ -367,26 +368,31 @@ function startBgmSynth(mood = "ambient") {
   const context = new AudioContextClass();
   const master = context.createGain();
   const lowpass = context.createBiquadFilter();
+  const lowShelf = context.createBiquadFilter();
   const volume = loadBgmState().volume;
   const settings = {
-    ambient: { base: 55, fifth: 82.5, drift: 0.012, filter: 680, gain: volume * 0.09 },
-    truth: { base: 41.2, fifth: 61.8, drift: 0.009, filter: 540, gain: volume * 0.08 },
-    hidden: { base: 36.7, fifth: 49, drift: 0.018, filter: 420, gain: volume * 0.1 }
-  }[mood] || { base: 55, fifth: 82.5, drift: 0.012, filter: 620, gain: volume * 0.08 };
+    ambient: { notes: [110, 164.8, 220, 329.6], drift: 0.045, filter: 1450, gain: volume * 0.22, noise: 0.2 },
+    truth: { notes: [82.4, 123.5, 196, 247], drift: 0.035, filter: 1180, gain: volume * 0.2, noise: 0.16 },
+    hidden: { notes: [73.4, 98, 146.8, 220], drift: 0.055, filter: 920, gain: volume * 0.24, noise: 0.24 }
+  }[mood] || { notes: [110, 164.8, 220, 329.6], drift: 0.045, filter: 1300, gain: volume * 0.2, noise: 0.18 };
 
   master.gain.value = settings.gain;
+  lowShelf.type = "lowshelf";
+  lowShelf.frequency.value = 180;
+  lowShelf.gain.value = 4;
   lowpass.type = "lowpass";
   lowpass.frequency.value = settings.filter;
-  lowpass.Q.value = 0.8;
-  lowpass.connect(master);
+  lowpass.Q.value = 1.1;
+  lowpass.connect(lowShelf);
+  lowShelf.connect(master);
   master.connect(context.destination);
 
-  const oscillators = [settings.base, settings.fifth].map((frequency, index) => {
+  const oscillators = settings.notes.map((frequency, index) => {
     const osc = context.createOscillator();
     const gain = context.createGain();
-    osc.type = index === 0 ? "sine" : "triangle";
+    osc.type = index < 2 ? "sine" : "triangle";
     osc.frequency.value = frequency;
-    gain.gain.value = index === 0 ? 0.58 : 0.22;
+    gain.gain.value = [0.34, 0.18, 0.12, 0.08][index] || 0.06;
     osc.connect(gain);
     gain.connect(lowpass);
     osc.start();
@@ -402,7 +408,7 @@ function startBgmSynth(mood = "ambient") {
   const noiseGain = context.createGain();
   noise.buffer = noiseBuffer;
   noise.loop = true;
-  noiseGain.gain.value = mood === "hidden" ? 0.16 : 0.1;
+  noiseGain.gain.value = settings.noise;
   noise.connect(noiseGain);
   noiseGain.connect(lowpass);
   noise.start();
@@ -411,13 +417,26 @@ function startBgmSynth(mood = "ambient") {
   const lfoGain = context.createGain();
   lfo.type = "sine";
   lfo.frequency.value = settings.drift;
-  lfoGain.gain.value = mood === "hidden" ? 18 : 11;
+  lfoGain.gain.value = mood === "hidden" ? 120 : 80;
   lfo.connect(lfoGain);
   lfoGain.connect(lowpass.frequency);
   lfo.start();
 
+  const cue = context.createOscillator();
+  const cueGain = context.createGain();
+  cue.type = "sine";
+  cue.frequency.setValueAtTime(mood === "hidden" ? 392 : 523.25, context.currentTime);
+  cue.frequency.exponentialRampToValueAtTime(mood === "hidden" ? 196 : 261.63, context.currentTime + 0.18);
+  cueGain.gain.setValueAtTime(0.0001, context.currentTime);
+  cueGain.gain.exponentialRampToValueAtTime(volume * 0.12, context.currentTime + 0.03);
+  cueGain.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + 0.28);
+  cue.connect(cueGain);
+  cueGain.connect(master);
+  cue.start();
+  cue.stop(context.currentTime + 0.32);
+
   context.resume();
-  window.__bgmSynth = { context, mood, oscillators, noise, lfo };
+  window.__bgmSynth = { context, mood, oscillators, noise, lfo, cue };
 }
 
 function stopBgmSynth() {
