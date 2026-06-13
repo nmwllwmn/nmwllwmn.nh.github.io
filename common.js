@@ -1,7 +1,30 @@
 const STORE_KEY = "last-checkin-webarg-v2";
 const NOTE_KEY = "last-checkin-investigation-notes-v1";
 const NOTE_BOX_KEY = "last-checkin-investigation-note-box-v1";
+const BGM_KEY = "last-checkin-bgm-v1";
 const MAX_STAGE = 40;
+const BGM_TRACKS = {
+  // Pixabay download is Cloudflare-protected in this environment; keep the intended source documented and use Signal to Noise as a playable fallback.
+  ambient: {
+    title: "Dark Ambient Background Mystery",
+    artist: "Lilliben",
+    source: "https://pixabay.com/music/ambient-dark-ambient-background-mystery-365195/",
+    audio: "https://www.scottbuckley.com.au/library/wp-content/uploads/2020/04/sb_signaltonoise.mp3",
+    note: "Fallback playback uses Signal to Noise until the Pixabay MP3 file is available locally."
+  },
+  truth: {
+    title: "Signal to Noise",
+    artist: "Scott Buckley",
+    source: "https://www.scottbuckley.com.au/library/signal-to-noise/",
+    audio: "https://www.scottbuckley.com.au/library/wp-content/uploads/2020/04/sb_signaltonoise.mp3"
+  },
+  hidden: {
+    title: "The Old Ones",
+    artist: "Scott Buckley",
+    source: "https://www.scottbuckley.com.au/library/the-old-ones/",
+    audio: "https://www.scottbuckley.com.au/library/wp-content/uploads/2018/10/sb_theoldones.mp3"
+  }
+};
 
 const defaultState = {
   stage: 0,
@@ -202,6 +225,7 @@ function initGameShell(options = {}) {
   setStage(stage);
   ensurePhoneBattery(page);
   initNotebook();
+  initBgm(page);
   if (!document.querySelector(".game-widget")) {
     const widget = document.createElement("aside");
     widget.className = "game-widget";
@@ -224,6 +248,105 @@ function initGameShell(options = {}) {
   });
   updateWidget();
   scheduleThreatEvents();
+}
+
+function loadBgmState() {
+  try {
+    return { enabled: false, volume: 0.26, ...JSON.parse(localStorage.getItem(BGM_KEY) || "{}") };
+  } catch {
+    return { enabled: false, volume: 0.26 };
+  }
+}
+
+function saveBgmState(state) {
+  localStorage.setItem(BGM_KEY, JSON.stringify(state));
+}
+
+function getBgmMood(page) {
+  const params = new URLSearchParams(location.search);
+  const site = params.get("site") || "";
+  const view = params.get("view") || "";
+  const place = params.get("place") || "";
+  const endingType = params.get("type") || "";
+  if (page === "phone-ending" && endingType === "rescue") return "hidden";
+  if (page === "phone-ending" || page === "phone-archive") return "truth";
+  if (page === "phone-browser" && ["guard", "nvr"].includes(site)) return "hidden";
+  if (page === "phone-browser" && ["oldinfo", "archive"].includes(site)) return "truth";
+  if (page === "phone-gallery" && ["grid", "photo", "full"].includes(view)) return "hidden";
+  if (page === "phone-map" && ["b17", "pump", "imp-2202"].includes(place.toLowerCase())) return "hidden";
+  return "ambient";
+}
+
+function initBgm(page) {
+  if (document.querySelector("#bgmAudio")) return;
+  const mood = getBgmMood(page);
+  const track = BGM_TRACKS[mood] || BGM_TRACKS.ambient;
+  const state = loadBgmState();
+  const audio = document.createElement("audio");
+  audio.id = "bgmAudio";
+  audio.loop = true;
+  audio.preload = "none";
+  audio.volume = state.volume;
+  audio.src = track.audio;
+  audio.dataset.mood = mood;
+  audio.dataset.title = track.title;
+  audio.dataset.artist = track.artist;
+
+  const toggle = document.createElement("button");
+  toggle.className = "bgm-toggle";
+  toggle.id = "bgmToggle";
+  toggle.type = "button";
+  toggle.innerHTML = `<span>BGM</span><strong>${state.enabled ? "ON" : "OFF"}</strong>`;
+  toggle.title = `${track.title} - ${track.artist}`;
+
+  document.body.appendChild(audio);
+  document.body.appendChild(toggle);
+
+  const setVisual = (enabled) => {
+    toggle.classList.toggle("active", enabled);
+    toggle.querySelector("strong").textContent = enabled ? "ON" : "OFF";
+  };
+  const tryPlay = async () => {
+    if (!loadBgmState().enabled) return;
+    setVisual(true);
+    try {
+      audio.volume = loadBgmState().volume;
+      await audio.play();
+      setVisual(true);
+    } catch {
+      setVisual(false);
+    }
+  };
+  const enableOnGesture = () => {
+    if (!loadBgmState().enabled) return;
+    tryPlay();
+  };
+
+  setVisual(state.enabled);
+  if (state.enabled) {
+    tryPlay();
+    document.addEventListener("pointerdown", enableOnGesture, { once: true });
+    document.addEventListener("keydown", enableOnGesture, { once: true });
+  }
+
+  toggle.addEventListener("click", async () => {
+    const current = loadBgmState();
+    const next = { ...current, enabled: !current.enabled };
+    saveBgmState(next);
+    if (next.enabled) {
+      setVisual(true);
+      await tryPlay();
+      if (audio.paused) toast("BGM 需要再次点击页面后播放。");
+    } else {
+      audio.pause();
+      setVisual(false);
+    }
+  });
+  audio.addEventListener("error", () => {
+    if (!loadBgmState().enabled) return;
+    setVisual(false);
+    toast("BGM 音源暂时无法加载。");
+  });
 }
 
 function initNotebook() {

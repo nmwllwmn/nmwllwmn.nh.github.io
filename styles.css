@@ -521,6 +521,62 @@ th {
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
 }
 
+.bgm-toggle {
+  position: fixed;
+  left: 14px;
+  top: 14px;
+  z-index: 142;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 34px;
+  border: 1px solid rgba(215, 203, 187, 0.78);
+  border-radius: 999px;
+  padding: 6px 10px;
+  background: rgba(12, 15, 20, 0.72);
+  color: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(14px);
+}
+
+.bgm-toggle span {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+
+.bgm-toggle strong {
+  color: #94a3b8;
+  font-family: var(--mono);
+  font-size: 11px;
+}
+
+.bgm-toggle.active {
+  border-color: rgba(125, 211, 252, 0.55);
+  background: rgba(8, 17, 31, 0.84);
+  color: white;
+}
+
+.bgm-toggle.active strong {
+  color: #7dd3fc;
+}
+
+body[data-page^="phone"] .bgm-toggle {
+  left: 50%;
+  top: 7px;
+  min-height: 24px;
+  padding: 3px 9px;
+  transform: translateX(-50%);
+  border-color: rgba(255, 255, 255, 0.14);
+  background: rgba(5, 6, 8, 0.9);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.28);
+}
+
+body[data-page^="phone"] .bgm-toggle span,
+body[data-page^="phone"] .bgm-toggle strong {
+  font-size: 9px;
+}
+
 .threat-barrage {
   position: fixed;
   top: 18px;
