@@ -2745,7 +2745,7 @@ body[data-notes-box="trash"] .notes-live {
   letter-spacing: 0.04em;
 }
 
-.browser-page article {
+.browser-page article:not(.old-info-paper) {
   display: grid;
   gap: 4px;
   border: 1px solid rgba(18,27,38,0.06);
@@ -3152,6 +3152,7 @@ body[data-notes-box="trash"] .notes-live {
 .old-info-site {
   display: grid;
   gap: 12px;
+  min-width: 0;
   font-family: "SimSun", var(--serif);
   background:
     linear-gradient(90deg, rgba(128, 102, 51, 0.08) 0 1px, transparent 1px 16px),
@@ -3159,6 +3160,10 @@ body[data-notes-box="trash"] .notes-live {
   border-radius: 12px;
   padding: 10px;
   box-shadow: inset 0 0 0 1px rgba(93, 74, 29, 0.12);
+}
+
+.old-info-site * {
+  max-width: 100%;
 }
 
 .old-info-banner {
@@ -3257,11 +3262,13 @@ body[data-notes-box="trash"] .notes-live {
 .old-info-layout {
   display: grid;
   gap: 10px;
+  min-width: 0;
 }
 
 .old-info-side {
   display: grid;
   gap: 8px;
+  min-width: 0;
 }
 
 .old-info-side section {
@@ -3333,6 +3340,8 @@ body[data-notes-box="trash"] .notes-live {
 }
 
 .old-info-paper {
+  display: block;
+  min-width: 0;
   border: 1px solid #d3c28b;
   border-radius: 6px;
   padding: 13px;
@@ -3402,10 +3411,18 @@ body[data-notes-box="trash"] .notes-live {
 }
 
 .old-info-table {
+  display: block;
+  overflow-x: auto;
   margin: 10px 0;
   font-size: 12px;
   border-color: #c8b77f;
   background: #fffdf0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.old-info-table tbody {
+  display: table;
+  width: 100%;
 }
 
 .old-info-table th {
@@ -5094,7 +5111,7 @@ body[data-page^="phone"] .btn.primary,
 .mail-detail,
 .map-result,
 .browser-history button,
-.browser-page article,
+.browser-page article:not(.old-info-paper),
 .moments-feed article {
   border-radius: 12px;
   background: white;
