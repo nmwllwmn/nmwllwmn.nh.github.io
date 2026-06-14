@@ -41,18 +41,20 @@ const evidenceLabels = {
 };
 
 const clueProgressSteps = [
-  { weight: 4, done: (state) => state.flags.phoneUnlocked },
-  { weight: 8, done: (state) => state.flags.readLinzhouWechat },
+  { weight: 2, done: (state) => state.flags.phoneUnlocked },
+  { weight: 6, done: (state) => state.flags.readLinzhouWechat },
   { weight: 4, done: (state) => state.flags.readTeamDoubt || state.flags.foundImportBatchHint },
-  { weight: 4, done: (state) => state.flags.readThreatSms },
-  { weight: 6, done: (state) => state.flags.albumLockOpened },
-  { weight: 12, done: (state) => state.evidence.A },
-  { weight: 12, done: (state) => state.evidence.B },
-  { weight: 12, done: (state) => state.evidence.C },
-  { weight: 6, done: (state) => state.flags.phoneMailLoggedIn },
-  { weight: 6, done: (state) => state.flags.foundNvrLogin },
+  { weight: 3, done: (state) => state.flags.readThreatSms },
+  { weight: 5, done: (state) => state.flags.albumLockOpened },
+  { weight: 10, done: (state) => state.evidence.A },
+  { weight: 10, done: (state) => state.evidence.B },
+  { weight: 10, done: (state) => state.evidence.C },
   { weight: 12, done: (state) => state.evidence.D || state.flags.foundImp2202 },
-  { weight: 14, done: (state) => state.evidence.E || state.flags.foundShenbo }
+  { weight: 12, done: (state) => state.evidence.E || state.flags.foundShenbo },
+  { weight: 6, done: (state) => state.flags.sudokuSecretSolved },
+  { weight: 6, done: (state) => state.flags.foundB17 },
+  { weight: 5, done: (state) => state.flags.foundPumpStation },
+  { weight: 5, done: (state) => state.flags.foundRescueWindow }
 ];
 
 function loadGame() {
@@ -174,11 +176,9 @@ function setStage(stage) {
 function getRemainingBattery(state = loadGame()) {
   const evidence = state.evidence || {};
   const flags = state.flags || {};
-  const coreComplete = Boolean(evidence.A && evidence.B && evidence.C && evidence.D && evidence.E);
-  if (coreComplete) return 0;
   const safeState = { ...state, evidence, flags };
   const progress = clueProgressSteps.reduce((total, step) => total + (step.done(safeState) ? step.weight : 0), 0);
-  return Math.max(1, 100 - Math.min(99, progress));
+  return Math.max(6, 100 - Math.min(94, progress));
 }
 
 function setFlag(key, value = true) {
@@ -292,6 +292,7 @@ function initBgm(page) {
   const state = loadBgmState();
   const tabId = createBgmTabId();
   let playRequested = false;
+  let userGestureSeen = false;
   const audio = document.createElement("audio");
   audio.id = "bgmAudio";
   audio.loop = true;
@@ -344,8 +345,9 @@ function initBgm(page) {
         return;
       }
       setVisual(true);
-    } catch {
+    } catch (error) {
       if (!loadBgmState().enabled || !ownsBgm()) return;
+      if (!userGestureSeen && error?.name === "NotAllowedError") return;
       startBgmSynth(mood);
       setVisual(true);
     }
@@ -353,6 +355,7 @@ function initBgm(page) {
   const enableOnGesture = (event) => {
     if (event?.target?.closest?.("#bgmToggle")) return;
     if (!loadBgmState().enabled) return;
+    userGestureSeen = true;
     tryPlay();
   };
 
@@ -380,6 +383,7 @@ function initBgm(page) {
   });
 
   toggle.addEventListener("click", async () => {
+    userGestureSeen = true;
     const current = loadBgmState();
     const next = { ...current, enabled: !current.enabled };
     saveBgmState(next);
@@ -933,13 +937,14 @@ function showThreatCall() {
 function showKnockout() {
   const old = document.querySelector(".knockout-screen");
   if (old) old.remove();
+  document.querySelectorAll(".threat-call, .threat-barrage").forEach((el) => el.remove());
   const overlay = document.createElement("section");
   overlay.className = "knockout-screen";
   overlay.innerHTML = `
     <div>
-      <p>身后有脚步声。</p>
-      <p>手机从手里滑了下去。</p>
-      <strong>最后一次签到：S08</strong>
+      <p>屏幕亮度自动降到最低。</p>
+      <p>定位停在北桥体育馆外侧，没有新的移动记录。</p>
+      <strong>信号中断：S08</strong>
     </div>
   `;
   document.body.appendChild(overlay);
