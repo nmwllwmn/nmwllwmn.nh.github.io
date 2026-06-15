@@ -77,7 +77,7 @@
                 ["A区打印店", "6 月 1 日 16:45", "有人要印 2023 年城迹社 PDF 吗？旧站下载慢，建议只复制文字别下附件。", "评论 2 · 打印"],
                 ["灰色雨衣", "5 月 31 日 23:17", "B17 不是楼号，是门号。知道的人别乱讲。", "评论 1 · 已折叠"],
                 ["校车末班", "5 月 30 日 22:38", "今晚北桥末班车改道，体育馆北侧施工，大家别从地下通道走。", "评论 4 · 交通"],
-                ["猫在实验楼", "5 月 29 日 19:12", "旧官网的保卫处页面好复古，页面底部还有 secure.nhu.edu.cn/guard 这种地址。", "评论 8 · 旧官网"],
+                ["猫在实验楼", "5 月 29 日 19:12", "旧官网迁移页脚好复古，域名和路径还分两段写，像是怕被首页检索到。", "评论 8 · 旧官网"],
                 ["匿名", "5 月 28 日 00:17", "每晚 00:17 以后，B17 会有几分钟维护窗口。别问。", "评论 0 · 已删除"]
               ].map(([user, time, text, meta]) => `
                 <article class="wall-post">
@@ -115,8 +115,8 @@
                 <aside class="old-info-side">
                   <section>
                     <h3>站内检索</h3>
-                    <label>关键词<input value="城迹社 夜行 2023" readonly></label>
-                    <button type="button">只读镜像，无法重新检索</button>
+                    <label>缓存索引<input value="CT-2023-0606-NW" readonly></label>
+                    <button type="button">只读镜像，检索服务停用</button>
                   </section>
                   <section>
                     <h3>近期公开</h3>
@@ -165,13 +165,14 @@
                   </section>
                   <section class="old-info-memo">
                     <h3>站点迁移工单 #NHU-MIG-2217</h3>
-                    <p>2023 年活动备案页迁入新站时，保卫处公开检索入口被标记为“校内镜像，不进入导航”。维护人员只在旧页脚保留了目标域名，避免学生从首页误入监控系统。</p>
-                    <p>页脚字段写法很旧：<code>sec-mirror</code> 后接校内域名，路径单独放在 <code>guard</code>。如果需要复核北桥片区夜间通行，请把两段按网页地址格式拼起来。</p>
+                    <p>2023 年活动备案页迁入新站时，保卫处公开检索入口被标记为“校内镜像，不进入导航”。维护人员只保留旧字段，避免学生从首页误入监控系统。</p>
+                    <p>校验字段未合并进新版导航：<code>sec-mirror</code> 与 <code>path_ref</code> 分别写入页脚，旧站爬虫不会把它识别成一个完整链接。</p>
                   </section>
                   <div class="old-info-footer">
                     <span>cache: citytrace/2023/route_old.html</span>
                     <span>last_export=2026-06-06 22:38</span>
-                    <span>sec-mirror=secure.nhu.edu.cn / guard</span>
+                    <span>sec-mirror=secure.nhu.edu.cn</span>
+                    <span>path_ref=/guard</span>
                   </div>
                 </article>
               </div>
