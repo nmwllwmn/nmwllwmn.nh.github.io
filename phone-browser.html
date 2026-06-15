@@ -38,7 +38,7 @@
         </section>
       </section>
     </main>
-    <script src="common.js?v=20260615-final-threat"></script>
+    <script src="common.js?v=20260615-bgm-fix"></script>
     <script>
       initGameShell({ stage: 10, page: "phone-browser" });
 
@@ -352,7 +352,7 @@
           clue.hidden = !lookingAtClue;
           nvrReady = lookingAtClue;
           if (lookingAtClue) {
-            status.textContent = "右下角残影可读：S08 / 地图编号 IMP-2202。去地图应用检索这个编号。";
+            status.textContent = "右下角残影可读：S08 / 地图编号 IMP-2202。";
             addEvidence("D");
             setFlag("foundImp2202");
           }
@@ -435,7 +435,7 @@
           if (normalize(new FormData(event.target).get("answer")) === "imp-2202" || normalize(new FormData(event.target).get("answer")) === "imp2202") {
             addEvidence("D");
             setFlag("foundImp2202");
-            toast("已确认地图编号 IMP-2202。去地图应用搜索这个编号。");
+            toast("已确认地图编号 IMP-2202。");
           } else {
             toast("编号不匹配。画面残影里是 IMP-2202。");
           }

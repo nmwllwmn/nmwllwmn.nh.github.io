@@ -310,8 +310,10 @@ function initBgm(page) {
   toggle.innerHTML = `<span>BGM</span><strong>${state.enabled ? "ON" : "OFF"}</strong>`;
   toggle.title = `${track.title} - ${track.artist}`;
 
-  document.body.appendChild(audio);
-  document.body.appendChild(toggle);
+  const phone = document.querySelector(".mi-phone");
+  const bgmHost = page && page.startsWith("phone") && phone ? phone : document.body;
+  bgmHost.appendChild(audio);
+  bgmHost.appendChild(toggle);
 
   const setVisual = (enabled) => {
     toggle.classList.toggle("active", enabled);
@@ -329,7 +331,11 @@ function initBgm(page) {
   };
   const pauseHere = () => {
     audio.pause();
-    stopBgmSynth();
+  };
+  const setUnavailable = () => {
+    setVisual(false);
+    toggle.classList.add("unavailable");
+    toggle.querySelector("strong").textContent = "ERR";
   };
   const tryPlay = async () => {
     if (!loadBgmState().enabled) return;
@@ -345,10 +351,10 @@ function initBgm(page) {
         return;
       }
       setVisual(true);
+      toggle.classList.remove("unavailable");
     } catch (error) {
       if (!loadBgmState().enabled || !ownsBgm()) return;
       if (!userGestureSeen && error?.name === "NotAllowedError") return;
-      startBgmSynth(mood);
       setVisual(true);
     }
   };
@@ -389,6 +395,7 @@ function initBgm(page) {
     saveBgmState(next);
     if (next.enabled) {
       setVisual(true);
+      toggle.classList.remove("unavailable");
       await tryPlay();
       if (audio.paused) toast("BGM 需要再次点击页面后播放。");
     } else {
@@ -398,110 +405,23 @@ function initBgm(page) {
   });
   audio.addEventListener("error", () => {
     if (!loadBgmState().enabled || !ownsBgm()) return;
-    startBgmSynth(mood);
-    setVisual(true);
+    const fallback = BGM_TRACKS.ambient.audio;
+    if (!audio.src.endsWith(fallback)) {
+      audio.src = fallback;
+      audio.load();
+      tryPlay();
+      return;
+    }
+    setUnavailable();
+    toast("BGM 音频暂时没有加载成功。");
   });
   audio.addEventListener("playing", () => {
     if (!loadBgmState().enabled || !ownsBgm()) {
       pauseHere();
       return;
     }
-    stopBgmSynth();
+    toggle.classList.remove("unavailable");
   });
-}
-
-function startBgmSynth(mood = "ambient") {
-  if (window.__bgmSynth?.mood === mood && window.__bgmSynth?.context?.state === "running") return;
-  stopBgmSynth();
-  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-  if (!AudioContextClass) return;
-  const context = new AudioContextClass();
-  const master = context.createGain();
-  const lowpass = context.createBiquadFilter();
-  const lowShelf = context.createBiquadFilter();
-  const volume = loadBgmState().volume;
-  const settings = {
-    ambient: { notes: [110, 164.8, 220, 329.6], drift: 0.045, filter: 1450, gain: volume * 0.22, noise: 0.2 },
-    truth: { notes: [82.4, 123.5, 196, 247], drift: 0.035, filter: 1180, gain: volume * 0.2, noise: 0.16 },
-    hidden: { notes: [73.4, 98, 146.8, 220], drift: 0.055, filter: 920, gain: volume * 0.24, noise: 0.24 }
-  }[mood] || { notes: [110, 164.8, 220, 329.6], drift: 0.045, filter: 1300, gain: volume * 0.2, noise: 0.18 };
-
-  master.gain.value = settings.gain;
-  lowShelf.type = "lowshelf";
-  lowShelf.frequency.value = 180;
-  lowShelf.gain.value = 4;
-  lowpass.type = "lowpass";
-  lowpass.frequency.value = settings.filter;
-  lowpass.Q.value = 1.1;
-  lowpass.connect(lowShelf);
-  lowShelf.connect(master);
-  master.connect(context.destination);
-
-  const oscillators = settings.notes.map((frequency, index) => {
-    const osc = context.createOscillator();
-    const gain = context.createGain();
-    osc.type = index < 2 ? "sine" : "triangle";
-    osc.frequency.value = frequency;
-    gain.gain.value = [0.34, 0.18, 0.12, 0.08][index] || 0.06;
-    osc.connect(gain);
-    gain.connect(lowpass);
-    osc.start();
-    return { osc, gain };
-  });
-
-  const noiseBuffer = context.createBuffer(1, context.sampleRate * 2, context.sampleRate);
-  const data = noiseBuffer.getChannelData(0);
-  for (let i = 0; i < data.length; i += 1) {
-    data[i] = (Math.random() * 2 - 1) * 0.16;
-  }
-  const noise = context.createBufferSource();
-  const noiseGain = context.createGain();
-  noise.buffer = noiseBuffer;
-  noise.loop = true;
-  noiseGain.gain.value = settings.noise;
-  noise.connect(noiseGain);
-  noiseGain.connect(lowpass);
-  noise.start();
-
-  const lfo = context.createOscillator();
-  const lfoGain = context.createGain();
-  lfo.type = "sine";
-  lfo.frequency.value = settings.drift;
-  lfoGain.gain.value = mood === "hidden" ? 120 : 80;
-  lfo.connect(lfoGain);
-  lfoGain.connect(lowpass.frequency);
-  lfo.start();
-
-  const cue = context.createOscillator();
-  const cueGain = context.createGain();
-  cue.type = "sine";
-  cue.frequency.setValueAtTime(mood === "hidden" ? 392 : 523.25, context.currentTime);
-  cue.frequency.exponentialRampToValueAtTime(mood === "hidden" ? 196 : 261.63, context.currentTime + 0.18);
-  cueGain.gain.setValueAtTime(0.0001, context.currentTime);
-  cueGain.gain.exponentialRampToValueAtTime(volume * 0.12, context.currentTime + 0.03);
-  cueGain.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + 0.28);
-  cue.connect(cueGain);
-  cueGain.connect(master);
-  cue.start();
-  cue.stop(context.currentTime + 0.32);
-
-  context.resume();
-  window.__bgmSynth = { context, mood, oscillators, noise, lfo, cue };
-}
-
-function stopBgmSynth() {
-  const synth = window.__bgmSynth;
-  if (!synth) return;
-  [...(synth.oscillators || []).map((item) => item.osc), synth.noise, synth.lfo].forEach((node) => {
-    try {
-      node.stop();
-      node.disconnect();
-    } catch {}
-  });
-  try {
-    synth.context.close();
-  } catch {}
-  window.__bgmSynth = null;
 }
 
 function initNotebook() {
