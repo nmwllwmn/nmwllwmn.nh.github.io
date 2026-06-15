@@ -5199,6 +5199,39 @@ body[data-page^="phone"] .btn.primary,
   border-radius: 16px;
 }
 
+.map-device-log {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+  padding-top: 12px;
+}
+
+.map-device-log > span {
+  display: block;
+  color: #64748b;
+  font-size: 11px;
+}
+
+.map-device-log article {
+  border-radius: 12px;
+  padding: 10px;
+  background: rgba(15, 23, 42, 0.045);
+}
+
+.map-device-log strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #1f2937;
+  font-size: 12px;
+}
+
+.map-log-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
 .archive-phone-card,
 .archive-phone-ending {
   border-radius: 12px;

@@ -30,7 +30,7 @@
         </section>
       </section>
     </main>
-    <script src="common.js?v=20260614-25dd102"></script>
+    <script src="common.js?v=20260615-final-threat"></script>
     <script>
       initGameShell({ stage: 16, page: "phone-map" });
       const params = new URLSearchParams(location.search);
@@ -57,7 +57,7 @@
         },
         imp: {
           title: "IMP-2202 导入任务",
-          body: "地图编号 IMP-2202 对应夜行赛 6 月 6 日的批量导入任务。执行账号为 shenbo_admin，执行时间 22:02，内容字段为 linzhou / S05-S07 / append。任务附带的北桥片区设备摘要写着：B17 地下通道 17 号门在 00:17-00:22 进入维护窗口，门后检修道通向北桥雨水泵站。这个编号解释了为什么 S05-S07 没有移动端定位签名，却在成绩页里出现为有效记录，也把救援路线指向了 B17、泵站和 00:17。",
+          body: "地图编号 IMP-2202 对应 6 月 6 日 22:02 的批量导入任务。执行账号为 shenbo_admin，内容字段为 linzhou / S05-S07 / append。记录里没有移动端定位签名，只有后台回写痕迹。",
           action: () => { addEvidence("E"); setFlag("foundShenbo"); }
         }
       };
@@ -69,7 +69,19 @@
         document.querySelector("#mapResult").innerHTML = `
           <h2>${place.title}</h2>
           <p>${place.body}</p>
-          ${key === "imp" ? "<p class='mono'>source=Web Import · operator=shenbo_admin · batch=IMP-2202</p>" : ""}
+          ${key === "imp" ? `
+            <section class="map-device-log">
+              <span class="mono">source=Web Import · operator=shenbo_admin · batch=IMP-2202</span>
+              <article>
+                <strong>设备摘要</strong>
+                <p>CAM 04 覆盖段与门禁队列同属北桥片区。B17 地下通道 17 号门在 00:17-00:22 进入维护窗口，门后检修道通向雨水泵站。</p>
+              </article>
+              <div class="map-log-actions">
+                <a class="small-btn" href="phone-map.html?place=b17">B17 门禁</a>
+                <a class="small-btn" href="phone-map.html?place=pump">泵站偏移</a>
+              </div>
+            </section>
+          ` : ""}
         `;
       }
 

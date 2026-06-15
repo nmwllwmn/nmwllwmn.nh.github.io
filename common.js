@@ -867,10 +867,9 @@ function runThreatEvents() {
     showThreatCall();
   }
 
-  if (level === "final" && !state.flags.knockoutSeen && page === "phone") {
-    markThreatFlag("knockoutSeen");
+  if (level === "final" && !state.flags.finalThreatSeen && page === "phone") {
+    markThreatFlag("finalThreatSeen");
     showThreatSmsBarrage("final");
-    showKnockout();
   }
 }
 
