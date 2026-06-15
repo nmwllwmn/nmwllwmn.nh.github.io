@@ -62,56 +62,56 @@
       if (hasHiddenEnding && !hasAlbumEnding) {
         setFlag("rescuedLinzhou");
         ending = `<article class="archive-phone-ending rescue">
-          <h2>隐藏结局：未完成的签到</h2>
-          <p>你没有去主馆，也没有把 21:38 的画面当成终点。旧站、NVR、B17 门禁和泵站入口指向同一条地下维护线。</p>
+          <h2>隐藏真结局：未完成的签到</h2>
+          <p>你没有被假成绩和假终点带偏。旧站、NVR、B17 门禁和泵站入口，最终都指向同一条地下维护线。</p>
           <ol class="ending-timeline">
             <li><span>00:17</span>B17 门禁进入维护窗口，地下通道短暂开放。</li>
-            <li><span>00:19</span>泵站侧门被确认，录音和照片同步上传。</li>
-            <li><span>00:24</span>校园安全中心接警记录写入，北桥假画面失效。</li>
+            <li><span>00:19</span>泵站侧门被确认，沿途留下的血迹把你带进检修通道。</li>
+            <li><span>00:24</span>校园安全中心与警方接管现场，北桥那条伪造路线彻底失效。</li>
           </ol>
-          <p>林舟被找到时，手机还剩 2% 电量。他没有完成比赛，S08 也从来不是终点。</p>
-          <p class="ending-verdict">救援完成 / 林舟已找到</p>
+          <p>林舟被找到时，后脑有伤，衣服上沾着血。沿着现场和后台痕迹，下手的人也在当晚被抓获。S08 从来不是终点，而是他留下的求救坐标。</p>
+          <p class="ending-verdict">林舟找回 / 凶手落网</p>
         </article>`;
       } else if (hasAlbumEnding) {
         ending = `<article class="archive-phone-ending truth">
           <h2>彩蛋结局：抓住幕后黑手</h2>
-          <p>你把隐藏照片、旧站缓存、NVR 覆盖记录和导入账号一起提交给警方。证据链足够完整，照片里的人被带走了。</p>
+          <p>你把隐藏照片、旧站缓存、NVR 覆盖记录和导入账号一起交给警方。照片、时间和位置把整条线索链一下子钉死了。</p>
           <ol class="ending-timeline">
             <li><span>21:38</span>北桥 CAM 04 出现覆盖，画面残留 IMP-2202。</li>
             <li><span>21:41</span>未知号码要求删除照片，暴露相册线索。</li>
-            <li><span>回执</span>警方接收隐藏照片和后台导入记录。</li>
+            <li><span>回执</span>警方接收隐藏照片和后台导入记录，并锁定泵站周边。</li>
           </ol>
-          <p>三年前的旧路线和今年被补写的成绩终于连成证据链。但你没有拼出 B17、泵站和 00:17 的完整救援路线。</p>
-          <p class="ending-verdict">嫌疑人已控制 / 林舟仍未找到</p>
+          <p>那张被藏起来的照片，成了最直接的求救信号。警方在北桥雨水泵站附近找回林舟，并将照片中的可疑人员抓获。</p>
+          <p class="ending-verdict">凶手被抓 / 林舟找回</p>
         </article>`;
       } else if (hasTruth && flags.sudokuSecretSolved) {
         ending = `<article class="archive-phone-ending truth">
           <h2>真相结局：旧站未删除</h2>
-          <p>数独缓存恢复出相册密码。你已经知道旧站、NVR 和导入任务之间存在人为串改，也知道林舟的完赛记录不是自然生成的。</p>
+          <p>数独缓存恢复出的隐藏索引，连同旧站、NVR 和导入任务的异常，终于把这场篡改完整地撕开了。</p>
           <ol class="ending-timeline">
             <li><span>已确认</span>S05-S07 为 Web Import，IMP-2202 留下后台回写痕迹。</li>
             <li><span>已确认</span>2023 旧路线存在 S08，许听雨与北桥有关。</li>
-            <li><span>未完成</span>隐藏照片、B17、泵站和 00:17 尚未形成救援闭环。</li>
+            <li><span>缺口</span>B17、泵站入口和 00:17 尚未形成救援闭环。</li>
           </ol>
-          <p>你可以报警，但这一次只能证明有人改过路线和成绩。林舟仍在手机信号之外。</p>
-          <p class="ending-verdict">真相成立 / 救援路线不完整</p>
+          <p>你能证明有人改过路线和成绩，甚至能证明北桥一定出过事。可缺少最后一段救援路径，林舟仍然没有被找到。</p>
+          <p class="ending-verdict">真相成立 / 救援未闭合</p>
         </article>`;
       } else if (hasTruth) {
         ending = `<article class="archive-phone-ending danger">
           <h2>普通结局：最后一次签到</h2>
-          <p>五条核心证据已经拼齐：林舟没有自然完赛，后半程被 Web Import 补写，IMP-2202 留下后台回写痕迹。</p>
+          <p>五条核心证据已经拼齐。林舟没有自然完赛，后半程是被人补写上去的，北桥那段记录从一开始就在撒谎。</p>
           <ol class="ending-timeline">
             <li><span>缺口</span>数独缓存未恢复，相册密码仍没有被确认。</li>
             <li><span>缺口</span>B17、泵站入口和 00:17 维护窗口仍缺任一环。</li>
-            <li><span>来电</span>未知号码再次打来，提醒你“北桥没有第八个点”。</li>
+            <li><span>代价</span>你带着不完整的路线闯进北桥，最终也消失在那场雨里。</li>
           </ol>
-          <p>你知道林舟没有完成比赛，却还不知道真正入口在哪里。</p>
-          <p class="ending-verdict">证据齐全 / 行动失败</p>
+          <p>你知道林舟没有完赛，也知道北桥不是终点。可缺掉的那一步，让你和他一起被夜色吞没。第二天，南洄大学失踪名单上多了第二个名字。</p>
+          <p class="ending-verdict">证据齐全 / 两人失踪</p>
         </article>`;
       } else {
         ending = `<article class="archive-phone-ending pending">
           <h2>结局尚未形成</h2>
-          <p>本机备份只显示已恢复条目，未恢复部分保持灰色。</p>
+          <p>你还没有把所有线索拼到一起。北桥、S08、B17 和那段被人改写过的记录，仍然缺少最后一环。</p>
         </article>`;
       }
 

@@ -75,11 +75,11 @@
             <div class="normal-ending-feed" id="normalFeed"></div>
             <div class="black-ending normal-black" id="normalBlack" hidden>
               <h2>普通结局</h2>
-              <p class="ending-reveal" hidden>你把最后一条消息发出去后，定位停在北桥体育馆外侧。</p>
-              <p class="ending-reveal" hidden>通话没有接通，录音里只剩雨声、排水声和一段越来越近的杂音。</p>
-              <p class="ending-reveal" hidden>你没有找到 B17，也没有找到 00:17 的入口。</p>
-              <p class="ending-reveal" hidden>手机最后一次亮起时，屏幕上仍停着那张没有打开的地图。</p>
-              <p class="ending-reveal" hidden>随后，信号消失。</p>
+              <p class="ending-reveal" hidden>你已经拼出了全部主线证据，也知道林舟没有自然完赛。</p>
+              <p class="ending-reveal" hidden>可你还是缺了最后一块: B17、泵站入口，或者 00:17 的维护窗口。</p>
+              <p class="ending-reveal" hidden>你顺着错误的时间走进北桥雨夜，以为再往前一点就能找到林舟。</p>
+              <p class="ending-reveal" hidden>身后传来急促的脚步声。下一秒，后脑一阵钝响。</p>
+              <p class="ending-reveal" hidden>等现场再次被人发现时，北桥只剩雨声，林舟和你都不见了。</p>
               <p class="ending-reveal news-line" hidden>直至今日，我市一所大学已经失踪两名学生不知去向。</p>
               ${restartButton()}
             </div>
@@ -88,9 +88,9 @@
 
         const feed = document.querySelector("#normalFeed");
         const lines = [
-          ["23:48", "我要去水泵站了。"],
-          ["23:49", "如果定位还在北桥附近，就说明我猜对了。"],
-          ["23:51", "手机信号开始断续。屏幕亮度自动降到最低。"]
+          ["23:48", "证据都对上了，林舟一定在北桥附近。"],
+          ["23:49", "只要再找到 B17 或者泵站入口，这条线就能闭合。"],
+          ["23:51", "我身后有人。"]
         ];
 
         lines.forEach((line, index) => {
@@ -123,10 +123,11 @@
             <div class="normal-ending-feed" id="truthFeed"></div>
             <div class="black-ending normal-black" id="truthBlack" hidden>
               <h2>真相结局：旧站未删除</h2>
-              <p class="ending-reveal" hidden>你证明了林舟没有自然完赛，S05-S07 来自 Web Import。</p>
-              <p class="ending-reveal" hidden>旧站的 S08、NVR 的 IMP-2202、地图里的后台回写记录串成了一条人为修改链。</p>
-              <p class="ending-reveal" hidden>可是你没有找到 B17、泵站和 00:17 的完整入口，也没有提交隐藏照片。</p>
-              <p class="ending-reveal" hidden>真相已经浮出水面，林舟仍在信号之外。</p>
+              <p class="ending-reveal" hidden>你恢复了旧站、导入记录和隐藏缓存，把篡改链完整地摆到了台面上。</p>
+              <p class="ending-reveal" hidden>S08 被删掉，21:38 的监控被覆盖，IMP-2202 则像一枚没擦干净的指纹。</p>
+              <p class="ending-reveal" hidden>你已经知道林舟不是自己离开的，也知道北桥一定出过事。</p>
+              <p class="ending-reveal" hidden>可你仍然缺少 B17、泵站入口和 00:17 的救援闭环。</p>
+              <p class="ending-reveal" hidden>真相已经成立，但人还没有被带回来。</p>
               ${restartButton()}
             </div>
           </section>
@@ -134,11 +135,11 @@
 
         const feed = document.querySelector("#truthFeed");
         const lines = [
-          ["证据 A", "成绩后半段不是自然上传，而是 Web Import。"],
-          ["证据 B", "旧站缓存保留了被新版官网删掉的 S08：北桥体育馆。"],
-          ["证据 D", "NVR 21:38 的覆盖残留指向 IMP-2202。"],
-          ["证据 E", "IMP-2202 留下了后台回写记录。"],
-          ["缺口", "救援路线仍缺一环，报警只能证明篡改，无法立刻定位林舟。"]
+          ["证据 A", "后半段成绩不是跑出来的，是被 Web Import 补进去的。"],
+          ["证据 B", "旧站还留着被删掉的 S08: 北桥体育馆。"],
+          ["证据 D", "21:38 之后的监控画面被覆盖，角落里残留 IMP-2202。"],
+          ["证据 E", "后台回写记录说明，篡改不是失误，是有人动过手。"],
+          ["缺口", "你证明了北桥出事，却还没有找到能把林舟救出来的那条路。"]
         ];
 
         lines.forEach((line, index) => {
@@ -171,11 +172,13 @@
             </figure>
             <div class="normal-ending-feed" id="rescueFeed"></div>
             <div class="black-ending normal-black" id="rescueBlack" hidden>
-              <h2>隐藏结局：未完成的签到</h2>
-              <p class="ending-reveal" hidden>你没有走向主馆，也没有把北桥当成终点。</p>
-              <p class="ending-reveal" hidden>B17 是地下通道 17 号门，泵站侧门在 00:17 短暂解除门禁。</p>
-              <p class="ending-reveal" hidden>你在手机剩余 2% 电量时找到了林舟。</p>
-              <p class="ending-reveal" hidden>S08 从来不是完赛点，它是求救点。</p>
+              <h2>隐藏真结局：未完成的签到</h2>
+              <p class="ending-reveal" hidden>你没有被成绩页骗过去，也没有把北桥当成一处普通废点。</p>
+              <p class="ending-reveal" hidden>B17 不是备注，是通往地下通道的门号。</p>
+              <p class="ending-reveal" hidden>00:17 的维护窗口打开后，你顺着泵站侧门下去，在检修通道里找到了林舟。</p>
+              <p class="ending-reveal" hidden>他身上有血，后脑有伤，但人还活着。</p>
+              <p class="ending-reveal" hidden>校安和警方顺着现场痕迹反追，当晚就把下手的人抓住了。</p>
+              <p class="ending-reveal" hidden>S08 从来不是终点，它是他拼命留下来的求救点。</p>
               ${restartButton()}
             </div>
           </section>
@@ -185,9 +188,9 @@
         const lines = [
           ["00:12", "你避开主馆，从北桥体育馆外侧绕到雨水泵站。"],
           ["00:17", "B17 门禁进入维护窗口，地下通道 17 号门短暂打开。"],
-          ["00:19", "手机录音里的排水声和现场泵站噪声重合。"],
-          ["00:23", "林舟被困在检修通道内，意识模糊，但仍有呼吸。"],
-          ["00:26", "校安和急救赶到。手机电量停在 2%。"]
+          ["00:19", "排水声越来越近，墙面和地上都能看到被雨水冲开的血迹。"],
+          ["00:23", "你在检修通道里找到了林舟。后脑受伤，意识模糊，但还有呼吸。"],
+          ["00:26", "校安、急救和警方赶到。地下通道被封锁，下手的人在撤离前被控制。"]
         ];
 
         lines.forEach((line, index) => {
@@ -221,9 +224,10 @@
           <div class="police-dialog" id="policeDialog" hidden></div>
           <div class="black-ending" id="blackEnding" hidden>
             <h2>彩蛋结局：雨夜来电</h2>
-            <p class="ending-reveal" hidden>你从林舟的手机里找到了那张被隐藏的照片。</p>
-            <p class="ending-reveal" hidden>照片里的人被警方带走了。</p>
-            <p class="ending-reveal" hidden>但林舟仍然失踪。</p>
+            <p class="ending-reveal" hidden>你从隐藏相册里找到了那张照片，也把它交给了警方。</p>
+            <p class="ending-reveal" hidden>照片里那个站在泵站入口外的人，很快被带走调查。</p>
+            <p class="ending-reveal" hidden>警方沿着照片拍摄时间、泵站位置和导入记录交叉排查，当晚找回了林舟。</p>
+            <p class="ending-reveal" hidden>那张被故意藏起来的照片，最终成了把人救回来的关键证据。</p>
             ${restartButton()}
           </div>
         `;
@@ -232,10 +236,10 @@
         const lines = [
           ["110 接警中心", "operator", "您好，110。请问您遇到了什么情况？"],
           ["你", "player", "我朋友林舟失踪了。我从他的手机相册里发现了一张隐藏照片。"],
-          ["你", "player", "照片是在北桥雨水泵站附近拍的。画面里有一个黑衣人，他拿着手机站在入口旁边。"],
-          ["你", "player", "这张照片被单独锁在应用锁后面，文件名和拍摄时间都像是林舟故意留下来的。"],
-          ["110 接警中心", "operator", "请不要靠近现场。请保留这部手机和照片原件，我们会通知辖区警力前往核查。"],
-          ["110 接警中心", "operator", "我们已经记录报警信息。请保持电话畅通，等待警方联系。"]
+          ["你", "player", "照片是在北桥雨水泵站附近拍的。画面里有一个黑衣人，位置就在入口旁边。"],
+          ["你", "player", "这张照片被单独藏了起来。我怀疑林舟出事前，故意把它留给后来的人。"],
+          ["110 接警中心", "operator", "请不要靠近现场。请保留手机和照片原件，我们会立刻通知辖区警力前往北桥雨水泵站核查。"],
+          ["110 接警中心", "operator", "报警信息已经记录。若现场情况属实，我们会同步排查失踪人员并控制照片中的可疑人员。"]
         ];
 
         function appendLine(line) {

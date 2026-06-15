@@ -110,25 +110,28 @@ function clampNotebookRect(rect) {
 
 function clampNotebookToggle(pos) {
   const size = 52;
-  const left = Math.min(Math.max(pos.left ?? window.innerWidth - size - 22, 8), window.innerWidth - size - 8);
-  const top = Math.min(Math.max(pos.top ?? window.innerHeight - size - 22, 8), window.innerHeight - size - 8);
+  const bounds = getNotebookBounds();
+  const fallback = getDefaultNotebookToggle();
+  const left = Math.min(Math.max(pos.left ?? fallback.left, bounds.left), bounds.right);
+  const top = Math.min(Math.max(pos.top ?? fallback.top, bounds.top), bounds.bottom);
   return { left: Math.round(left), top: Math.round(top) };
 }
 
 function snapNotebookToggle(pos) {
   const size = 52;
   const clamped = clampNotebookToggle(pos);
+  const bounds = getNotebookBounds();
   const distances = [
-    { edge: "left", value: clamped.left - 8 },
-    { edge: "right", value: window.innerWidth - (clamped.left + size) - 8 },
-    { edge: "top", value: clamped.top - 8 },
-    { edge: "bottom", value: window.innerHeight - (clamped.top + size) - 8 }
+    { edge: "left", value: clamped.left - bounds.left },
+    { edge: "right", value: bounds.right - clamped.left },
+    { edge: "top", value: clamped.top - bounds.top },
+    { edge: "bottom", value: bounds.bottom - clamped.top }
   ];
   const nearest = distances.reduce((best, item) => item.value < best.value ? item : best, distances[0]);
-  if (nearest.edge === "left") return { left: 8, top: clamped.top };
-  if (nearest.edge === "right") return { left: window.innerWidth - size - 8, top: clamped.top };
-  if (nearest.edge === "top") return { left: clamped.left, top: 8 };
-  return { left: clamped.left, top: window.innerHeight - size - 8 };
+  if (nearest.edge === "left") return { left: bounds.left, top: clamped.top };
+  if (nearest.edge === "right") return { left: bounds.right, top: clamped.top };
+  if (nearest.edge === "top") return { left: clamped.left, top: bounds.top };
+  return { left: clamped.left, top: bounds.bottom };
 }
 
 function getNotebookPanelNearToggle(toggle, panel) {
@@ -218,12 +221,56 @@ function normalize(value) {
   return String(value || "").trim().toLowerCase().replace(/\s+/g, "");
 }
 
+function isPhoneLikePage() {
+  return (document.body.dataset.page || "").startsWith("phone") || Boolean(document.querySelector(".mi-phone"));
+}
+
+function getNotebookBounds() {
+  const size = 52;
+  if (isPhoneLikePage()) {
+    const phone = document.querySelector(".mi-phone");
+    const phoneRect = phone?.getBoundingClientRect();
+    if (phoneRect && phoneRect.width > 0 && phoneRect.height > 0) {
+      const margin = 14;
+      const left = Math.max(8, phoneRect.left - size - margin);
+      const right = Math.min(window.innerWidth - size - 8, phoneRect.right + margin);
+      const top = Math.max(8, phoneRect.top + 18);
+      const bottom = Math.min(window.innerHeight - size - 8, phoneRect.bottom - size - 18);
+      return {
+        left: Math.round(Math.min(left, right)),
+        right: Math.round(Math.max(left, right)),
+        top: Math.round(Math.min(top, bottom)),
+        bottom: Math.round(Math.max(top, bottom)),
+        phoneRect
+      };
+    }
+  }
+  return {
+    left: 8,
+    right: window.innerWidth - size - 8,
+    top: 8,
+    bottom: window.innerHeight - size - 8,
+    phoneRect: null
+  };
+}
+
+function getDefaultNotebookToggle() {
+  const bounds = getNotebookBounds();
+  if (bounds.phoneRect) {
+    return {
+      left: bounds.right,
+      top: Math.min(Math.max(bounds.phoneRect.top + bounds.phoneRect.height * 0.58, bounds.top), bounds.bottom)
+    };
+  }
+  return { left: bounds.right, top: bounds.bottom };
+}
+
 function initGameShell(options = {}) {
   const { stage = 0, page = "" } = options;
   document.body.dataset.page = page;
   setStage(stage);
   ensurePhoneBattery(page);
-  if (options.notebook === true) initNotebook();
+  if (options.notebook !== false) initNotebook();
   initBgm(page);
   const shouldShowWidget = page && !page.startsWith("phone") && page !== "archive";
   if (shouldShowWidget && !document.querySelector(".game-widget")) {
@@ -276,7 +323,7 @@ function getBgmMood(page) {
   const view = params.get("view") || "";
   const place = params.get("place") || "";
   const endingType = params.get("type") || "";
-  if (page === "phone-ending" && endingType === "rescue") return "hidden";
+  if (page === "phone-ending" && ["rescue", "album-report"].includes(endingType)) return "hidden";
   if (page === "phone-ending" || page === "phone-archive") return "truth";
   if (page === "phone-browser" && ["guard", "nvr"].includes(site)) return "hidden";
   if (page === "phone-browser" && ["oldinfo", "archive"].includes(site)) return "truth";
@@ -344,12 +391,12 @@ function initBgm(page) {
     setVisual(true);
     try {
       audio.volume = loadBgmState().volume;
+      claimBgm();
       await audio.play();
       if (!loadBgmState().enabled) {
         pauseHere();
         return;
       }
-      claimBgm();
       setVisual(true);
       toggle.classList.remove("unavailable");
     } catch (error) {
@@ -489,9 +536,16 @@ function initNotebook() {
   };
   const applyToggleBox = () => {
     const saved = loadNotebookBox();
+    const bounds = getNotebookBounds();
     const isPhonePage = (document.body.dataset.page || "").startsWith("phone");
-    const phoneDefault = { left: 8, top: window.innerHeight - 74 };
-    const pos = clampNotebookToggle(isPhonePage ? phoneDefault : (saved.toggle || {}));
+    const stored = saved.toggle || {};
+    const farFromPhone = isPhonePage && bounds.phoneRect && (
+      stored.left > bounds.right + 24 ||
+      stored.left + 52 < bounds.left - 24 ||
+      stored.top > bounds.bottom + 24 ||
+      stored.top + 52 < bounds.top - 24
+    );
+    const pos = clampNotebookToggle(farFromPhone ? getDefaultNotebookToggle() : (isPhonePage ? stored : (saved.toggle || {})));
     toggle.style.left = `${pos.left}px`;
     toggle.style.top = `${pos.top}px`;
     toggle.style.right = "auto";
@@ -561,7 +615,12 @@ function initNotebook() {
       toggle.removeEventListener("pointercancel", onEnd);
       if (toggleDragged) {
         const rect = toggle.getBoundingClientRect();
-        const snapped = snapNotebookToggle({ left: rect.left, top: rect.top });
+        const bounds = getNotebookBounds();
+        const raw = { left: rect.left, top: rect.top };
+        const snapped = snapNotebookToggle({
+          left: Math.min(Math.max(raw.left, bounds.left), bounds.right),
+          top: Math.min(Math.max(raw.top, bounds.top), bounds.bottom)
+        });
         toggle.style.left = `${snapped.left}px`;
         toggle.style.top = `${snapped.top}px`;
         toggle.style.right = "auto";
@@ -861,9 +920,9 @@ function showKnockout() {
   overlay.className = "knockout-screen";
   overlay.innerHTML = `
     <div>
-      <p>屏幕亮度自动降到最低。</p>
-      <p>定位停在北桥体育馆外侧，没有新的移动记录。</p>
-      <strong>信号中断：S08</strong>
+      <p>北桥的雨声忽然近了。</p>
+      <p>身后有人停下脚步，你还没来得及回头。</p>
+      <strong>记录中断：S08</strong>
     </div>
   `;
   document.body.appendChild(overlay);

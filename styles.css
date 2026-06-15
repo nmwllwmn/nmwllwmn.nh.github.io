@@ -5363,6 +5363,40 @@ body[data-page^="phone"] .btn.primary,
   border-radius: 12px;
 }
 
+.archive-app.app-screen {
+  background: #10151c;
+  color: #e9edf4;
+}
+
+.archive-app .archive-phone-card,
+.archive-app .archive-phone-ending {
+  border-color: rgba(255,255,255,0.1);
+  background: rgba(15, 23, 42, 0.82);
+  color: #e9edf4;
+}
+
+.archive-app .archive-phone-card.locked {
+  background: rgba(30, 41, 59, 0.72);
+}
+
+.archive-app .archive-phone-card h2,
+.archive-app .archive-phone-ending h2 {
+  color: #f8fafc;
+}
+
+.archive-app .archive-phone-card p,
+.archive-app .archive-phone-ending p {
+  color: #dbe5f1;
+}
+
+.archive-app .archive-phone-card.locked h2 {
+  color: #cbd5e1;
+}
+
+.archive-app .archive-phone-card.locked p {
+  color: #b6c2d2;
+}
+
 body[data-page^="phone"] .notebook-toggle {
   right: 34px;
   bottom: 26px;
