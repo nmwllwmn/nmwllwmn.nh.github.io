@@ -4566,13 +4566,13 @@ body[data-page^="phone"] .btn.primary,
 .black-ending p {
   max-width: 280px;
   margin: 0;
-  color: #cbd5e1;
+  color: #e5ebf3;
   line-height: 1.8;
 }
 
 .black-ending .ending-reveal {
   opacity: 0;
-  animation: endingTextReveal 1.2s ease var(--delay, 0s) both;
+  animation: endingTextReveal 0.8s ease var(--delay, 0s) both;
 }
 
 .black-ending .news-line {
