@@ -30,6 +30,11 @@
               <strong>校园墙</strong>
               <span>wall.nhu.edu.cn · 匿名投稿与旧站缓存线索</span>
             </button>
+            <button data-page="nanhuaiNews" type="button">
+              <small>18:16 · 本地新闻</small>
+              <strong>南洄晚报</strong>
+              <span>news.nh.cn · 科技园员工坠楼事件后续通报</span>
+            </button>
           </section>
           <section class="browser-page" id="browserPage" hidden>
             <div class="browser-page-head"><button class="mini-back" id="browserBack" type="button">‹</button><strong id="browserTitle">网页</strong></div>
@@ -89,6 +94,32 @@
             </section>
           `,
           action: () => setFlag("foundOldInfoFromWall")
+        },
+        nanhuaiNews: {
+          title: "南洄晚报",
+          html: `
+            <section class="local-news-site">
+              <div class="news-topbar">
+                <strong>南洄晚报</strong>
+                <span>news.nh.cn · 城市新闻 · 2026-06-06 16:20</span>
+              </div>
+              <article class="news-article">
+                <p class="news-kicker">南洄科技园</p>
+                <h2>一名 24 岁男子从南洄科技 C 座坠落，警方排除刑事案件</h2>
+                <p class="news-meta">记者：韩沛 · 编辑：晚报值班台 · 来源：南洄市公安局海湾分局通报</p>
+                <p>6 月 6 日 15 时许，南洄科技园 C 座发生一起人员坠楼事件。坠楼男子姓顾，24 岁，系南洄智云科技有限公司前员工。现场医护人员到场后确认其已无生命体征。</p>
+                <p>园区物业人员称，顾某曾在该公司工作一年左右，于本周办理离职交接。事发前，他曾返回办公楼取个人物品，并在前台登记为“补交设备”。公司相关负责人表示，双方劳动关系已按流程解除，具体情况以警方调查为准。</p>
+                <p>海湾分局通报称，警方已调取现场监控、门禁记录和公司交接材料，初步排除刑事案件。顾某家属对离职沟通、绩效申诉和工单交接仍有异议，相关部门已介入协调。</p>
+                <section class="news-sidebar">
+                  <strong>同日简讯</strong>
+                  <p>南洄大学北桥片区夜间临时管制，校方称与雨水设施巡检有关。</p>
+                  <p>南洄科技园部分企业网络认证服务短时异常，园区信息办称已恢复。</p>
+                </section>
+                <p class="news-footnote">本页面为移动端缓存。评论区因家属申请暂时关闭，原始链接已从首页滚动栏目撤下。</p>
+              </article>
+            </section>
+          `,
+          action: () => setFlag("openedNanhuaiTechNews")
         },
         oldinfo: {
           title: "南洄大学旧信息站",
@@ -233,7 +264,7 @@
                   <button type="button" data-pan="down">下移</button>
                   <button type="button" id="nvrZoom">自动增强边缘</button>
                 </div>
-                <p class="nvr-status" id="nvrStatus">已连接 CAM 04。异常段提示：21:38-21:44，右下角有压缩残影。</p>
+                <p class="nvr-status" id="nvrStatus">已连接 CAM 04。异常段标记：21:38-21:44，右下角有压缩残影。</p>
                 <div class="nvr-monitor-grid">
                   <div class="nvr-monitor active" data-monitor="04">
                     <div class="nvr-viewer" data-adjustable="true">
@@ -288,6 +319,7 @@
         { keys: ["oldinfo.nhu.edu.cn/citytrace/2023", "oldinfo.nhu.edu.cn", "旧信息站", "城迹社2023", "citytrace"], page: "oldinfo" },
         { keys: ["secure.nhu.edu.cn/guard", "保卫中心", "校园保卫中心", "guard"], page: "guard" },
         { keys: ["校园墙", "wall.nhu.edu.cn", "wall"], page: "wall" },
+        { keys: ["南洄晚报", "news.nh.cn", "南洄科技", "智云科技", "科技园", "顾某"], page: "nanhuaiNews" },
         { keys: ["nvr", "cam04", "监控回放", "sec_north"], page: "nvr" },
         { keys: ["archive", "备份记录", "myj"], page: "archive" },
         { keys: ["南洄大学官网", "www.nhu.edu.cn", "nhu.edu.cn"], page: "university" }
@@ -375,7 +407,7 @@
               image.removeAttribute("data-src");
             });
             if (button.dataset.cam === "04") {
-              status.textContent = nvrTimeReady ? "CAM 04 的 21:38 画面有覆盖残留。" : "CAM 04 异常段提示：21:38-21:44。";
+              status.textContent = nvrTimeReady ? "CAM 04 的 21:38 画面有覆盖残留。" : "CAM 04 异常段标记：21:38-21:44。";
             } else if (button.dataset.cam === "02") {
               status.textContent = "CAM 02 在关键时间黑屏，门禁队列里只剩 B17 标记。";
               setFlag("foundB17");
