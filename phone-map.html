@@ -52,7 +52,7 @@
         },
         pump: {
           title: "北桥雨水泵站",
-          body: "相册定位和监控残影都指向这里。B17 向西偏 34 米，环境记录里有持续低频排水声。",
+          body: "IMP-2202 残留图层把北桥体育馆西侧的维护设施重新标了出来。B17 向西偏 34 米，环境记录里有持续低频排水声。",
           action: () => setFlag("foundPumpStation")
         },
         imp: {
@@ -63,7 +63,11 @@
       };
 
       function canShowNorthbridgeLayer() {
-        return hasFlag("foundImp2202") || hasEvidence("D") || hasEvidence("E") || hasFlag("foundShenbo");
+        return hasFlag("searchedImp2202Map") || hasEvidence("E") || hasFlag("foundShenbo");
+      }
+
+      function canOpenImpRecord() {
+        return hasFlag("foundImp2202") || hasEvidence("D") || canShowNorthbridgeLayer();
       }
 
       function refreshMapLayer() {
@@ -78,7 +82,14 @@
       function showPlace(key) {
         const place = places[key];
         if (!place) return;
-        if (["imp", "s08", "pump", "b17"].includes(key) && !canShowNorthbridgeLayer()) {
+        if (key === "imp" && !canOpenImpRecord()) {
+          document.querySelector("#mapResult").innerHTML = `
+            <h2>没有结果</h2>
+            <p>公开图层没有收录这个编号。</p>
+          `;
+          return;
+        }
+        if (["s08", "pump", "b17"].includes(key) && !canShowNorthbridgeLayer()) {
           document.querySelector("#mapResult").innerHTML = `
             <h2>没有结果</h2>
             <p>公开图层没有收录这个地点。</p>
@@ -86,6 +97,7 @@
           return;
         }
         place.action?.();
+        if (key === "imp") setFlag("searchedImp2202Map");
         refreshMapLayer();
         document.querySelector("#mapResult").innerHTML = `
           <h2>${place.title}</h2>
@@ -106,10 +118,6 @@
           ${key === "pump" ? `
             <section class="map-device-log">
               <span class="mono">route=北桥体育馆西侧 · signal=weak</span>
-              <article>
-                <strong>残留语音转写</strong>
-                <p>有血。有人从背后偷袭我。</p>
-              </article>
               <div class="map-log-actions">
                 <button class="small-btn danger" id="navigatePump" type="button">导航去此处</button>
               </div>
@@ -136,7 +144,7 @@
         event.preventDefault();
         const q = normalize(new FormData(event.target).get("q"));
         if (q.includes("imp2202") || q.includes("imp-2202")) {
-          if (hasFlag("foundImp2202") || hasEvidence("D")) location.href = "phone-map.html?place=imp";
+          if (canOpenImpRecord()) location.href = "phone-map.html?place=imp";
           else toast("没有找到公开记录。");
         }
         else if ((q.includes("s08") || q.includes("北桥体育馆")) && canShowNorthbridgeLayer()) location.href = "phone-map.html?place=s08";
