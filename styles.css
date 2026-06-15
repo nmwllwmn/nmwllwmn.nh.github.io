@@ -3426,6 +3426,26 @@ body[data-notes-box="trash"] .notes-live {
   font-family: var(--mono);
 }
 
+.old-info-links {
+  margin-top: 10px;
+  border-top: 1px solid #d8c995;
+  padding-top: 8px;
+}
+
+.old-info-links h3 {
+  margin: 0 0 6px;
+  color: #5d4214;
+  font-size: 13px;
+}
+
+.old-info-links a {
+  display: inline-block;
+  color: #6f4d10;
+  font-size: 12px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 .old-info-table {
   display: block;
   overflow-x: auto;
@@ -4119,6 +4139,10 @@ body[data-page^="phone"] .camera-viewfinder::after {
   font-weight: 800;
   box-shadow: 0 10px 22px rgba(0,0,0,0.22);
   transition: transform 0.14s ease, box-shadow 0.14s ease;
+}
+
+.map-pin[hidden] {
+  display: none;
 }
 
 .map-pin:hover {

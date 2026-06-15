@@ -37,7 +37,7 @@ const evidenceLabels = {
   B: "2023 旧路线含 S08",
   C: "许听雨参加过 2023 试跑",
   D: "21:38 北桥监控异常",
-  E: "IMP-2202 由沈泊执行"
+  E: "IMP-2202 后台回写记录"
 };
 
 const clueProgressSteps = [
@@ -341,21 +341,21 @@ function initBgm(page) {
     if (!loadBgmState().enabled) return;
     if (document.visibilityState === "hidden") return;
     playRequested = true;
-    claimBgm();
     setVisual(true);
     try {
       audio.volume = loadBgmState().volume;
       await audio.play();
-      if (!loadBgmState().enabled || !ownsBgm()) {
+      if (!loadBgmState().enabled) {
         pauseHere();
         return;
       }
+      claimBgm();
       setVisual(true);
       toggle.classList.remove("unavailable");
     } catch (error) {
-      if (!loadBgmState().enabled || !ownsBgm()) return;
+      if (!loadBgmState().enabled) return;
       if (!userGestureSeen && error?.name === "NotAllowedError") return;
-      setVisual(true);
+      setVisual(false);
     }
   };
   const enableOnGesture = (event) => {
@@ -404,7 +404,7 @@ function initBgm(page) {
     }
   });
   audio.addEventListener("error", () => {
-    if (!loadBgmState().enabled || !ownsBgm()) return;
+    if (!loadBgmState().enabled) return;
     const fallback = BGM_TRACKS.ambient.audio;
     if (!audio.src.endsWith(fallback)) {
       audio.src = fallback;

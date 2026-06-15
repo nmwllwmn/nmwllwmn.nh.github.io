@@ -18,19 +18,19 @@
           <section class="phone-map-canvas">
             <div class="map-river"></div>
             <button class="map-pin s04" data-place="s04" type="button">S04</button>
-            <button class="map-pin s08" data-place="s08" type="button">S08</button>
-            <button class="map-pin b17" data-place="b17" type="button">B17</button>
-            <button class="map-pin pump" data-place="pump" type="button">泵站</button>
+            <button class="map-pin s08" data-place="s08" type="button" hidden>S08</button>
+            <button class="map-pin b17" data-place="b17" type="button" hidden>B17</button>
+            <button class="map-pin pump" data-place="pump" type="button" hidden>泵站</button>
           </section>
           <article class="map-result" id="mapResult">
-            <h2>最近搜索</h2>
-            <p class="mono">西桥观景台 / 北桥体育馆 / B17 / 雨水泵站</p>
-            <p>6 月 6 日 21:32 后，定位点一直在北桥片区小范围漂移。地图编号需要从其他系统获得。</p>
+            <h2>离线地图</h2>
+            <p class="mono">南洄大学 / 北桥片区缓存不完整</p>
+            <p>公开图层只保留西桥前段。北桥附近的历史点位没有同步到新版地图。</p>
           </article>
         </section>
       </section>
     </main>
-    <script src="common.js?v=20260615-bgm-fix"></script>
+    <script src="common.js?v=20260615-map-bgm"></script>
     <script>
       initGameShell({ stage: 16, page: "phone-map" });
       const params = new URLSearchParams(location.search);
@@ -56,33 +56,70 @@
           action: () => setFlag("foundPumpStation")
         },
         imp: {
-          title: "IMP-2202 导入任务",
-          body: "地图编号 IMP-2202 对应 6 月 6 日 22:02 的批量导入任务。执行账号为 shenbo_admin，内容字段为 linzhou / S05-S07 / append。记录里没有移动端定位签名，只有后台回写痕迹。",
+          title: "IMP-2202",
+          body: "编号命中一条后台回写记录：linzhou / S05-S07 / append。记录没有移动端定位签名，只留下北桥片区的旧图层索引。",
           action: () => { addEvidence("E"); setFlag("foundShenbo"); }
         }
       };
 
+      function canShowNorthbridgeLayer() {
+        return hasFlag("foundImp2202") || hasEvidence("D") || hasEvidence("E") || hasFlag("foundShenbo");
+      }
+
+      function refreshMapLayer() {
+        const unlocked = canShowNorthbridgeLayer();
+        document.querySelectorAll(".map-pin.s08, .map-pin.pump").forEach((pin) => {
+          pin.hidden = !unlocked;
+        });
+        document.querySelector(".map-pin.b17").hidden = !(unlocked && hasFlag("foundB17"));
+        document.querySelector(".phone-map-canvas").classList.toggle("revealed", unlocked);
+      }
+
       function showPlace(key) {
         const place = places[key];
         if (!place) return;
+        if (["imp", "s08", "pump", "b17"].includes(key) && !canShowNorthbridgeLayer()) {
+          document.querySelector("#mapResult").innerHTML = `
+            <h2>没有结果</h2>
+            <p>公开图层没有收录这个地点。</p>
+          `;
+          return;
+        }
         place.action?.();
+        refreshMapLayer();
         document.querySelector("#mapResult").innerHTML = `
           <h2>${place.title}</h2>
           <p>${place.body}</p>
           ${key === "imp" ? `
             <section class="map-device-log">
-              <span class="mono">source=Web Import · operator=shenbo_admin · batch=IMP-2202</span>
+              <span class="mono">source=Web Import · batch=IMP-2202</span>
               <article>
-                <strong>设备摘要</strong>
-                <p>CAM 04 覆盖段与门禁队列同属北桥片区。B17 地下通道 17 号门在 00:17-00:22 进入维护窗口，门后检修道通向雨水泵站。</p>
+                <strong>残留图层</strong>
+                <p>旧路线把 S08 标在北桥体育馆外侧。定位偏移继续向西，靠近雨水泵站。</p>
               </article>
               <div class="map-log-actions">
-                <a class="small-btn" href="phone-map.html?place=b17">B17 门禁</a>
-                <a class="small-btn" href="phone-map.html?place=pump">泵站偏移</a>
+                <a class="small-btn" href="phone-map.html?place=s08">S08</a>
+                <a class="small-btn" href="phone-map.html?place=pump">雨水泵站</a>
+              </div>
+            </section>
+          ` : ""}
+          ${key === "pump" ? `
+            <section class="map-device-log">
+              <span class="mono">route=北桥体育馆西侧 · signal=weak</span>
+              <div class="map-log-actions">
+                <button class="small-btn danger" id="navigatePump" type="button">导航去此处</button>
               </div>
             </section>
           ` : ""}
         `;
+        document.querySelector("#navigatePump")?.addEventListener("click", () => {
+          setFlag("wentToPumpStation");
+          if (hasEvidence("A") && hasEvidence("B") && hasEvidence("C") && hasEvidence("D") && hasEvidence("E")) {
+            location.href = "ending.html?type=normal";
+          } else {
+            toast("路线已加入地图。");
+          }
+        });
       }
 
       document.querySelectorAll(".map-pin").forEach((pin) => {
@@ -96,16 +133,17 @@
         const q = normalize(new FormData(event.target).get("q"));
         if (q.includes("imp2202") || q.includes("imp-2202")) {
           if (hasFlag("foundImp2202") || hasEvidence("D")) location.href = "phone-map.html?place=imp";
-          else toast("没有找到公开任务。先确认监控画面里的地图编号。");
+          else toast("没有找到公开记录。");
         }
-        else if (q.includes("s08") || q.includes("北桥体育馆")) location.href = "phone-map.html?place=s08";
-        else if (q.includes("b17") || q.includes("17号门") || q.includes("地下")) location.href = "phone-map.html?place=b17";
-        else if (q.includes("泵站") || q.includes("排水")) location.href = "phone-map.html?place=pump";
+        else if ((q.includes("s08") || q.includes("北桥体育馆")) && canShowNorthbridgeLayer()) location.href = "phone-map.html?place=s08";
+        else if ((q.includes("b17") || q.includes("17号门") || q.includes("地下")) && canShowNorthbridgeLayer()) location.href = "phone-map.html?place=b17";
+        else if ((q.includes("泵站") || q.includes("排水")) && canShowNorthbridgeLayer()) location.href = "phone-map.html?place=pump";
         else if (q.includes("s04") || q.includes("西桥")) location.href = "phone-map.html?place=s04";
         else toast("没有找到地点。");
       });
 
       const initialPlace = params.get("place");
+      refreshMapLayer();
       if (initialPlace && places[initialPlace]) showPlace(initialPlace);
     </script>
   </body>
