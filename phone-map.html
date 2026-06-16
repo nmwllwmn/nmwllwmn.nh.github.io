@@ -58,12 +58,12 @@
         imp: {
           title: "IMP-2202",
           body: "编号命中一条后台回写记录：linzhou / S05-S07 / append。记录没有移动端定位签名，只留下北桥片区的旧图层索引。",
-          action: () => { addEvidence("E"); setFlag("foundShenbo"); }
+          action: () => { addEvidence("E"); setFlag("foundImp2202MapRecord"); }
         }
       };
 
       function canShowNorthbridgeLayer() {
-        return hasFlag("searchedImp2202Map") || hasEvidence("E") || hasFlag("foundShenbo");
+        return hasFlag("searchedImp2202Map") || hasEvidence("E") || hasFlag("foundImp2202MapRecord") || hasFlag("foundShenbo");
       }
 
       function canOpenImpRecord() {
@@ -117,7 +117,7 @@
           ` : ""}
           ${key === "pump" ? `
             <section class="map-device-log">
-              <span class="mono">route=北桥体育馆西侧 · signal=weak</span>
+              <span class="mono">地面有血迹 · 背后有脚步声靠近</span>
               <div class="map-log-actions">
                 <button class="small-btn danger" id="navigatePump" type="button">导航去此处</button>
               </div>

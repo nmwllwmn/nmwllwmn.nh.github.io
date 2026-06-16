@@ -35,7 +35,7 @@ const defaultState = {
 const evidenceLabels = {
   A: "林舟 S05-S07 为 Web Import",
   B: "2023 旧路线含 S08",
-  C: "许听雨参加过 2023 试跑",
+  C: "2023 试跑人员记录与 S08 重合",
   D: "21:38 北桥监控异常",
   E: "IMP-2202 后台回写记录"
 };
@@ -50,7 +50,7 @@ const clueProgressSteps = [
   { weight: 10, done: (state) => state.evidence.B },
   { weight: 10, done: (state) => state.evidence.C },
   { weight: 12, done: (state) => state.evidence.D || state.flags.foundImp2202 },
-  { weight: 12, done: (state) => state.evidence.E || state.flags.foundShenbo },
+  { weight: 12, done: (state) => state.evidence.E || state.flags.foundImp2202MapRecord || state.flags.foundShenbo },
   { weight: 6, done: (state) => state.flags.sudokuSecretSolved },
   { weight: 6, done: (state) => state.flags.foundB17 },
   { weight: 5, done: (state) => state.flags.foundPumpStation },
