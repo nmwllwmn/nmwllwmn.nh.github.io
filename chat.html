@@ -40,8 +40,8 @@
                 <button class="cc-tile" type="button">静音<br><span>关闭</span></button>
                 <button class="cc-tile on" type="button">手电筒<br><span>可用</span></button>
               </div>
-              <div class="slider-row"><span>亮度</span><input type="range" min="20" max="100" value="74"></div>
-              <div class="slider-row"><span>音量</span><input type="range" min="0" max="100" value="28"></div>
+              <div class="slider-row"><span>亮度</span><input id="brightnessSlider" type="range" min="35" max="110" value="74"></div>
+              <div class="slider-row"><span>BGM</span><input id="bgmVolumeSlider" type="range" min="0" max="100" value="62"></div>
             </section>
             <section class="notification-center" id="notificationCenter">
               <div class="cc-head"><strong>通知</strong><span>今天</span></div>
@@ -158,6 +158,46 @@
       });
 
       const shade = document.querySelector("#shadeLayer");
+      const brightnessSlider = document.querySelector("#brightnessSlider");
+      const bgmVolumeSlider = document.querySelector("#bgmVolumeSlider");
+      const BRIGHTNESS_KEY = "last-checkin-phone-brightness-v1";
+
+      function loadBrightness() {
+        return Math.min(110, Math.max(35, Number(localStorage.getItem(BRIGHTNESS_KEY) || 74)));
+      }
+
+      function applyBrightness(value) {
+        const brightness = Math.min(110, Math.max(35, Number(value) || 74));
+        localStorage.setItem(BRIGHTNESS_KEY, String(brightness));
+        brightnessSlider.value = String(brightness);
+        document.querySelector(".mi-phone").style.setProperty("--screen-brightness", String(brightness / 100));
+      }
+
+      function applyBgmVolume(value) {
+        const volume = Math.min(100, Math.max(0, Number(value) || 0));
+        bgmVolumeSlider.value = String(volume);
+        const current = loadBgmState();
+        saveBgmState({ ...current, volume: volume / 100, enabled: volume > 0 });
+        const audio = document.querySelector("#bgmAudio");
+        if (audio) {
+          audio.volume = volume / 100;
+          if (volume <= 0) {
+            audio.pause();
+          } else {
+            audio.play().catch(() => {});
+          }
+        }
+        const bgmToggle = document.querySelector("#bgmToggle");
+        bgmToggle?.classList.toggle("active", volume > 0);
+        const bgmStateText = bgmToggle?.querySelector("strong");
+        if (bgmStateText) bgmStateText.textContent = volume > 0 ? "ON" : "OFF";
+      }
+
+      applyBrightness(loadBrightness());
+      bgmVolumeSlider.value = String(Math.round(loadBgmState().volume * 100));
+      brightnessSlider.addEventListener("input", (event) => applyBrightness(event.target.value));
+      bgmVolumeSlider.addEventListener("input", (event) => applyBgmVolume(event.target.value));
+
       function openShade(type) {
         shade.hidden = false;
         document.querySelector("#controlCenter").hidden = type !== "controls";

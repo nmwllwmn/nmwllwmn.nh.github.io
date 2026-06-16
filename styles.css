@@ -1272,6 +1272,7 @@ body[data-notes-box="trash"] .notes-live {
   height: 100%;
   border-radius: var(--screen-radius);
   background: #f4f5f4;
+  filter: brightness(var(--screen-brightness, 1));
   touch-action: none;
 }
 
@@ -1633,6 +1634,12 @@ body[data-notes-box="trash"] .notes-live {
   padding: 10px;
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.72);
+}
+
+.slider-row input[type="range"] {
+  width: 100%;
+  accent-color: #2d83f7;
+  cursor: pointer;
 }
 
 .notice-card {
