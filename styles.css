@@ -190,22 +190,24 @@ button {
 }
 
 .series-note {
-  width: min(760px, 100%);
+  width: fit-content;
+  min-width: 160px;
   margin: 0 auto 24px;
   border: 1px solid rgba(138, 98, 59, 0.26);
   border-left: 4px solid #8a623b;
   border-radius: 6px;
-  padding: 16px 18px;
+  padding: 12px 18px;
   background: rgba(255, 253, 247, 0.78);
   color: #3f372f;
+  text-align: center;
 }
 
 .series-note strong {
   display: block;
   margin-bottom: 0;
   color: #6f4d2e;
-  font-size: 18px;
-  letter-spacing: 0.08em;
+  font-size: 20px;
+  letter-spacing: 0.16em;
 }
 
 .enter-area {
@@ -353,17 +355,32 @@ button {
 }
 
 .hero-series-note {
-  display: inline-block;
+  display: inline-grid;
+  gap: 6px;
   margin: 24px 0 0;
-  padding: 12px 18px;
+  padding: 16px 24px 18px;
   border: 1px solid rgba(245, 220, 160, 0.42);
-  border-radius: 999px;
-  background: rgba(255, 247, 225, 0.12);
+  border-left: 5px solid #f3c85f;
+  border-radius: 6px;
+  background: rgba(255, 247, 225, 0.14);
   color: #ffe8b1;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.16);
+}
+
+.hero-series-note span {
   font-family: var(--mono);
-  font-size: clamp(16px, 2vw, 24px);
+  font-size: clamp(12px, 1.4vw, 16px);
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.22em;
+}
+
+.hero-series-note strong {
+  color: #fff7df;
+  font-family: var(--serif);
+  font-size: clamp(34px, 5vw, 64px);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.08em;
 }
 
 .intro-band {
