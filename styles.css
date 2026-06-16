@@ -202,17 +202,10 @@ button {
 
 .series-note strong {
   display: block;
-  margin-bottom: 6px;
+  margin-bottom: 0;
   color: #6f4d2e;
-  font-size: 15px;
-  letter-spacing: 0.04em;
-}
-
-.series-note p {
-  margin: 0;
-  color: #5c5146;
-  font-size: 14px;
-  line-height: 1.75;
+  font-size: 18px;
+  letter-spacing: 0.08em;
 }
 
 .enter-area {
@@ -357,6 +350,20 @@ button {
   font-family: var(--serif);
   font-size: clamp(20px, 3vw, 34px);
   line-height: 1.55;
+}
+
+.hero-series-note {
+  display: inline-block;
+  margin: 24px 0 0;
+  padding: 12px 18px;
+  border: 1px solid rgba(245, 220, 160, 0.42);
+  border-radius: 999px;
+  background: rgba(255, 247, 225, 0.12);
+  color: #ffe8b1;
+  font-family: var(--mono);
+  font-size: clamp(16px, 2vw, 24px);
+  font-weight: 700;
+  letter-spacing: 0.12em;
 }
 
 .intro-band {
