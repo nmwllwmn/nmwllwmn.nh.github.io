@@ -2246,6 +2246,53 @@ body[data-notes-box="trash"] .notes-live {
   font-weight: 700;
 }
 
+.sudoku-password-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: 22px;
+  background: rgba(15, 18, 22, 0.58);
+}
+
+.sudoku-password-overlay[hidden] {
+  display: none;
+}
+
+.sudoku-password-card {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  width: min(300px, 100%);
+  border: 1px solid rgba(255,255,255,0.72);
+  border-radius: 16px;
+  padding: 24px 20px;
+  background: rgba(255, 252, 244, 0.96);
+  color: #15181d;
+  text-align: center;
+  box-shadow: 0 26px 70px rgba(0,0,0,0.32);
+}
+
+.sudoku-password-card span {
+  color: #a26a23;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+}
+
+.sudoku-password-card strong {
+  color: #111827;
+  font-size: 26px;
+  line-height: 1.25;
+}
+
+.sudoku-password-card p {
+  margin: 0;
+  color: #667085;
+  font-size: 13px;
+}
+
 .phone-app-toast {
   position: absolute;
   left: 20px;

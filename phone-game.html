@@ -23,6 +23,14 @@
             <div class="number-pad" id="numberPad"></div>
             <button class="btn primary" id="submitSudoku" type="button">提交</button>
             <div class="phone-app-toast" id="sudokuToast" hidden></div>
+            <div class="sudoku-password-overlay" id="sudokuPasswordOverlay" hidden>
+              <div class="sudoku-password-card">
+                <span>彩蛋解锁</span>
+                <strong>相册密码 062141</strong>
+                <p>记住后去打开相册。</p>
+                <button class="btn primary" id="sudokuPasswordConfirm" type="button">记住了</button>
+              </div>
+            </div>
           </div>
         </section>
       </section>
@@ -148,7 +156,7 @@
           renderSudoku(currentSudokuLevel + 1);
         } else {
           setFlag("sudokuSecretSolved");
-          gameToast("彩蛋解锁：相册密码 062141。");
+          showSudokuPassword();
         }
       });
 
@@ -215,6 +223,17 @@
           box.hidden = true;
           box.classList.remove("show");
         }, 2600);
+      }
+
+      function showSudokuPassword() {
+        const overlay = document.querySelector("#sudokuPasswordOverlay");
+        const confirm = document.querySelector("#sudokuPasswordConfirm");
+        overlay.hidden = false;
+        confirm.focus();
+        confirm.onclick = () => {
+          overlay.hidden = true;
+          location.href = "phone-gallery.html?view=lock";
+        };
       }
 
       renderSudoku(getUnlockedLevel());
